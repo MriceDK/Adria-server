@@ -1,0 +1,44 @@
+image: registry.ci.infra.lan:5000/ad-project:server-QA 
+
+stages:
+  - QA
+
+sonar:
+  stage: QA
+  only:
+    - main
+  except:
+    changes:
+      - documents/**/*
+  script: |
+    dotnet tool install -g dotnet-sonarscanner
+    dotnet tool install -g dotnet-coverage
+    export PATH="$PATH:$HOME/.dotnet/tools"
+
+    dotnet sonarscanner begin \
+      /k:"2025.ad-project.adria.${CI_PROJECT_NAMESPACE:(-2)}.server" \
+      /n:"2025.ad-project.adria.${CI_PROJECT_NAMESPACE:(-2)}.server" \
+      /d:sonar.host.url="https://sonarqube.ti.howest.be/" \
+      /d:sonar.token="$SONAR_TOKEN" \
+      /d:sonar.cs.opencover.reportsPaths=".testresults/**/coverage.opencover.xml" \
+      /d:sonar.cs.vstest.reportsPaths=".testresults/*.trx" \
+      /d:sonar.qualitygate.wait=true \
+      /d:sonar.qualityprofile="AD-Project-C#" \
+      /d:sonar.coverage.exclusions="**/Adria.Infrastructure/**/*.cs,**/Adria.Main/**/*.cs,**/Shared/**"
+
+    dotnet restore
+    dotnet build --configuration Debug --no-incremental
+    
+    dotnet test -c Debug --no-build \
+      --logger "trx;LogFileName=tests.trx" \
+      --results-directory .testresults \
+      --collect:"XPlat Code Coverage" \
+      -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover \
+      -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.OutputDirectory=.testresults \
+      -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.OutputName=coverage.opencover.xml
+    
+    dotnet sonarscanner end /d:sonar.token="$SONAR_TOKEN"
+
+
+# Create a job to push the Docker image to the registry see project documentation for more info.
+

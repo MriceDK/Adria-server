@@ -1,0 +1,52 @@
+# Ignore build artifacts
+**/bin/
+**/obj/
+**/out/
+
+# Ignore test results
+**/TestResults/
+
+# Ignore .NET Core packages
+**/.nuget/
+
+# Ignore OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Ignore IDE files
+.vscode/
+.vs/
+*.userprefs
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Ignore logs
+*.log
+logs/
+
+# Ignore docker files themselves
+Dockerfile*
+.dockerignore
+
+# Ignore git
+.git/
+.gitignore
+.gitattributes
+
+# Ignore documentation
+README.md
+TODO.md
+*.md
+
+# Ignore test requests
+test_requests/
+
+# Ignore other files
+sonar.sh

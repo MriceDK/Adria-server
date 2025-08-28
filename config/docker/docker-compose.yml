@@ -1,0 +1,4 @@
+# This file is used to define all the services that make up your application.
+# In this case, we only need a database (mysql) service to run this .NET 8 application on localhost.
+
+# Create a MySQL service using the official MySQL image from Docker Hub.

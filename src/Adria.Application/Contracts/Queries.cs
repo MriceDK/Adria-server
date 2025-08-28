@@ -1,0 +1,1 @@
+namespace Adria.Application.Contracts;
