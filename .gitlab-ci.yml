@@ -41,4 +41,3 @@ sonar:
 
 
 # Create a job to push the Docker image to the registry see project documentation for more info.
-
