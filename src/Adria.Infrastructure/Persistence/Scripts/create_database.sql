@@ -15,7 +15,7 @@ DROP TABLE IF EXISTS `Foods`;
 DROP TABLE IF EXISTS `Users`;
 DROP TABLE IF EXISTS `Subscriptions`;
 
--- Create Subscriptions table
+
 CREATE TABLE `Subscriptions`
 (
     `SubscriptionId` VARCHAR(36) PRIMARY KEY NOT NULL,
@@ -24,7 +24,7 @@ CREATE TABLE `Subscriptions`
     `Advantages`     TEXT
 );
 
--- Create Users table
+
 CREATE TABLE `Users`
 (
     `AdrianId`       VARCHAR(36) PRIMARY KEY NOT NULL,
@@ -34,7 +34,7 @@ CREATE TABLE `Users`
     FOREIGN KEY (`SubscriptionId`) REFERENCES `Subscriptions` (`SubscriptionId`)
 );
 
--- Create Foods table
+
 CREATE TABLE `Foods`
 (
     `FoodId` VARCHAR(36) PRIMARY KEY NOT NULL,
@@ -43,7 +43,6 @@ CREATE TABLE `Foods`
     `Edible` BOOLEAN                 NOT NULL DEFAULT TRUE
 );
 
--- Create Supplements table
 CREATE TABLE `Supplements`
 (
     `SupplementId` VARCHAR(36) PRIMARY KEY NOT NULL,
@@ -53,7 +52,6 @@ CREATE TABLE `Supplements`
     `Stock`        INT                     NOT NULL DEFAULT 0
 );
 
--- Create Orders table
 CREATE TABLE `Orders`
 (
     `OrderId`    VARCHAR(36) PRIMARY KEY NOT NULL,
@@ -63,7 +61,6 @@ CREATE TABLE `Orders`
     FOREIGN KEY (`AdrianId`) REFERENCES `Users` (`AdrianId`)
 );
 
--- Create Nutrients table
 CREATE TABLE `Nutrients`
 (
     `NutrientId`        VARCHAR(36) PRIMARY KEY NOT NULL,
@@ -71,7 +68,6 @@ CREATE TABLE `Nutrients`
     `RecommendedAmount` VARCHAR(50)             NOT NULL
 );
 
--- Create Scans table
 CREATE TABLE `Scans`
 (
     `ScanId`   VARCHAR(36) PRIMARY KEY NOT NULL,
@@ -83,7 +79,6 @@ CREATE TABLE `Scans`
     FOREIGN KEY (`FoodId`) REFERENCES `Foods` (`FoodId`)
 );
 
--- Create FoodCompositions table (junction table)
 CREATE TABLE `FoodCompositions`
 (
     `FoodId`     VARCHAR(36) NOT NULL,
@@ -94,7 +89,6 @@ CREATE TABLE `FoodCompositions`
     FOREIGN KEY (`NutrientId`) REFERENCES `Nutrients` (`NutrientId`)
 );
 
--- Create HealthAnalyses table
 CREATE TABLE `HealthAnalyses`
 (
     `AnalyseId`      VARCHAR(36) PRIMARY KEY NOT NULL,
@@ -105,7 +99,6 @@ CREATE TABLE `HealthAnalyses`
     FOREIGN KEY (`AdrianId`) REFERENCES `Users` (`AdrianId`)
 );
 
--- Create OrderSupplementDetails table (junction table)
 CREATE TABLE `OrderSupplementDetails`
 (
     `OrderId`      VARCHAR(36) NOT NULL,
