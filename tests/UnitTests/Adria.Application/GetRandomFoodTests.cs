@@ -1,11 +1,18 @@
 ﻿using Adria.Application.Scanner;
 using Adria.Domain.Food;
 using UnitTests.Mocks;
+using Xunit.Abstractions;
 
 namespace UnitTests.Adria.Application;
 
 public class GetRandomFoodTests
 {
+    private readonly ITestOutputHelper _testOutputHelper;
+
+    public GetRandomFoodTests(ITestOutputHelper testOutputHelper)
+    {
+        _testOutputHelper = testOutputHelper;
+    }
     [Fact]
     public async Task GetRandomFood_ReturnsAValidFood()
     {
@@ -27,6 +34,9 @@ public class GetRandomFoodTests
         Assert.Contains(result, foods);
         Assert.False(string.IsNullOrWhiteSpace(result.Name));
         Assert.False(string.IsNullOrWhiteSpace(result.Type));
+        
+        _testOutputHelper.WriteLine($"Foodname: {result.Name}");
+
     }
 
 
