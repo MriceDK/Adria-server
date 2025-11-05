@@ -1,6 +1,6 @@
 ﻿namespace Adria.Domain.Subcriptions;
 
-public enum Type
+public enum SubscriptionType
 {
     Basic,
     Standard,

@@ -2,7 +2,7 @@
 
 public interface ISubscriptionRepository
 {
-    Task<Subscription?> ByType(Type type);
+    Task<Subscription?> ById(Guid subscriptionId);
 
     Task Save(Subscription subscription);
 }
