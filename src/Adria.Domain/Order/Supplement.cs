@@ -1,4 +1,4 @@
-﻿namespace Adria.Domain.Supplement;
+﻿namespace Adria.Domain.Order;
 
 public sealed class Supplement
 {
