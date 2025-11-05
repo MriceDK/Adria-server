@@ -1,6 +1,5 @@
 ﻿using Adria.Application.Contracts;
 using Adria.Domain.Subcriptions;
-using Adria.Domain.Users;
 using Microsoft.Extensions.Logging;
 
 namespace Adria.Application.Subscriptions;
