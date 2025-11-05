@@ -45,7 +45,7 @@ public class ScanFoodTests
         _testOutputHelper.WriteLine($"Foodname: {result.FoodName}");
         foreach (var nut in result.Nutrients)
         {
-            _testOutputHelper.WriteLine($"Nutrient: {nut.Type}, Amount: {nut.Amount}, Recommended: {nut.RecommendedAmount}");
+            _testOutputHelper.WriteLine($"Nutrient: {nut.Type}, Amount: {nut.Amount}, Recommended: {nut.RecommendedAmount}, ScanTime: {result.ScanDateTime}");
         }
 
         // Assert
@@ -75,12 +75,12 @@ public async Task ScanFood_WithMultipleFoodsAndNutrients_ReturnsFoodAndAllNutrie
 
     var compositions = new List<FoodComposition>
     {
-        new FoodComposition(food1Id, proteinId, 31.0),
-        new FoodComposition(food1Id, fiberId, 0.5),
+        new(food1Id, proteinId, 31.0),
+        new(food1Id, fiberId, 0.5),
 
-        new FoodComposition(food2Id, proteinId, 2.8),
-        new FoodComposition(food2Id, fiberId, 2.6),
-        new FoodComposition(food2Id, vitaminCId, 89.0)
+        new (food2Id, proteinId, 2.8),
+        new (food2Id, fiberId, 2.6),
+        new (food2Id, vitaminCId, 89.0)
     };
 
     var mockFoodRepo = new MockFoodRepository(new List<Food> { food1, food2 });
@@ -97,11 +97,13 @@ public async Task ScanFood_WithMultipleFoodsAndNutrients_ReturnsFoodAndAllNutrie
 
     // Output
     _testOutputHelper.WriteLine($"Foodname: {result.FoodName}");
-    foreach (var nut in result.Nutrients)
+    foreach (var nutrient in result.Nutrients)
     {
-        _testOutputHelper.WriteLine($"Nutrient: {nut.Type}, Amount: {nut.Amount}, Recommended: {nut.RecommendedAmount}");
+        _testOutputHelper.WriteLine($"Nutrient: {nutrient.Type}, Amount: {nutrient.Amount}, Recommended: {nutrient.RecommendedAmount}");
     }
+    _testOutputHelper.WriteLine($"{result.FoodName}{result.Nutrients.Count}{result.ScanDateTime}{result.ScanId}");
 
+    
     // Assert
     Assert.Contains(result.FoodName, new[] { "Chicken Breast", "Broccoli" });
     Assert.True(result.Nutrients.Count > 0);
