@@ -1,6 +1,5 @@
 ﻿using Adria.Domain.Subcriptions;
 using Adria.Domain.Users;
-using Type = Adria.Domain.Subcriptions.Type;
 
 namespace UnitTests.Adria.Domain;
 
@@ -12,7 +11,7 @@ public sealed class UserTests
         // Arrange
         const string name = "John Doe";
         const string job = "Doctor";
-        var subscription = new Subscription(Type.Basic, 10, "not so much");
+        var subscription = new Subscription(SubscriptionType.Basic, 10, "not so much");
         // Act
         var user = new User(name, job, subscription);
 
@@ -29,7 +28,7 @@ public sealed class UserTests
         // Arrange
         const string name = "John Doe";
         const string job = "Doctor";
-        var subscription = new Subscription(Type.Basic, 10, "not so much");
+        var subscription = new Subscription(SubscriptionType.Basic, 10, "not so much");
         var adrianId = Guid.NewGuid();
         // Act
         var user = new User(name, job, subscription, adrianId);
@@ -50,7 +49,7 @@ public sealed class UserTests
         // Arrange
         string email = "valid@email.com";
         const string job = "Doctor";
-        var subscription = new Subscription(Type.Basic, 10, "not so much");
+        var subscription = new Subscription(SubscriptionType.Basic, 10, "not so much");
 
         // Act & Assert
         Assert.Throws<ArgumentException>(() => new User(invalidName, job, subscription));
@@ -66,7 +65,7 @@ public sealed class UserTests
         // Arrange
         const string name = "John Doe";
         const string job = "Doctor";
-        var subscription = new Subscription(Type.Basic, 10, "not so much");
+        var subscription = new Subscription(SubscriptionType.Basic, 10, "not so much");
 
         // Act & Assert
         Assert.Throws<ArgumentException>(() => new User(name, invalidJob, subscription));

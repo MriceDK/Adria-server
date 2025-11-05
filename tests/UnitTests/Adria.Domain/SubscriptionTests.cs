@@ -1,5 +1,4 @@
 ﻿using Adria.Domain.Subcriptions;
-using Type = Adria.Domain.Subcriptions.Type;
 
 namespace UnitTests.Adria.Domain;
 
@@ -9,7 +8,7 @@ public sealed class SubscriptionTests
     public void Constructor_WithValidParameters_CreatesSubscription()
     {
         // Arrange
-        var type = Type.Basic;
+        var type = SubscriptionType.Basic;
         const double price = 9.99;
         const string advantages = "Basic advantages";
 
@@ -17,7 +16,7 @@ public sealed class SubscriptionTests
         var subscription = new Subscription(type, price, advantages);
 
         // Assert
-        Assert.Equal(type, subscription.Type);
+        Assert.Equal(type, subscription.SubscriptionType);
         Assert.Equal(price, subscription.PricePerMonth);
         Assert.Equal(advantages, subscription.Advantages);
         Assert.NotEqual(Guid.Empty, subscription.Id);
@@ -27,7 +26,7 @@ public sealed class SubscriptionTests
     public void Constructor_WithValidParametersAndId_CreatesSubscription()
     {
         // Arrange
-        var type = Type.Premium;
+        var type = SubscriptionType.Premium;
         const double price = 19.99;
         const string advantages = "Premium advantages";
         var subscriptionId = Guid.NewGuid();
@@ -36,7 +35,7 @@ public sealed class SubscriptionTests
         var subscription = new Subscription(type, price, advantages, subscriptionId);
 
         // Assert
-        Assert.Equal(type, subscription.Type);
+        Assert.Equal(type, subscription.SubscriptionType);
         Assert.Equal(price, subscription.PricePerMonth);
         Assert.Equal(advantages, subscription.Advantages);
         Assert.Equal(subscriptionId, subscription.Id);
@@ -49,7 +48,7 @@ public sealed class SubscriptionTests
     public void Constructor_WithInvalidAdvantages_ThrowsArgumentException(string invalidAdvantages)
     {
         // Arrange
-        var type = Type.Basic;
+        var type = SubscriptionType.Basic;
         const double price = 10;
 
         // Act & Assert
@@ -63,19 +62,19 @@ public sealed class SubscriptionTests
     public void Properties_CanBeSet_AfterConstruction()
     {
         // Arrange
-        var subscription = new Subscription(Type.Basic, 10, "Initial advantages");
+        var subscription = new Subscription(SubscriptionType.Basic, 10, "Initial advantages");
 
-        var newType = Type.Premium;
+        var newType = SubscriptionType.Premium;
         const double newPrice = 25.50;
         const string newAdvantages = "New advantages";
 
         // Act
-        subscription.Type = newType;
+        subscription.SubscriptionType = newType;
         subscription.PricePerMonth = newPrice;
         subscription.Advantages = newAdvantages;
 
         // Assert
-        Assert.Equal(newType, subscription.Type);
+        Assert.Equal(newType, subscription.SubscriptionType);
         Assert.Equal(newPrice, subscription.PricePerMonth);
         Assert.Equal(newAdvantages, subscription.Advantages);
     }
@@ -87,7 +86,7 @@ public sealed class SubscriptionTests
     public void Advantages_Setter_AllowsInvalidValues_AfterConstruction(string invalidAdvantages)
     {
         // Arrange
-        var subscription = new Subscription(Type.Basic, 10, "Valid advantages");
+        var subscription = new Subscription(SubscriptionType.Basic, 10, "Valid advantages");
 
         // Act
         // Note: The validation is only in the constructor, not the setter.

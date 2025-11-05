@@ -2,18 +2,18 @@
 
 public sealed class Subscription
 {
-    public Subscription(Type type, double pricePerMonth, string advantages, Guid subscriptionId = default)
+    public Subscription(SubscriptionType subscriptionType, double pricePerMonth, string advantages, Guid subscriptionId = default)
     {
         EnsureAdvantagesIsNotEmpty(advantages);
         
         Id = subscriptionId == Guid.Empty ? Guid.NewGuid() : subscriptionId;
-        Type = type;
+        SubscriptionType = subscriptionType;
         PricePerMonth = pricePerMonth;
         Advantages = advantages;
     }
 
     public Guid Id { get; private init; }
-    public Type Type { get; set; }
+    public SubscriptionType SubscriptionType { get; set; }
     public double PricePerMonth { get; set; }
     public string Advantages { get; set; }
 
