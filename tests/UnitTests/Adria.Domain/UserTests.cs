@@ -19,7 +19,7 @@ public sealed class UserTests
         // Assert
         Assert.Equal(name, user.Name);
         Assert.Equal(job, user.Job);
-        Assert.Equal(subscription.SubscriptionId, user.Subscription.SubscriptionId);
+        Assert.Equal(subscription.Id, user.Subscription.Id);
         Assert.NotEqual(Guid.Empty, user.AdrianId);
     }
 
@@ -37,7 +37,7 @@ public sealed class UserTests
         // Assert
         Assert.Equal(name, user.Name);
         Assert.Equal(job, user.Job);
-        Assert.Equal(subscription.SubscriptionId, user.Subscription.SubscriptionId);
+        Assert.Equal(subscription.Id, user.Subscription.Id);
         Assert.Equal(adrianId, user.AdrianId);
     }
 

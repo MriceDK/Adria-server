@@ -20,7 +20,7 @@ public sealed class SubscriptionTests
         Assert.Equal(type, subscription.Type);
         Assert.Equal(price, subscription.PricePerMonth);
         Assert.Equal(advantages, subscription.Advantages);
-        Assert.NotEqual(Guid.Empty, subscription.SubscriptionId);
+        Assert.NotEqual(Guid.Empty, subscription.Id);
     }
 
     [Fact]
@@ -39,7 +39,7 @@ public sealed class SubscriptionTests
         Assert.Equal(type, subscription.Type);
         Assert.Equal(price, subscription.PricePerMonth);
         Assert.Equal(advantages, subscription.Advantages);
-        Assert.Equal(subscriptionId, subscription.SubscriptionId);
+        Assert.Equal(subscriptionId, subscription.Id);
     }
 
     [Theory]
