@@ -2,3 +2,18 @@
 # In this case, we only need a database (mysql) service to run this .NET 8 application on localhost.
 
 # Create a MySQL service using the official MySQL image from Docker Hub.
+services:
+  nutriscan_db.adria:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: scan
+      MYSQL_DATABASE: nutriscan
+      MYSQL_USER: nutri
+      MYSQL_PASSWORD: scan
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+volumes:
+  mysql_data:
