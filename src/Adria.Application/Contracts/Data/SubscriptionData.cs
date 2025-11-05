@@ -1,8 +1,10 @@
-﻿namespace Adria.Application.Contracts.Data;
+﻿using Adria.Domain.Subcriptions;
+
+namespace Adria.Application.Contracts.Data;
 
 public sealed record SubscriptionData(
     Guid SubscriptionId,
-    Type Type,
+    SubscriptionType Type,
     double PricePerMonth,
     string Advantages
 );
