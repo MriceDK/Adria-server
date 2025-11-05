@@ -1,6 +1,6 @@
 ﻿namespace Adria.Domain.Order;
 
-public interface ISupplement
+public interface ISupplementRepository
 {
     Task<Supplement?> BySupplementId(Guid supplementId);
     Task<Supplement?> ByName(string name);

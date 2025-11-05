@@ -1,6 +1,6 @@
 ﻿namespace Adria.Domain.Order;
 
-public interface IOrderSupplementDetails
+public interface IOrderSupplementDetailsRepository
 {
     Task<OrderSupplementDetails?> ByOrderId(Guid orderId);
     Task<IReadOnlyCollection<OrderSupplementDetails>> BySupplementId(Guid supplementId);
