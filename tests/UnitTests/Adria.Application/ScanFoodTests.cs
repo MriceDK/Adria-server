@@ -1,0 +1,112 @@
+﻿using Adria.Application.Contracts.Data;
+using Adria.Application.Scanner;
+using Adria.Domain.Food;
+using UnitTests.Mocks;
+using Xunit.Abstractions;
+
+namespace UnitTests.Adria.Application;
+
+public class ScanFoodTests
+{
+    private readonly ITestOutputHelper _testOutputHelper;
+
+    public ScanFoodTests(ITestOutputHelper testOutputHelper)
+    {
+        _testOutputHelper = testOutputHelper;
+    }
+
+    [Fact]
+    public async Task ScanFood_UserRequestsScan_FoodAndNutrientsAreLoaded()
+    {
+        // Arrange
+        Guid adrianId = Guid.NewGuid();
+        Guid foodId = Guid.NewGuid();
+        Guid nutrientId = Guid.NewGuid();
+        string foodName = "Chicken Breast";
+        string foodType = "Poultry";
+        bool foodEdible = true;
+
+        var food = new Food(foodId, foodName, foodType, foodEdible);
+        var nutrient = new Nutrient(nutrientId, "Protein", 50.0);
+        var composition = new FoodComposition(foodId, nutrientId, 31.0);
+        var mockFoodRepo = new MockFoodRepository(new List<Food> { food });
+        var mockNutrientRepo = new MockNutrientRepository(new List<Nutrient> { nutrient });
+        var mockFoodCompRepo = new MockFoodCompositionRepository(new List<FoodComposition> { composition });
+        var mockScanRepo = new MockScanRepository();
+
+        var getRandomFood = new GetRandomFood(mockFoodRepo);
+        var getFoodNutrients = new GetFoodNutrients(mockFoodCompRepo, mockNutrientRepo);
+        var scanFoodUseCase = new ScanFood(getRandomFood, getFoodNutrients, mockScanRepo);
+
+        // Act
+        ScannedFoodResult result = await scanFoodUseCase.Execute(adrianId);
+
+        // Output
+        _testOutputHelper.WriteLine($"Foodname: {result.FoodName}");
+        foreach (var nut in result.Nutrients)
+        {
+            _testOutputHelper.WriteLine($"Nutrient: {nut.Type}, Amount: {nut.Amount}, Recommended: {nut.RecommendedAmount}");
+        }
+
+        // Assert
+        Assert.Equal(foodName, result.FoodName);
+        Assert.Single(result.Nutrients);
+    }
+    
+    [Fact]
+public async Task ScanFood_WithMultipleFoodsAndNutrients_ReturnsFoodAndAllNutrients()
+{
+    // Arrange
+    Guid adrianId = Guid.NewGuid();
+
+    Guid food1Id = Guid.NewGuid();
+    var food1 = new Food(food1Id, "Chicken Breast", "Poultry", true);
+
+    Guid food2Id = Guid.NewGuid();
+    var food2 = new Food(food2Id, "Broccoli", "Vegetable", true);
+
+    Guid proteinId = Guid.NewGuid();
+    Guid fiberId = Guid.NewGuid();
+    Guid vitaminCId = Guid.NewGuid();
+
+    var protein = new Nutrient(proteinId, "Protein", 50.0);
+    var fiber = new Nutrient(fiberId, "Fiber", 25.0);
+    var vitaminC = new Nutrient(vitaminCId, "Vitamin C", 90.0);
+
+    var compositions = new List<FoodComposition>
+    {
+        new FoodComposition(food1Id, proteinId, 31.0),
+        new FoodComposition(food1Id, fiberId, 0.5),
+
+        new FoodComposition(food2Id, proteinId, 2.8),
+        new FoodComposition(food2Id, fiberId, 2.6),
+        new FoodComposition(food2Id, vitaminCId, 89.0)
+    };
+
+    var mockFoodRepo = new MockFoodRepository(new List<Food> { food1, food2 });
+    var mockNutrientRepo = new MockNutrientRepository(new List<Nutrient> { protein, fiber, vitaminC });
+    var mockFoodCompRepo = new MockFoodCompositionRepository(compositions);
+    var mockScanRepo = new MockScanRepository();
+
+    var getRandomFood = new GetRandomFood(mockFoodRepo);
+    var getFoodNutrients = new GetFoodNutrients(mockFoodCompRepo, mockNutrientRepo);
+    var scanFoodUseCase = new ScanFood(getRandomFood, getFoodNutrients, mockScanRepo);
+
+    // Act
+    ScannedFoodResult result = await scanFoodUseCase.Execute(adrianId);
+
+    // Output
+    _testOutputHelper.WriteLine($"Foodname: {result.FoodName}");
+    foreach (var nut in result.Nutrients)
+    {
+        _testOutputHelper.WriteLine($"Nutrient: {nut.Type}, Amount: {nut.Amount}, Recommended: {nut.RecommendedAmount}");
+    }
+
+    // Assert
+    Assert.Contains(result.FoodName, new[] { "Chicken Breast", "Broccoli" });
+    Assert.True(result.Nutrients.Count > 0);
+
+}
+
+
+}
