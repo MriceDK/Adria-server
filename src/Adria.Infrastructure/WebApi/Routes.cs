@@ -47,11 +47,6 @@ public static class Routes
             .WithName(nameof(SearchAllSubscriptionsController))
             .WithMetadata(new ProducesAttribute(APPLICATION_JSON))
             .WithOpenApi();
-        subscriptionRoutes
-            .MapPost("/", CreateSubscriptionController.Invoke)
-            .WithDescription("Create a new user.")
-            .WithName(nameof(CreateSubscriptionController))
-            .WithMetadata(new ConsumesAttribute(APPLICATION_JSON))
-            .WithOpenApi();
+   
     }
 }

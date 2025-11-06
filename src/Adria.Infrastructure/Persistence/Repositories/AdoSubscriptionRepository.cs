@@ -10,8 +10,8 @@ public class AdoSubscriptionRepository: AbstractAdoRepository, ISubscriptionRepo
   private readonly ILogger<AdoSubscriptionRepository> _logger;
     private static readonly string TABLE_SUBSCRIPTIONS = "subscriptions";
     private static readonly string COL_ID = "id";
-    private static readonly string COL_SUBSCRIPTION_TYPE = "subscription_type";
-    private static readonly string COL_PRICE_PER_MONTH = "price_per_month";
+    private static readonly string COL_SUBSCRIPTION_TYPE = "type";
+    private static readonly string COL_PRICE_PER_MONTH = "pricePerMonth";
     private static readonly string COL_ADVANTAGES = "advantages";
     
     private static readonly string INSERT_SUBSCRIPTION = $@"
