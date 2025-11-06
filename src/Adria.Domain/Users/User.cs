@@ -9,13 +9,13 @@ public sealed class User
         EnsureNameIsNotEmpty(name);
         EnsureJobIsNotEmpty(job);
 
-        AdrianId = adrianId == Guid.Empty ? Guid.NewGuid() : adrianId;
+        AdriaId = adrianId == Guid.Empty ? Guid.NewGuid() : adrianId;
         Name = name;
         Job = job;
         Subscription = subscription;
     }
 
-    public Guid AdrianId { get; private init; }
+    public Guid AdriaId { get; private init; }
     public string Name { get; set; }
     public string Job { get; set; }
     public Subscription Subscription { get; set; }
