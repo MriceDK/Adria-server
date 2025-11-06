@@ -3,7 +3,7 @@
 namespace Adria.Application.Contracts.Data;
 
 public sealed record UserData(
- Guid AdrianId,
+ Guid AdriaId,
  string Name ,
  string Job ,
  Subscription Subscription 
