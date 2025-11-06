@@ -11,24 +11,16 @@ public sealed record CreateOrderInput(
     double TotalPrice
 );
 
-public sealed class CreateOrder : IUseCase<CreateOrderInput, Task<Guid>>
+public sealed class CreateOrder(IOrderRepository orderRepository, ILogger<CreateOrder> logger)
+    : IUseCase<CreateOrderInput, Task<Guid>>
 {
-    private readonly IOrderRepository _orderRepository;
-    private readonly ILogger<CreateOrder> _logger;
-
-    public CreateOrder(IOrderRepository orderRepository, ILogger<CreateOrder> logger)
-    {
-        _orderRepository = orderRepository;
-        _logger = logger;
-    }
-
     public async Task<Guid> Execute(CreateOrderInput input)
     {
         Domain.Order.Order order = new(input.OrderId, input.AdrianId, input.Date, input.TotalPrice);
 
-        await _orderRepository.Save(order);
+        await orderRepository.Save(order);
 
-        _logger.LogInformation(
+        logger.LogInformation(
             "New order created with ID {OrderId}, AdrianId: {AdrianId}, Date: {Date}, TotalPrice: {TotalPrice}",
             order.OrderId,
             order.AdrianId,

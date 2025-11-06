@@ -29,4 +29,8 @@
     <ProjectReference Include="..\..\src\Adria.Infrastructure\Adria.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Adria.Application\Order\" />
+  </ItemGroup>
+
 </Project>
