@@ -15,3 +15,8 @@ public interface IOrderByIdQuery
 {
     Task<OrderData?> Fetch(Guid orderId);
 }
+
+public interface IOrderByUserIdQuery
+{
+    Task<OrderData?> Fetch(Guid adrianId);
+}
