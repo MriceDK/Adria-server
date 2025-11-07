@@ -25,6 +25,7 @@ public static class Routes
     public static WebApplication MapRoutes(this WebApplication app)
     {
         MapSubscriptionRoutes(app);
+        MapUserRoutes(app);
         return app;
     }
 
@@ -47,6 +48,35 @@ public static class Routes
             .WithName(nameof(SearchAllSubscriptionsController))
             .WithMetadata(new ProducesAttribute(APPLICATION_JSON))
             .WithOpenApi();
-   
+    }
+
+    private static void MapUserRoutes(WebApplication app)
+    {
+        var userRoutes = app
+            .MapGroup("/api/users")
+            .WithTags("Users")
+            .WithDescription("All endpoints related to Taskly users.")
+            .WithOpenApi();
+
+        userRoutes
+            .MapPost("/", CreateUserController.Invoke)
+            .WithDescription("Create a new user.")
+            .WithName(nameof(CreateUserController))
+            .WithMetadata(new ConsumesAttribute(APPLICATION_JSON))
+            .WithOpenApi();
+
+        userRoutes
+            .MapGet("/{userId}", SearchUserByIdController.Invoke)
+            .WithDescription("Get a user by their ID.")
+            .WithName(nameof(SearchUserByIdController))
+            .WithMetadata(new ProducesAttribute(APPLICATION_JSON))
+            .WithOpenApi();
+
+        userRoutes
+            .MapGet("/", SearchAllUsersController.Invoke)
+            .WithDescription("Get all users .")
+            .WithName(nameof(SearchAllUsersController))
+            .WithMetadata(new ProducesAttribute(APPLICATION_JSON))
+            .WithOpenApi();
     }
 }
