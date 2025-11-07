@@ -17,7 +17,7 @@ public sealed class SearchUserByIdTests
             userId, 
             "John Doe", 
             "Software Developer", 
-            new Subscription(SubscriptionType.Basic,10,"basic")
+            nameof(SubscriptionType.Basic)
         );
         
         var mockQuery = new MockUserByIdQuery();
@@ -35,7 +35,7 @@ public sealed class SearchUserByIdTests
         Assert.Equal(userId, result.AdriaId);
         Assert.Equal("John Doe", result.Name);
         Assert.Equal("Software Developer", result.Job);
-        Assert.Equal(SubscriptionType.Basic, result.Subscription.SubscriptionType);
+        Assert.Equal(nameof(SubscriptionType.Basic), result.Subscription);
         Assert.Single(mockLogger.LoggedMessages);
         Assert.Contains($"Fetching user with ID {userId}", mockLogger.LoggedMessages[0]);
     }
