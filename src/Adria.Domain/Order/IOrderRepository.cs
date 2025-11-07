@@ -2,7 +2,7 @@
 
 public interface IOrderRepository
 {
-    Task<Order> ByOrderId(Guid orderId);
+    Task<Order?> ById(Guid orderId);
     Task<IReadOnlyCollection<Order>> ByUserId(Guid adrianId);
     Task<IReadOnlyCollection<Order>> GetAll();
     Task Save(Order order);
