@@ -2,9 +2,9 @@
 
 public interface IFood
 {
-   Task<Food?> ById(string foodId);
    Task<IReadOnlyCollection<Food>> ByType(string type);
    Task<IReadOnlyCollection<Food>> GetAll();
-   Task Save(Food food);
    Task Remove(Food food);
+   Task<IReadOnlyCollection<Guid>> GetFoodIdByName(string name);
+   Task<Guid> AddFood(string name, string type, bool edible);
 }
