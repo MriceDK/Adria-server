@@ -4,16 +4,16 @@ HINT: start with dropping tables if they exist
 See example server for reference
 */
 
-DROP TABLE IF EXISTS `OrderSupplementDetails`;
-DROP TABLE IF EXISTS `HealthAnalyses`;
-DROP TABLE IF EXISTS `FoodCompositions`;
-DROP TABLE IF EXISTS `Nutrients`;
-DROP TABLE IF EXISTS `Scans`;
-DROP TABLE IF EXISTS `Orders`;
-DROP TABLE IF EXISTS `Supplements`;
-DROP TABLE IF EXISTS `Foods`;
-DROP TABLE IF EXISTS `Users`;
-DROP TABLE IF EXISTS `Subscriptions`;
+DROP TABLE IF EXISTS `orderSupplementDetails`;
+DROP TABLE IF EXISTS `healthAnalyses`;
+DROP TABLE IF EXISTS `foodCompositions`;
+DROP TABLE IF EXISTS `nutrients`;
+DROP TABLE IF EXISTS `scans`;
+DROP TABLE IF EXISTS `orders`;
+DROP TABLE IF EXISTS `supplements`;
+DROP TABLE IF EXISTS `foods`;
+DROP TABLE IF EXISTS `users`;
+DROP TABLE IF EXISTS `subscriptions`;
 
 
 CREATE TABLE subscriptions
@@ -25,7 +25,7 @@ CREATE TABLE subscriptions
 );
 
 
-CREATE TABLE `Users`
+CREATE TABLE users
 (
     `AdrianId`       VARCHAR(36) PRIMARY KEY NOT NULL,
     `Name`           VARCHAR(255)            NOT NULL,
@@ -43,7 +43,7 @@ CREATE TABLE foods
     `Edible` BOOLEAN                 NOT NULL DEFAULT TRUE
 );
 
-CREATE TABLE `Supplements`
+CREATE TABLE supplements
 (
     `SupplementId` VARCHAR(36) PRIMARY KEY NOT NULL,
     `Name`         VARCHAR(255)            NOT NULL,
@@ -58,7 +58,7 @@ CREATE TABLE orders
     `AdrianId`   VARCHAR(36)             NOT NULL,
     `Date`       DATETIME                NOT NULL,
     `TotalPrice` INT                     NOT NULL,
-    FOREIGN KEY (`AdrianId`) REFERENCES `Users` (`AdrianId`)
+    FOREIGN KEY (`AdrianId`) REFERENCES users (`AdrianId`)
 );
 
 CREATE TABLE nutrients
@@ -75,7 +75,7 @@ CREATE TABLE scans
     `DateTime` DATETIME                NOT NULL,
     `Result`   TEXT,
     `FoodId`   VARCHAR(36)             NOT NULL,
-    FOREIGN KEY (`AdrianId`) REFERENCES `Users` (`AdrianId`),
+    FOREIGN KEY (`AdrianId`) REFERENCES users (`AdrianId`),
     FOREIGN KEY (`FoodId`) REFERENCES foods (`FoodId`)
 );
 
@@ -96,7 +96,7 @@ CREATE TABLE healthAnalyses
     `DateTime`       DATETIME                NOT NULL,
     `Status`         VARCHAR(100)            NOT NULL,
     `Recommendation` TEXT,
-    FOREIGN KEY (`AdrianId`) REFERENCES `Users` (`AdrianId`)
+    FOREIGN KEY (`AdrianId`) REFERENCES users (`AdrianId`)
 );
 
 CREATE TABLE orderSupplementDetails
@@ -106,7 +106,7 @@ CREATE TABLE orderSupplementDetails
     `Amount`       VARCHAR(50) NOT NULL,
     PRIMARY KEY (`OrderId`, `SupplementId`),
     FOREIGN KEY (`OrderId`) REFERENCES orders (`OrderId`),
-    FOREIGN KEY (`SupplementId`) REFERENCES `Supplements` (`SupplementId`)
+    FOREIGN KEY (`SupplementId`) REFERENCES supplements (`SupplementId`)
 );
 
 /* ========== SEED DATA ========== */
@@ -123,21 +123,21 @@ INSERT INTO subscriptions (id, `Type`, `PricePerMonth`, `Advantages`)
 VALUES ('c3d4e5f6-a7b8-4c5d-0e1f-3a4b5c6d7e8f', 'Free', 0.00, 'Limited food database access, 5 scans per month');
 
 -- Insert Users
-INSERT INTO `Users` (`AdrianId`, `Name`, `Job`, `SubscriptionId`)
+INSERT INTO users (`AdrianId`, `Name`, `Job`, `SubscriptionId`)
 VALUES ('d4e5f6a7-b8c9-4d5e-1f2a-4b5c6d7e8f9a', 'Adrian Martinez', 'Software Engineer',
         'b2c3d4e5-f6a7-4b5c-9d0e-2f3a4b5c6d7e');
 
-INSERT INTO `Users` (`AdrianId`, `Name`, `Job`, `SubscriptionId`)
+INSERT INTO users (`AdrianId`, `Name`, `Job`, `SubscriptionId`)
 VALUES ('e5f6a7b8-c9d0-4e5f-2a3b-5c6d7e8f9a0b', 'Sarah Johnson', 'Fitness Trainer',
         'b2c3d4e5-f6a7-4b5c-9d0e-2f3a4b5c6d7e');
 
-INSERT INTO `Users` (`AdrianId`, `Name`, `Job`, `SubscriptionId`)
+INSERT INTO users (`AdrianId`, `Name`, `Job`, `SubscriptionId`)
 VALUES ('f6a7b8c9-d0e1-4f5a-3b4c-6d7e8f9a0b1c', 'Michael Chen', 'Student', 'c3d4e5f6-a7b8-4c5d-0e1f-3a4b5c6d7e8f');
 
-INSERT INTO `Users` (`AdrianId`, `Name`, `Job`, `SubscriptionId`)
+INSERT INTO users (`AdrianId`, `Name`, `Job`, `SubscriptionId`)
 VALUES ('a7b8c9d0-e1f2-4a5b-4c5d-7e8f9a0b1c2d', 'Emma Wilson', 'Nutritionist', 'b2c3d4e5-f6a7-4b5c-9d0e-2f3a4b5c6d7e');
 
-INSERT INTO `Users` (`AdrianId`, `Name`, `Job`, `SubscriptionId`)
+INSERT INTO users (`AdrianId`, `Name`, `Job`, `SubscriptionId`)
 VALUES ('b8c9d0e1-f2a3-4b5c-5d6e-8f9a0b1c2d3e', 'David Brown', 'Chef', 'a1b2c3d4-e5f6-4a5b-8c9d-1e2f3a4b5c6d');
 
 -- Insert Nutrients
@@ -268,28 +268,28 @@ INSERT INTO foodCompositions (`FoodId`, `NutrientId`, `Amount`)
 VALUES ('a5b6c7d8-e9f0-4a5b-2c3d-5e6f7a8b9c0d', 'a3b4c5d6-e7f8-4a5b-0c1d-3e4f5a6b7c8d', '269mg per 100g');
 
 -- Insert Supplements
-INSERT INTO `Supplements` (`SupplementId`, `Name`, `Type`, `Price`, `Stock`)
+INSERT INTO supplements (`SupplementId`, `Name`, `Type`, `Price`, `Stock`)
 VALUES ('c7d8e9f0-a1b2-4c5d-4e5f-7a8b9c0d1e2f', 'Whey Protein Powder', 'Protein', 29.99, 150);
 
-INSERT INTO `Supplements` (`SupplementId`, `Name`, `Type`, `Price`, `Stock`)
+INSERT INTO supplements (`SupplementId`, `Name`, `Type`, `Price`, `Stock`)
 VALUES ('d8e9f0a1-b2c3-4d5e-5f6a-8b9c0d1e2f3a', 'Multivitamin Complex', 'Vitamins', 19.99, 200);
 
-INSERT INTO `Supplements` (`SupplementId`, `Name`, `Type`, `Price`, `Stock`)
+INSERT INTO supplements (`SupplementId`, `Name`, `Type`, `Price`, `Stock`)
 VALUES ('e9f0a1b2-c3d4-4e5f-6a7b-9c0d1e2f3a4b', 'Omega-3 Fish Oil', 'Fatty Acids', 24.99, 100);
 
-INSERT INTO `Supplements` (`SupplementId`, `Name`, `Type`, `Price`, `Stock`)
+INSERT INTO supplements (`SupplementId`, `Name`, `Type`, `Price`, `Stock`)
 VALUES ('f0a1b2c3-d4e5-4f5a-7b8c-0d1e2f3a4b5c', 'Vitamin D3', 'Vitamin', 12.99, 175);
 
-INSERT INTO `Supplements` (`SupplementId`, `Name`, `Type`, `Price`, `Stock`)
+INSERT INTO supplements (`SupplementId`, `Name`, `Type`, `Price`, `Stock`)
 VALUES ('a1b2c3d4-e5f6-4a5b-8c9d-1e2f3a4b5c6d', 'Calcium + Magnesium', 'Minerals', 15.99, 80);
 
-INSERT INTO `Supplements` (`SupplementId`, `Name`, `Type`, `Price`, `Stock`)
+INSERT INTO supplements (`SupplementId`, `Name`, `Type`, `Price`, `Stock`)
 VALUES ('b2c3d4e5-f6a7-4b5c-9d0e-2f3a4b5c6d7e', 'Probiotic Complex', 'Digestive', 22.99, 60);
 
-INSERT INTO `Supplements` (`SupplementId`, `Name`, `Type`, `Price`, `Stock`)
+INSERT INTO supplements (`SupplementId`, `Name`, `Type`, `Price`, `Stock`)
 VALUES ('c3d4e5f6-a7b8-4c5d-0e1f-3a4b5c6d7e8f', 'Iron Supplement', 'Mineral', 9.99, 120);
 
-INSERT INTO `Supplements` (`SupplementId`, `Name`, `Type`, `Price`, `Stock`)
+INSERT INTO supplements (`SupplementId`, `Name`, `Type`, `Price`, `Stock`)
 VALUES ('d4e5f6a7-b8c9-4d5e-1f2a-4b5c6d7e8f9a', 'BCAA Powder', 'Amino Acids', 27.99, 0);
 
 -- Insert Orders
