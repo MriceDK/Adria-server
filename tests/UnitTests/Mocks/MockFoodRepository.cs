@@ -39,4 +39,13 @@ public class MockFoodRepository : IFood
 
     public Task Save(Food food) => Task.CompletedTask;
     public Task Remove(Food food) => Task.CompletedTask;
+    public Task<IReadOnlyCollection<Guid>> GetFoodIdByName(string name)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<Guid> AddFood(string name, string type, bool edible)
+    {
+        throw new NotImplementedException();
+    }
 }

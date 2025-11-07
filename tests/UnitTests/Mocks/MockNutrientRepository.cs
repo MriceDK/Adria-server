@@ -23,4 +23,14 @@ public class MockNutrientRepository:INutrient
 
     public Task Save(Nutrient nutrient) => Task.CompletedTask;
     public Task Remove(Nutrient nutrient) => Task.CompletedTask;
+
+    public Task<IReadOnlyCollection<Nutrient>> GetAllNutrients()
+    {
+        return Task.FromResult<IReadOnlyCollection<Nutrient>>(_nutrients);
+    }
+
+    public Task<IReadOnlyCollection<Guid>> GetNutrientIdBytype(string type)
+    {
+        throw new NotImplementedException();
+    }
 }
