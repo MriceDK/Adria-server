@@ -9,7 +9,7 @@ namespace Adria.Infrastructure.Persistence.Queries;
 public class AllSubscriptionsQuery : IAllSubscriptionsQuery
 {
     private static readonly string QRY = @"
-        SELECT id, subscription_type, price_per_month, advantages
+        SELECT id, type, pricePerMonth, advantages
         FROM subscriptions
     ";
 
@@ -50,8 +50,8 @@ public class AllSubscriptionsQuery : IAllSubscriptionsQuery
         while (await reader.ReadAsync())
         {
             var idOrd = reader.GetOrdinal("id");
-            var typeOrd = reader.GetOrdinal("subscription_type");
-            var priceOrd = reader.GetOrdinal("price_per_month");
+            var typeOrd = reader.GetOrdinal("type");
+            var priceOrd = reader.GetOrdinal("pricePerMonth");
             var advOrd = reader.GetOrdinal("advantages");
 
             var id = reader.GetGuid(idOrd);
