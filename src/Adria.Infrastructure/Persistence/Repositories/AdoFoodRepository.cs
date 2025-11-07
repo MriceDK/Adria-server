@@ -34,20 +34,55 @@ public class AdoFoodRepository : AbstractAdoRepository, IFood
 
         return foods;
     }
-
     
-    public async Task<Food?> ById(string foodId)
-        => throw new NotImplementedException();
-
     public async Task<IReadOnlyCollection<Food>> ByType(string type)
         => throw new NotImplementedException();
     
 
-    public async Task Save(Food food)
-        => throw new NotImplementedException();
-
     public async Task Remove(Food food)
         => throw new NotImplementedException();
+
+    public async Task<IReadOnlyCollection<Guid>> GetFoodIdByName(string name)
+    {
+        var ids = new List<Guid>();
+
+        const string query = "SELECT FoodId FROM Foods WHERE Name = @Name LIMIT 1;";
+
+        using var connection = _factory.CreateConnection();
+        connection.ConnectionString = _connectionString;
+        await connection.OpenAsync();
+
+        using var command = connection.CreateCommand();
+        command.CommandText = query;
+
+        var param = command.CreateParameter();
+        param.ParameterName = "@Name";
+        param.Value = name;
+        command.Parameters.Add(param);
+
+        using var reader = await command.ExecuteReaderAsync();
+        if (await reader.ReadAsync())
+        {
+            ids.Add(reader.GetGuid(reader.GetOrdinal("FoodId")));
+        }
+
+        return ids;
+    }
     
-    
+    public async Task<Guid> AddFood(string name, string type, bool edible)
+    {
+        var newId = Guid.NewGuid();
+        const string query = "INSERT INTO Foods (FoodId, Name, Type, Edible) VALUES (@Id, @Name, @Type, @Edible);";
+        using var connection = _factory.CreateConnection();
+        connection.ConnectionString = _connectionString;
+        await connection.OpenAsync();
+        using var command = connection.CreateCommand();
+        command.CommandText = query;
+        command.Parameters.Add(CreateParameter("@Id", newId.ToString()));
+        command.Parameters.Add(CreateParameter("@Name", name));
+        command.Parameters.Add(CreateParameter("@Type", type));
+        command.Parameters.Add(CreateParameter("@Edible", edible));
+        await command.ExecuteNonQueryAsync();
+        return newId;
+    }
 }
