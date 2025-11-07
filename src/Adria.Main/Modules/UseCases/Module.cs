@@ -1,9 +1,18 @@
+using Adria.Application.Contracts;
+using Adria.Application.Contracts.Data;
+using Adria.Application.Subscriptions;
+using Adria.Infrastructure.Persistence.Queries;
+
 namespace Adria.Main.Modules.UseCases;
 
 public static class UseCases
 {
     public static IServiceCollection AddUseCases(this IServiceCollection services)
     {
-        return services;
+        return services
+                .AddScoped<IUseCase<CreateSubscriptionInput, Task<Guid>>, CreateSubscription>()
+                .AddScoped<IUseCase<Task<IReadOnlyCollection<SubscriptionData>>>, SearchAllSubscriptions>()
+                .AddScoped<IUseCase<SearchSubscriptionByIdInput, Task<SubscriptionData>>, SearchSubscriptionById>()
+            ;
     }
 }

@@ -1,14 +1,22 @@
 using System.Data.Common;
+using Adria.Application.Contracts;
+using Adria.Domain.Subcriptions;
+using Adria.Infrastructure.Persistence.Queries;
+using Adria.Infrastructure.Persistence.Repositories;
 
 namespace Adria.Main.Modules.Persistence;
 
 public static class PersistenceModule
 {
+    private static string _connectionString = string.Empty;
+
     public static IServiceCollection AddPersistenceModule(
         this IServiceCollection services,
         IConfiguration configuration
     )
     {
+        
+        _connectionString = configuration["Persistence:ConnectionString"]!;
         return services
             .AddAdoServices(configuration)
             .AddRepositories()
@@ -25,7 +33,15 @@ public static class PersistenceModule
     )
     {
         // Configure repositories here.
-        return services;
+        return services
+            .AddScoped<ISubscriptionRepository, AdoSubscriptionRepository>(serviceProvider =>
+            {
+                return new AdoSubscriptionRepository(
+                    serviceProvider.GetRequiredService<DbProviderFactory>(),
+                    _connectionString,
+                    serviceProvider.GetRequiredService<ILogger<AdoSubscriptionRepository>>()
+                );
+            });
     }
 
     private static IServiceCollection AddQueries(
@@ -33,7 +49,23 @@ public static class PersistenceModule
     )
     {
         // Configure queries here.
-        return services;
+        return services
+            .AddScoped<IAllSubscriptionsQuery, AllSubscriptionsQuery>(serviceProvider =>
+            {
+                return new AllSubscriptionsQuery(
+                    serviceProvider.GetRequiredService<DbProviderFactory>(),
+                    _connectionString,
+                    serviceProvider.GetRequiredService<ILogger<AllSubscriptionsQuery>>()
+                );
+            })
+            .AddScoped<ISubscriptionByIdQuery, SubscriptionByIdQuery>(serviceProvider =>
+            {
+                return new SubscriptionByIdQuery(
+                    serviceProvider.GetRequiredService<DbProviderFactory>(),
+                    _connectionString,
+                    serviceProvider.GetRequiredService<ILogger<SubscriptionByIdQuery>>()
+                );
+            });
     }
 
     private static IServiceCollection AddAdoServices(
@@ -45,12 +77,9 @@ public static class PersistenceModule
 
         DbProviderFactories.RegisterFactory(provider, MySql.Data.MySqlClient.MySqlClientFactory.Instance);
 
-        return services.AddScoped(serviceProvider =>
-        {
-            return DbProviderFactories.GetFactory(provider);
-        });
+        return services.AddScoped(serviceProvider => { return DbProviderFactories.GetFactory(provider); });
     }
-    
+
     private static WebApplication ApplyMigrations(this WebApplication app)
     {
         IServiceProvider serviceProvider = app.Services.CreateScope().ServiceProvider;
