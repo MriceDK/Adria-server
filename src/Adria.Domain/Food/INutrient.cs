@@ -4,6 +4,8 @@ public interface INutrient
 {
     Task<Nutrient?> ById(string nutrientId);
     Task<IReadOnlyCollection<Nutrient>> ByType(string type);
-    Task Save(Nutrient nutrient);
     Task Remove(Nutrient nutrient);
+    Task<IReadOnlyCollection<Nutrient>> GetAllNutrients();
+    
+    Task<IReadOnlyCollection<Guid>> GetNutrientIdBytype(string type);
 }
