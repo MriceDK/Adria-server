@@ -6,5 +6,5 @@ public sealed record UserData(
  Guid AdriaId,
  string Name ,
  string Job ,
- Subscription Subscription 
+ string Subscription 
 );
