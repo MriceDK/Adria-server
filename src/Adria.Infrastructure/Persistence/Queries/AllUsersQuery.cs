@@ -10,7 +10,7 @@ public class AllUsersQuery : IAllUsersQuery
     private static readonly string QRY = @"
         SELECT u.AdrianId, u.Name, u.Job, s.Type AS SubscriptionType
         FROM users u
-        INNER JOIN Subscriptions s ON u.SubscriptionId = s.SubscriptionId
+        INNER JOIN subscriptions s ON u.SubscriptionId = s.id
     ";
 
     private readonly DbProviderFactory _factory;
@@ -53,7 +53,7 @@ public class AllUsersQuery : IAllUsersQuery
             var jobOrd = reader.GetOrdinal("Job");
             var subTypeOrd = reader.GetOrdinal("SubscriptionType");
 
-            var id = Guid.Parse(reader.GetString(idOrd)); // SQL'de VARCHAR(36) olduğu için
+            var id = Guid.Parse(reader.GetString(idOrd)); 
             var name = reader.GetString(nameOrd);
             var job = reader.GetString(jobOrd);
             var subType = reader.GetString(subTypeOrd);

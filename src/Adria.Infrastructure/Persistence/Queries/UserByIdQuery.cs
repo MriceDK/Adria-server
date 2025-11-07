@@ -10,7 +10,7 @@ public class UserByIdQuery : IUserByIdQuery
    private static readonly string QRY = @"
         SELECT u.AdrianId, u.Name, u.Job, s.Type AS SubscriptionType
         FROM users u
-        INNER JOIN Subscriptions s ON u.SubscriptionId = s.SubscriptionId
+        INNER JOIN subscriptions s ON u.SubscriptionId = s.id
         WHERE u.AdrianId = @Id;
     ";
     
