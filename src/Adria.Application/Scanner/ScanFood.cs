@@ -24,7 +24,7 @@ namespace Adria.Application.Scanner
             IReadOnlyCollection<NutrientInfo> nutrients = await _getFoodNutrients.Execute(food.FoodId);
 
             Guid scanId = Guid.NewGuid();
-            DateTime scanDateTime = DateTime.Now;
+            DateTime scanDateTime = DateTime.UtcNow;
 
             Scan scan = new Scan
             (
