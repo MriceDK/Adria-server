@@ -23,7 +23,7 @@ public sealed class SearchOrderByUserId(
 
         return (await orderByUserIdQuery.Fetch(input.AdrianId))
                ?? throw new ElementNotFoundException(
-                   $"Order with ID {input.AdrianId} not found."
+                   $"Orders with user ID {input.AdrianId} not found."
                );
     }
 }
