@@ -5,9 +5,9 @@ See example server for reference
 */
 
 SET FOREIGN_KEY_CHECKS = 0;
-DROP TABLE IF EXISTS `HealthAnalyse`;
-DROP TABLE IF EXISTS `Analyse`;
-DROP TABLE IF EXISTS `BodyStats`;
+DROP TABLE IF EXISTS `healthAnalyse`;
+DROP TABLE IF EXISTS `analyse`;
+DROP TABLE IF EXISTS `bodyStats`;
 DROP TABLE IF EXISTS `orderSupplementDetails`;
 DROP TABLE IF EXISTS `healthAnalyses`;
 DROP TABLE IF EXISTS `foodCompositions`;
@@ -139,7 +139,7 @@ CREATE TABLE `analyse`
     `AnalyseId` VARCHAR(36) PRIMARY KEY NOT NULL,
     `AdrianId`  VARCHAR(36)             NOT NULL,
     `DateTime`  DATETIME                NOT NULL,
-    FOREIGN KEY (`AdrianId`) REFERENCES `Users` (`AdrianId`)
+    FOREIGN KEY (`AdrianId`) REFERENCES `users` (`AdrianId`)
 );
 
 CREATE TABLE `healthAnalyse`
@@ -148,8 +148,8 @@ CREATE TABLE `healthAnalyse`
     `BodyStatId` VARCHAR(36) NOT NULL,
     `Current`    DOUBLE      NOT NULL,
     PRIMARY KEY (`AnalyseId`, `BodyStatId`),
-    FOREIGN KEY (`AnalyseId`) REFERENCES `Analyse` (`AnalyseId`),
-    FOREIGN KEY (`BodyStatId`) REFERENCES `BodyStats` (`BodyStatId`)
+    FOREIGN KEY (`AnalyseId`) REFERENCES `analyse` (`AnalyseId`),
+    FOREIGN KEY (`BodyStatId`) REFERENCES `bodyStats` (`BodyStatId`)
 );
 
 /* ========== SEED DATA ========== */
@@ -387,18 +387,18 @@ INSERT INTO orderSupplementDetails (`OrderId`, `SupplementId`, `Amount`)
 VALUES ('c9d0e1f2-a3b4-4c5d-6e7f-9a0b1c2d3e4f', 'c3d4e5f6-a7b8-4c5d-0e1f-3a4b5c6d7e8f', '1');
 
 
-INSERT INTO `BodyStats` (`BodyStatId`, `Label`, `Unit`, `Goal`)
+INSERT INTO `bodyStats` (`BodyStatId`, `Label`, `Unit`, `Goal`)
 VALUES
     ('bs1-1111-2222-3333-444444444444', 'Body Fat', '%', 12.5),
     ('bs2-1111-2222-3333-444444444444', 'Weight', 'kg', 75.0),
     ('bs3-1111-2222-3333-444444444444', 'Hydration', '%', 100.0),
     ('bs4-1111-2222-3333-444444444444', 'Resting Heart Rate', 'bpm', 60.0);
 
-INSERT INTO `Analyse` (`AnalyseId`, `AdrianId`, `DateTime`)
+INSERT INTO `analyse` (`AnalyseId`, `AdrianId`, `DateTime`)
 VALUES
     ('an1-aaaa-bbbb-cccc-dddddddddddd', 'd4e5f6a7-b8c9-4d5e-1f2a-4b5c6d7e8f9a', '2025-11-18 08:30:00');
 
-INSERT INTO `HealthAnalyse` (`AnalyseId`, `BodyStatId`, `Current`)
+INSERT INTO `healthAnalyse` (`AnalyseId`, `BodyStatId`, `Current`)
 VALUES
     ('an1-aaaa-bbbb-cccc-dddddddddddd', 'bs1-1111-2222-3333-444444444444', 15.2),
     ('an1-aaaa-bbbb-cccc-dddddddddddd', 'bs2-1111-2222-3333-444444444444', 78.5),
