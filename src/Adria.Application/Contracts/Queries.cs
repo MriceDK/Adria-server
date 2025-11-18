@@ -41,3 +41,8 @@ public interface ISupplementsByTypeQuery
 {
     Task<IReadOnlyCollection<SupplementData?>> Fetch(string type);
 }
+
+public interface ISupplementsByIdQuery
+{
+    Task<SupplementData?> Fetch(Guid supplementId);
+}
