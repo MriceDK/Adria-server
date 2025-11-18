@@ -21,3 +21,13 @@ public interface IAllUsersQuery
 {
     Task<IReadOnlyCollection<UserData>> Fetch();
 }
+
+public interface IOrderByUserIdQuery
+{
+    Task<OrderData?> Fetch(Guid adrianId);
+}
+
+public interface IOrderByIdQuery
+{
+    Task<OrderData?> Fetch(Guid orderId);
+}
