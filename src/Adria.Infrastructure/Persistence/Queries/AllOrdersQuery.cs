@@ -1,11 +1,12 @@
 ﻿using System.Data.Common;
 using Adria.Application.Contracts;
 using Adria.Application.Contracts.Data;
+using Adria.Domain.Order;
 using Microsoft.Extensions.Logging;
 
 namespace Adria.Infrastructure.Persistence.Queries;
 
-public class AllOrdersQuery : IAllOrdersQuery
+public class AllOrdersQuery : IOrdersRepository
 {
     private static readonly string QRY = @"
         SELECT OrderId, AdrianId, Date, TotalPrice

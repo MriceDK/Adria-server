@@ -1,7 +1,6 @@
 ﻿using System.Data.Common;
 using Adria.Application.Contracts;
 using Adria.Application.Contracts.Data;
-using Adria.Domain.Order;
 using Microsoft.Extensions.Logging;
 
 namespace Adria.Infrastructure.Persistence.Queries;
