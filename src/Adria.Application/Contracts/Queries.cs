@@ -36,3 +36,23 @@ public interface IOrderByIdQuery
 {
     Task<OrderData?> Fetch(Guid orderId);
 }
+
+public interface ISupplementsByNameQuery
+{
+    Task<IReadOnlyCollection<SupplementData?>> Fetch(string name);
+}
+
+public interface ISupplementsByTypeQuery
+{
+    Task<IReadOnlyCollection<SupplementData?>> Fetch(string type);
+}
+
+public interface ISupplementsByIdQuery
+{
+    Task<SupplementData?> Fetch(Guid supplementId);
+}
+
+public interface IAllSupplementsQuery
+{
+    Task<IReadOnlyCollection<SupplementData?>> Fetch();
+}
