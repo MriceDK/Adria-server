@@ -6,11 +6,11 @@ using Microsoft.Extensions.Logging;
 
 namespace Adria.Infrastructure.Persistence.Repositories;
 
-public class AdoUserRepository : AbstractAdoRepository,IUserRepository
+public sealed class AdoUserRepository : AbstractAdoRepository, IUserRepository
 {
-  private readonly ILogger<AdoUserRepository> _logger;
+    private readonly ILogger<AdoUserRepository> _logger;
     private readonly ISubscriptionRepository _subscriptionRepository;
-    
+
     private static readonly string TABLE_USERS = "users";
     private static readonly string COL_ADRIAN_ID = "AdrianId";
     private static readonly string COL_NAME = "Name";
@@ -40,11 +40,11 @@ public class AdoUserRepository : AbstractAdoRepository,IUserRepository
         DbProviderFactory factory,
         string connectionString,
         ILogger<AdoUserRepository> logger,
-        ISubscriptionRepository subscriptionRepository // <-- YENİ BAĞIMLILIK
+        ISubscriptionRepository subscriptionRepository 
     ) : base(factory, connectionString)
     {
         _logger = logger;
-        _subscriptionRepository = subscriptionRepository; // <-- YENİ
+        _subscriptionRepository = subscriptionRepository; 
     }
 
     public async Task<User?> ById(Guid userId)
@@ -71,7 +71,7 @@ public class AdoUserRepository : AbstractAdoRepository,IUserRepository
                 return new User(
                     name,
                     job,
-                    subscription,
+                    subscription, 
                     adrianId
                 );
             }
@@ -107,6 +107,7 @@ public class AdoUserRepository : AbstractAdoRepository,IUserRepository
                 CreateParameter("@Id", user.AdriaId.ToString().ToLower()),
                 CreateParameter("@Name", user.Name),
                 CreateParameter("@Job", user.Job),
+                // Domain nesnesinden sadece ID'yi alıp veritabanına yaz
                 CreateParameter("@SubscriptionId", user.Subscription.Id.ToString().ToLower())
             ];
 

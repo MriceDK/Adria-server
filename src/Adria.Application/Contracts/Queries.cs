@@ -25,3 +25,8 @@ public interface IAllSubscriptionsQuery
 {
     Task<IReadOnlyCollection<SubscriptionData>> Fetch();
 }
+
+public interface IAllUsersQuery
+{
+    Task<IReadOnlyCollection<UserData>> Fetch();
+}

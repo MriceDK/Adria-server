@@ -1,6 +1,7 @@
 using Adria.Application.Contracts;
 using Adria.Application.Contracts.Data;
 using Adria.Application.Subscriptions;
+using Adria.Application.Users;
 using Adria.Infrastructure.Persistence.Queries;
 
 namespace Adria.Main.Modules.UseCases;
@@ -13,6 +14,10 @@ public static class UseCases
                 .AddScoped<IUseCase<CreateSubscriptionInput, Task<Guid>>, CreateSubscription>()
                 .AddScoped<IUseCase<Task<IReadOnlyCollection<SubscriptionData>>>, SearchAllSubscriptions>()
                 .AddScoped<IUseCase<SearchSubscriptionByIdInput, Task<SubscriptionData>>, SearchSubscriptionById>()
+                .AddScoped<IUseCase<SearchUserByIdInput, Task<UserData>>, SearchUserById>()
+                .AddScoped<IUseCase<Task<IReadOnlyCollection<UserData>>>, SearchAllUsers>()
+                .AddScoped<IUseCase<CreateUserInput, Task<Guid>>, CreateUser>()
+
             ;
     }
 }
