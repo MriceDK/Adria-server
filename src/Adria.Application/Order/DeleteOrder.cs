@@ -16,7 +16,7 @@ public sealed class DeleteOrder(
 {
     public async Task Execute(DeleteOrderInput input)
     {
-        Domain.Order.Order order = await orderRepository.ByOrderId(input.OrderId);
+        Domain.Order.Order order = await orderRepository.ById(input.OrderId);
         
         await orderRepository.Remove(order);
 
