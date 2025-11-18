@@ -10,72 +10,184 @@ namespace Adria.Infrastructure.Persistence.Repositories;
     {
         private readonly ILogger<AdoFoodCompositionRepository> _logger;
 
-        private static readonly string TABLE_FOOD_COMPOSITION = "FoodCompositions";
-        private static readonly string INSERT_FOOD_COMPOSITION = $@"
-            INSERT INTO {TABLE_FOOD_COMPOSITION} (FoodId, NutrientId, Amount)
-            VALUES (@FoodId, @NutrientId, @Amount);
-        ";
+    private static readonly string TABLE_FOOD_COMPOSITION = "FoodCompositions";
+    private static readonly string TABLE_FOODS = "Foods";
+    private static readonly string TABLE_NUTRIENTS = "Nutrients";
 
-        private static readonly string TABLE_SCAN = "Scans";
-        private static readonly string INSERT_SCAN = $@"
-            INSERT INTO {TABLE_SCAN} (ScanId, AdrianId, DateTime, Result, FoodId)
-            VALUES (@ScanId, @AdrianId, @DateTime, @Result, @FoodId);
-        ";
+    private static readonly string COL_FOOD_ID = "FoodId";
+    private static readonly string COL_NUTRIENT_ID = "NutrientId";
+    private static readonly string COL_AMOUNT = "Amount";
 
-        public AdoFoodCompositionRepository(DbProviderFactory factory, string connectionString)
-            : base(factory, connectionString)
+    private static readonly string INSERT_FOOD_COMPOSITION = $@"
+        INSERT INTO {TABLE_FOOD_COMPOSITION} ({COL_FOOD_ID}, {COL_NUTRIENT_ID}, {COL_AMOUNT})
+        VALUES (@FoodId, @NutrientId, @Amount);
+    ";
+
+    private static readonly string DELETE_FOOD_COMPOSITION = $@"
+        DELETE FROM {TABLE_FOOD_COMPOSITION}
+        WHERE {COL_FOOD_ID} = @FoodId 
+          AND {COL_NUTRIENT_ID} = @NutrientId;
+    ";
+
+    private static readonly string SELECT_BY_FOOD_ID = $@"
+        SELECT {COL_FOOD_ID}, {COL_NUTRIENT_ID}, {COL_AMOUNT}
+        FROM {TABLE_FOOD_COMPOSITION}
+        WHERE {COL_FOOD_ID} = @FoodId;
+    ";
+
+    private static readonly string SELECT_BY_NUTRIENT_ID = $@"
+        SELECT {COL_FOOD_ID}, {COL_NUTRIENT_ID}, {COL_AMOUNT}
+        FROM {TABLE_FOOD_COMPOSITION}
+        WHERE {COL_NUTRIENT_ID} = @NutrientId;
+    ";
+
+    public AdoFoodCompositionRepository(
+        DbProviderFactory factory,
+        string connectionString,
+        ILogger<AdoFoodCompositionRepository> logger
+    ) : base(factory, connectionString)
+    {
+        _logger = logger;
+    }
+
+    public async Task Save(FoodComposition foodComposition)
+    {
+        try
         {
+            _logger.LogInformation(
+                "Saving FoodComposition for Food {FoodId} and Nutrient {NutrientId}.",
+                foodComposition.FoodId,
+                foodComposition.NutrientId
+            );
+
+            if (!await ExistsInTable(TABLE_FOODS, COL_FOOD_ID, foodComposition.FoodId))
+                throw new ArgumentException("Invalid FoodId: does not exist in Foods table.");
+
+            if (!await ExistsInTable(TABLE_NUTRIENTS, COL_NUTRIENT_ID, foodComposition.NutrientId))
+                throw new ArgumentException("Invalid NutrientId: does not exist in Nutrients table.");
+
+            await ExecuteNonQueryAsync(
+                INSERT_FOOD_COMPOSITION,
+                CreateParameters(foodComposition)
+            );
         }
-
-        public async Task Save(FoodComposition foodComposition)
+        catch (DbException ex)
         {
-            try
+            _logger.LogError(ex,
+                "Failed to save FoodComposition for Food {FoodId} and Nutrient {NutrientId}.",
+                foodComposition.FoodId,
+                foodComposition.NutrientId);
+
+            throw new NutriscanDatabaseException("Failed to save FoodComposition.", ex);
+        }
+    }
+
+    private DbParameter[] CreateParameters(FoodComposition foodComposition) =>
+    [
+        CreateParameter("@FoodId", foodComposition.FoodId.ToString()),
+        CreateParameter("@NutrientId", foodComposition.NutrientId.ToString()),
+        CreateParameter("@Amount", foodComposition.Amount)
+    ];
+
+    private async Task<bool> ExistsInTable(string table, string column, Guid id)
+    {
+        string query = $"SELECT COUNT(1) FROM {table} WHERE {column} = @Id";
+
+        using DbDataReader reader = await ExecuteReaderAsync(
+            query,
+            [CreateParameter("@Id", id.ToString())]
+        );
+
+        if (await reader.ReadAsync())
+            return reader.GetInt32(0) > 0;
+
+        return false;
+    }
+
+    public async Task<IReadOnlyCollection<FoodComposition>> ByFoodId(string foodId)
+    {
+        try
+        {
+            _logger.LogInformation("Reading FoodComposition entries for FoodId {FoodId}", foodId);
+
+            DbParameter foodParam = CreateParameter("@FoodId", foodId);
+            DbDataReader reader = await ExecuteReaderAsync(SELECT_BY_FOOD_ID, [foodParam]);
+
+            var result = new List<FoodComposition>();
+
+            while (await reader.ReadAsync())
             {
-                bool foodExists = await ExistsInTable("Foods", "FoodId", foodComposition.FoodId);
-                if (!foodExists)
-                    throw new ArgumentException("Invalid FoodId: does not exist in Foods table.");
+                result.Add(new FoodComposition(
+                    Guid.Parse(reader.GetString(reader.GetOrdinal(COL_FOOD_ID))),
+                    Guid.Parse(reader.GetString(reader.GetOrdinal(COL_NUTRIENT_ID))),
+                    reader.GetDouble(reader.GetOrdinal(COL_AMOUNT))
+                ));
+            }
 
-                bool nutrientExists = await ExistsInTable("Nutrients", "NutrientId", foodComposition.NutrientId);
-                if (!nutrientExists)
-                    throw new ArgumentException("Invalid NutrientId: does not exist in Nutrients table.");
+            return result;
+        }
+        catch (DbException ex)
+        {
+            _logger.LogError(ex, "Failed to read FoodComposition entries for FoodId {FoodId}", foodId);
+            throw new NutriscanDatabaseException("Database error reading food compositions.", ex);
+        }
+    }
 
-                await ExecuteNonQueryAsync(INSERT_FOOD_COMPOSITION, new[]
-                {
+    public async Task<IReadOnlyCollection<FoodComposition>> ByNutrientId(string nutrientId)
+    {
+        try
+        {
+            _logger.LogInformation("Reading FoodComposition entries for NutrientId {NutrientId}", nutrientId);
+
+            DbParameter nutrientParam = CreateParameter("@NutrientId", nutrientId);
+            DbDataReader reader = await ExecuteReaderAsync(SELECT_BY_NUTRIENT_ID, [nutrientParam]);
+
+            var result = new List<FoodComposition>();
+
+            while (await reader.ReadAsync())
+            {
+                result.Add(new FoodComposition(
+                    Guid.Parse(reader.GetString(reader.GetOrdinal(COL_FOOD_ID))),
+                    Guid.Parse(reader.GetString(reader.GetOrdinal(COL_NUTRIENT_ID))),
+                    reader.GetDouble(reader.GetOrdinal(COL_AMOUNT))
+                ));
+            }
+
+            return result;
+        }
+        catch (DbException ex)
+        {
+            _logger.LogError(ex, "Failed to read FoodComposition entries for NutrientId {NutrientId}", nutrientId);
+            throw new NutriscanDatabaseException("Database error reading nutrient compositions.", ex);
+        }
+    }
+
+    public async Task Remove(FoodComposition foodComposition)
+    {
+        try
+        {
+            _logger.LogInformation(
+                "Removing FoodComposition for Food {FoodId} and Nutrient {NutrientId}.",
+                foodComposition.FoodId,
+                foodComposition.NutrientId
+            );
+
+            await ExecuteNonQueryAsync(
+                DELETE_FOOD_COMPOSITION,
+                [
                     CreateParameter("@FoodId", foodComposition.FoodId.ToString()),
-                    CreateParameter("@NutrientId", foodComposition.NutrientId.ToString()),
-                    CreateParameter("@Amount", foodComposition.Amount)
-                });
-            }
-            catch (DbException ex)
-            {
-                _logger.LogError(ex, "Failed to save FoodComposition.");
-                throw;
-            }
+                    CreateParameter("@NutrientId", foodComposition.NutrientId.ToString())
+                ]
+            );
         }
-        
-        private async Task<bool> ExistsInTable(string tableName, string columnName, Guid id)
+        catch (DbException ex)
         {
-            string query = $"SELECT COUNT(1) FROM {tableName} WHERE {columnName} = @Id";
-            using var reader = await ExecuteReaderAsync(query, new[] { CreateParameter("@Id", id.ToString()) });
-            if (await reader.ReadAsync())
-            {
-                return reader.GetInt32(0) > 0;
-            }
-            return false;
-        }
+            _logger.LogError(ex,
+                "Failed to remove FoodComposition for Food {FoodId} and Nutrient {NutrientId}.",
+                foodComposition.FoodId,
+                foodComposition.NutrientId);
 
-        public Task<IReadOnlyCollection<FoodComposition>> ByFoodId(string foodId)
-        {
-            throw new NotImplementedException();
+            throw new NutriscanDatabaseException("Failed to remove FoodComposition.", ex);
         }
-
-        public Task<IReadOnlyCollection<FoodComposition>> ByNutrientId(string nutrientId)
-        {
-            throw new NotImplementedException();
-        }
-        
-        public Task Remove(FoodComposition foodComposition)
-        {
-            throw new NotImplementedException();
-        }
+    }
     }

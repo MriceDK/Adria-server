@@ -4,40 +4,42 @@ HINT: start with dropping tables if they exist
 See example server for reference
 */
 
+SET FOREIGN_KEY_CHECKS = 0;
+
 DROP TABLE IF EXISTS `orderSupplementDetails`;
 DROP TABLE IF EXISTS `healthAnalyses`;
 DROP TABLE IF EXISTS `foodCompositions`;
-DROP TABLE IF EXISTS `nutrients`;
 DROP TABLE IF EXISTS `scans`;
 DROP TABLE IF EXISTS `orders`;
 DROP TABLE IF EXISTS `supplements`;
 DROP TABLE IF EXISTS `foods`;
+DROP TABLE IF EXISTS `nutrients`;
 DROP TABLE IF EXISTS `users`;
 DROP TABLE IF EXISTS `subscriptions`;
 
+SET FOREIGN_KEY_CHECKS = 1;
 
-CREATE TABLE subscriptions
+CREATE TABLE `subscriptions`
 (
-    id VARCHAR(36) PRIMARY KEY NOT NULL,
-    `Type`           VARCHAR(100)            NOT NULL,
-    `PricePerMonth` DOUBLE NOT NULL,
-    `Advantages`     TEXT,
-    `StartDate`     DATETIME    NOT NULL,
-    `EndDate`       DATETIME    NOT NULL 
+    `id`            VARCHAR(36) PRIMARY KEY NOT NULL,
+    `Type`          VARCHAR(100)            NOT NULL,
+    `PricePerMonth` DOUBLE                  NOT NULL,
+    `Advantages`    TEXT,
+    `StartDate`     DATETIME                NOT NULL,
+    `EndDate`       DATETIME                NOT NULL
 );
 
-
-CREATE TABLE users
+CREATE TABLE `users`
 (
     `AdrianId`       VARCHAR(36) PRIMARY KEY NOT NULL,
     `Name`           VARCHAR(255)            NOT NULL,
     `Job`            VARCHAR(255),
     `SubscriptionId` VARCHAR(36)             NOT NULL,
-    FOREIGN KEY (`SubscriptionId`) REFERENCES subscriptions (id)
+    CONSTRAINT `fk_users_subscription`
+        FOREIGN KEY (`SubscriptionId`) REFERENCES `subscriptions`(`id`)
 );
 
-
-CREATE TABLE foods
+CREATE TABLE `foods`
 (
     `FoodId` VARCHAR(36) PRIMARY KEY NOT NULL,
     `Name`   VARCHAR(255)            NOT NULL,
@@ -45,122 +47,170 @@ CREATE TABLE foods
     `Edible` BOOLEAN                 NOT NULL DEFAULT TRUE
 );
 
-CREATE TABLE supplements
+CREATE TABLE `supplements`
 (
     `SupplementId` VARCHAR(36) PRIMARY KEY NOT NULL,
     `Name`         VARCHAR(255)            NOT NULL,
     `Type`         VARCHAR(100)            NOT NULL,
-    `Price` DOUBLE NOT NULL,
+    `Price`        DOUBLE                  NOT NULL,
     `Stock`        INT                     NOT NULL DEFAULT 0
 );
 
-CREATE TABLE orders
+CREATE TABLE `nutrients`
+(
+    `NutrientId` VARCHAR(36) PRIMARY KEY NOT NULL,
+    `Type`       VARCHAR(100)            NOT NULL,
+    `Unit`       DOUBLE                  NOT NULL,
+    `Minimum`    VARCHAR(36)             NOT NULL,
+    `Maximum`    VARCHAR(36)             NOT NULL
+);
+
+CREATE TABLE `orders`
 (
     `OrderId`    VARCHAR(36) PRIMARY KEY NOT NULL,
     `AdrianId`   VARCHAR(36)             NOT NULL,
     `Date`       DATETIME                NOT NULL,
     `TotalPrice` INT                     NOT NULL,
-    FOREIGN KEY (`AdrianId`) REFERENCES users (`AdrianId`)
+    CONSTRAINT `fk_orders_user`
+        FOREIGN KEY (`AdrianId`) REFERENCES `users`(`AdrianId`)
 );
 
-CREATE TABLE nutrients
-(
-    `NutrientId`        VARCHAR(36) PRIMARY KEY NOT NULL,
-    `Type`              VARCHAR(100)            NOT NULL,
-    `Unit`              DOUBLE                  NOT NULL,
-    `Minimum`           VARCHAR(36)             NOT NULL,
-    `Maximum`           VARCHAR(36)             NOT NULL 
-    );
-
-CREATE TABLE scans
+CREATE TABLE `scans`
 (
     `ScanId`   VARCHAR(36) PRIMARY KEY NOT NULL,
     `AdrianId` VARCHAR(36)             NOT NULL,
     `DateTime` DATETIME                NOT NULL,
     `Result`   TEXT,
     `FoodId`   VARCHAR(36)             NOT NULL,
-    FOREIGN KEY (`AdrianId`) REFERENCES users (`AdrianId`),
-    FOREIGN KEY (`FoodId`) REFERENCES foods (`FoodId`)
+    CONSTRAINT `fk_scans_user`
+        FOREIGN KEY (`AdrianId`) REFERENCES `users`(`AdrianId`),
+    CONSTRAINT `fk_scans_food`
+        FOREIGN KEY (`FoodId`) REFERENCES `foods`(`FoodId`)
 );
 
-CREATE TABLE foodCompositions
+CREATE TABLE `foodCompositions`
 (
     `FoodId`     VARCHAR(36) NOT NULL,
     `NutrientId` VARCHAR(36) NOT NULL,
     `Amount`     VARCHAR(50) NOT NULL,
     PRIMARY KEY (`FoodId`, `NutrientId`),
-    FOREIGN KEY (`FoodId`) REFERENCES foods (`FoodId`),
-    FOREIGN KEY (`NutrientId`) REFERENCES nutrients (`NutrientId`)
+    CONSTRAINT `fk_foodcomp_food`
+        FOREIGN KEY (`FoodId`) REFERENCES `foods`(`FoodId`),
+    CONSTRAINT `fk_foodcomp_nutrient`
+        FOREIGN KEY (`NutrientId`) REFERENCES `nutrients`(`NutrientId`)
 );
 
-CREATE TABLE healthAnalyses
+CREATE TABLE `healthAnalyses`
 (
     `AnalyseId`      VARCHAR(36) PRIMARY KEY NOT NULL,
     `AdrianId`       VARCHAR(36)             NOT NULL,
     `DateTime`       DATETIME                NOT NULL,
     `Status`         VARCHAR(100)            NOT NULL,
     `Recommendation` TEXT,
-    FOREIGN KEY (`AdrianId`) REFERENCES users (`AdrianId`)
+    CONSTRAINT `fk_healthanalyses_user`
+        FOREIGN KEY (`AdrianId`) REFERENCES `users`(`AdrianId`)
 );
 
-CREATE TABLE orderSupplementDetails
+CREATE TABLE `orderSupplementDetails`
 (
     `OrderId`      VARCHAR(36) NOT NULL,
     `SupplementId` VARCHAR(36) NOT NULL,
     `Amount`       VARCHAR(50) NOT NULL,
     PRIMARY KEY (`OrderId`, `SupplementId`),
-    FOREIGN KEY (`OrderId`) REFERENCES orders (`OrderId`),
-    FOREIGN KEY (`SupplementId`) REFERENCES supplements (`SupplementId`)
+    CONSTRAINT `fk_ordersupp_order`
+        FOREIGN KEY (`OrderId`) REFERENCES `orders`(`OrderId`),
+    CONSTRAINT `fk_ordersupp_supplement`
+        FOREIGN KEY (`SupplementId`) REFERENCES `supplements`(`SupplementId`)
 );
 
 /* ========== SEED DATA ========== */
 
 -- Insert Subscriptions
-INSERT INTO subscriptions (id, `Type`, `PricePerMonth`, `Advantages`, StartDate, EndDate)
-VALUES
-    ('sub-basic', 'Basic', 9.99, 'Access to food database, Basic scanning features',
-     NOW(), DATE_ADD(NOW(), INTERVAL 1 YEAR)),
-    ('sub-premium', 'Premium', 19.99,
-     'Unlimited scans, Health analysis, Personalized recommendations, Priority support',
-     NOW(), DATE_ADD(NOW(), INTERVAL 1 YEAR)),
-    ('sub-free', 'Free', 0.00, 'Limited food database access, 5 scans per month',
-     NOW(), DATE_ADD(NOW(), INTERVAL 1 YEAR));
+INSERT INTO subscriptions (id, `Type`, `PricePerMonth`, `Advantages`, `StartDate`, `EndDate`)
+VALUES ('a1b2c3d4-e5f6-4a5b-8c9d-1e2f3a4b5c6d', 'Basic', 9.99, 'Access to food database, Basic scanning features',
+        '2025-01-01 00:00:00', '2026-01-01 00:00:00');
 
+INSERT INTO subscriptions (id, `Type`, `PricePerMonth`, `Advantages`, `StartDate`, `EndDate`)
+VALUES ('b2c3d4e5-f6a7-4b5c-9d0e-2f3a4b5c6d7e', 'Premium', 19.99,
+        'Unlimited scans, Health analysis, Personalized recommendations, Priority support',
+        '2025-01-01 00:00:00', '2026-01-01 00:00:00');
+
+INSERT INTO subscriptions (id, `Type`, `PricePerMonth`, `Advantages`, `StartDate`, `EndDate`)
+VALUES ('c3d4e5f6-a7b8-4c5d-0e1f-3a4b5c6d7e8f', 'Free', 0.00, 'Limited food database access, 5 scans per month',
+        '2025-01-01 00:00:00', '2026-01-01 00:00:00');
 -- Insert Users
 INSERT INTO users (`AdrianId`, `Name`, `Job`, `SubscriptionId`)
-VALUES
-    ('user-adrian', 'Adrian Martinez', 'Software Engineer', 'sub-premium'),
-    ('user-sarah', 'Sarah Johnson', 'Fitness Trainer', 'sub-premium'),
-    ('user-michael', 'Michael Chen', 'Student', 'sub-free'),
-    ('user-emma', 'Emma Wilson', 'Nutritionist', 'sub-premium'),
-    ('user-david', 'David Brown', 'Chef', 'sub-basic');
+VALUES ('d4e5f6a7-b8c9-4d5e-1f2a-4b5c6d7e8f9a', 'Adrian Martinez', 'Software Engineer',
+        'b2c3d4e5-f6a7-4b5c-9d0e-2f3a4b5c6d7e');
+
+INSERT INTO users (`AdrianId`, `Name`, `Job`, `SubscriptionId`)
+VALUES ('e5f6a7b8-c9d0-4e5f-2a3b-5c6d7e8f9a0b', 'Sarah Johnson', 'Fitness Trainer',
+        'b2c3d4e5-f6a7-4b5c-9d0e-2f3a4b5c6d7e');
+
+INSERT INTO users (`AdrianId`, `Name`, `Job`, `SubscriptionId`)
+VALUES ('f6a7b8c9-d0e1-4f5a-3b4c-6d7e8f9a0b1c', 'Michael Chen', 'Student', 'c3d4e5f6-a7b8-4c5d-0e1f-3a4b5c6d7e8f');
+
+INSERT INTO users (`AdrianId`, `Name`, `Job`, `SubscriptionId`)
+VALUES ('a7b8c9d0-e1f2-4a5b-4c5d-7e8f9a0b1c2d', 'Emma Wilson', 'Nutritionist', 'b2c3d4e5-f6a7-4b5c-9d0e-2f3a4b5c6d7e');
+
+INSERT INTO users (`AdrianId`, `Name`, `Job`, `SubscriptionId`)
+VALUES ('b8c9d0e1-f2a3-4b5c-5d6e-8f9a0b1c2d3e', 'David Brown', 'Chef', 'a1b2c3d4-e5f6-4a5b-8c9d-1e2f3a4b5c6d');
 
 -- Insert Nutrients
-/* Nutrients */
 INSERT INTO nutrients (`NutrientId`, `Type`, `Unit`, `Minimum`, `Maximum`)
-VALUES
-    ('nut-protein', 'Protein', 1, '45', '60'),
-    ('nut-carbs', 'Carbohydrates', 1, '200', '350'),
-    ('nut-fiber', 'Fiber', 1, '20', '35'),
-    ('nut-vitc', 'Vitamin C', 1, '70', '120'),
-    ('nut-calcium', 'Calcium', 1, '800', '1500'),
-    ('nut-iron', 'Iron', 1, '8', '27'),
-    ('nut-vitd', 'Vitamin D', 1, '400', '800'),
-    ('nut-omega3', 'Omega-3', 1, '200', '500');
-    
+VALUES ('c9d0e1f2-a3b4-4c5d-6e7f-9a0b1c2d3e4f', 'Protein',       50,  '45',   '60');
+
+INSERT INTO nutrients (`NutrientId`, `Type`, `Unit`, `Minimum`, `Maximum`)
+VALUES ('d0e1f2a3-b4c5-4d5e-7f8a-0b1c2d3e4f5a', 'Carbohydrates', 300, '200',  '350');
+
+INSERT INTO nutrients (`NutrientId`, `Type`, `Unit`, `Minimum`, `Maximum`)
+VALUES ('e1f2a3b4-c5d6-4e5f-8a9b-1c2d3e4f5a6b', 'Fiber',         25,  '20',   '35');
+
+INSERT INTO nutrients (`NutrientId`, `Type`, `Unit`, `Minimum`, `Maximum`)
+VALUES ('f2a3b4c5-d6e7-4f5a-9b0c-2d3e4f5a6b7c', 'Vitamin C',     90,  '70',   '120');
+
+INSERT INTO nutrients (`NutrientId`, `Type`, `Unit`, `Minimum`, `Maximum`)
+VALUES ('a3b4c5d6-e7f8-4a5b-0c1d-3e4f5a6b7c8d', 'Calcium',       1000,'800',  '1500');
+
+INSERT INTO nutrients (`NutrientId`, `Type`, `Unit`, `Minimum`, `Maximum`)
+VALUES ('b4c5d6e7-f8a9-4b5c-1d2e-4f5a6b7c8d9e', 'Iron',          18,  '8',    '27');
+
+INSERT INTO nutrients (`NutrientId`, `Type`, `Unit`, `Minimum`, `Maximum`)
+VALUES ('c5d6e7f8-a9b0-4c5d-2e3f-5a6b7c8d9e0f', 'Vitamin D',     600, '400',  '800');
+
+INSERT INTO nutrients (`NutrientId`, `Type`, `Unit`, `Minimum`, `Maximum`)
+VALUES ('d6e7f8a9-b0c1-4d5e-3f4a-6b7c8d9e0f1a', 'Omega-3',       250, '200',  '500');
+
 -- Insert Foods
 INSERT INTO foods (`FoodId`, `Name`, `Type`, `Edible`)
-VALUES
-    ('food-apple', 'Apple', 'Fruit', TRUE),
-    ('food-banana', 'Banana', 'Fruit', TRUE),
-    ('food-chicken', 'Chicken Breast', 'Protein', TRUE),
-    ('food-brownrice', 'Brown Rice', 'Grain', TRUE),
-    ('food-broccoli', 'Broccoli', 'Vegetable', TRUE),
-    ('food-salmon', 'Salmon', 'Protein', TRUE),
-    ('food-milk', 'Milk', 'Dairy', TRUE),
-    ('food-spinach', 'Spinach', 'Vegetable', TRUE),
-    ('food-almonds', 'Almonds', 'Nuts', TRUE),
-    ('food-plastic', 'Plastic Wrapper', 'Packaging', FALSE);
+VALUES ('e7f8a9b0-c1d2-4e5f-4a5b-7c8d9e0f1a2b', 'Apple', 'Fruit', TRUE);
+
+INSERT INTO foods (`FoodId`, `Name`, `Type`, `Edible`)
+VALUES ('f8a9b0c1-d2e3-4f5a-5b6c-8d9e0f1a2b3c', 'Banana', 'Fruit', TRUE);
+
+INSERT INTO foods (`FoodId`, `Name`, `Type`, `Edible`)
+VALUES ('a9b0c1d2-e3f4-4a5b-6c7d-9e0f1a2b3c4d', 'Chicken Breast', 'Protein', TRUE);
+
+INSERT INTO foods (`FoodId`, `Name`, `Type`, `Edible`)
+VALUES ('b0c1d2e3-f4a5-4b5c-7d8e-0f1a2b3c4d5e', 'Brown Rice', 'Grain', TRUE);
+
+INSERT INTO foods (`FoodId`, `Name`, `Type`, `Edible`)
+VALUES ('c1d2e3f4-a5b6-4c5d-8e9f-1a2b3c4d5e6f', 'Broccoli', 'Vegetable', TRUE);
+
+INSERT INTO foods (`FoodId`, `Name`, `Type`, `Edible`)
+VALUES ('d2e3f4a5-b6c7-4d5e-9f0a-2b3c4d5e6f7a', 'Salmon', 'Protein', TRUE);
+
+INSERT INTO foods (`FoodId`, `Name`, `Type`, `Edible`)
+VALUES ('e3f4a5b6-c7d8-4e5f-0a1b-3c4d5e6f7a8b', 'Milk', 'Dairy', TRUE);
+
+INSERT INTO foods (`FoodId`, `Name`, `Type`, `Edible`)
+VALUES ('f4a5b6c7-d8e9-4f5a-1b2c-4d5e6f7a8b9c', 'Spinach', 'Vegetable', TRUE);
+
+INSERT INTO foods (`FoodId`, `Name`, `Type`, `Edible`)
+VALUES ('a5b6c7d8-e9f0-4a5b-2c3d-5e6f7a8b9c0d', 'Almonds', 'Nuts', TRUE);
+
+INSERT INTO foods (`FoodId`, `Name`, `Type`, `Edible`)
+VALUES ('b6c7d8e9-f0a1-4b5c-3d4e-6f7a8b9c0d1e', 'Plastic Wrapper', 'Packaging', FALSE);
 
 -- Insert FoodCompositions
 -- Apple composition

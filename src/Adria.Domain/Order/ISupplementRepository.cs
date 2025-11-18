@@ -8,4 +8,5 @@ public interface ISupplementRepository
     Task<IReadOnlyCollection<Supplement>> GetAll();
     Task Save(Supplement supplement);
     Task Remove(Supplement supplement);
+    Task Add(Supplement supplement);
 }

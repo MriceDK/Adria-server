@@ -10,9 +10,9 @@ public sealed class Supplement
     public Supplement(Guid supplementId, string name, string type, double price)
     {
         SupplementId = supplementId;
-        SetName(name);
-        SetType(type);
-        SetPrice(price);
+        Name = EnsureNameIsValid(name);
+        Type = EnsureNameIsValid(type);
+        Price = EnsurePriceIsValid(price);
     }
 
     public void SetName(string name)
@@ -27,7 +27,7 @@ public sealed class Supplement
     
     public void SetPrice(double price)
     {
-        Price = EnsurePriceIsValid(price);
+        Price = EnsurePriceIsValid(price);  
     }
     
     private static double EnsurePriceIsValid(double price)
