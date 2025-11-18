@@ -64,9 +64,6 @@ namespace Adria.Infrastructure.Persistence.Repositories;
             return false;
         }
 
-      
-
-        // Additional data retrieval methods can be added here
         public Task<IReadOnlyCollection<FoodComposition>> ByFoodId(string foodId)
         {
             throw new NotImplementedException();
