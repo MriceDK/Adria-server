@@ -1,0 +1,20 @@
+﻿using Adria.Domain.BodyStatus;
+
+namespace UnitTests.Mocks;
+
+public class MockAnalyseRepository : IAnalyseRepository
+{
+    private readonly List<Analyse> _analyses = new();
+
+    public Task Save(Analyse analyse)
+    {
+        _analyses.Add(analyse);
+        return Task.CompletedTask;
+    }
+
+    public Task<Analyse?> ById(Guid id)
+    {
+        var analyse = _analyses.FirstOrDefault(a => a.Id == id);
+        return Task.FromResult(analyse);
+    }
+}
