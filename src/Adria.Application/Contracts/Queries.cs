@@ -12,6 +12,22 @@ public interface IUserByIdQuery
     Task<UserData?> Fetch(Guid userId);
 }
 
+public interface IBodyStatsQuery
+{
+    Task<IReadOnlyCollection<BodyStatData>?> Fetch(Guid userId);
+}
+
+public interface IOrderByIdQuery
+{
+    Task<OrderData?> Fetch(Guid orderId);
+}
+
+public interface IOrderByUserIdQuery
+{
+    Task<OrderData?> Fetch(Guid adrianId);
+}
+
+
 public interface IAllSubscriptionsQuery
 {
     Task<IReadOnlyCollection<SubscriptionData>> Fetch();

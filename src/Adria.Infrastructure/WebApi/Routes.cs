@@ -26,6 +26,7 @@ public static class Routes
     {
         MapSubscriptionRoutes(app);
         MapUserRoutes(app);
+        MapAnalyseRoutes(app);
         return app;
     }
 
@@ -77,6 +78,28 @@ public static class Routes
             .WithDescription("Get all users .")
             .WithName(nameof(SearchAllUsersController))
             .WithMetadata(new ProducesAttribute(APPLICATION_JSON))
+            .WithOpenApi();
+    }
+    
+    private static void MapAnalyseRoutes(WebApplication app)
+    {
+        var analyseRoutes = app.MapGroup("/api/analyses")
+            .WithTags("Analyses")
+            .WithDescription("Endpoints for managing health analyses.")
+            .WithOpenApi();
+
+        analyseRoutes
+            .MapPost("/", CreateAnalyseController.Invoke)
+            .WithDescription("Create a new health analyse.")
+            .WithName(nameof(CreateAnalyseController))
+            .WithMetadata(new ConsumesAttribute("application/json"))
+            .WithOpenApi();
+            
+        analyseRoutes
+            .MapGet("/user/{userId}/stats", GetBodyStatsController.Invoke)
+            .WithDescription("Get the latest body statistics for a user.")
+            .WithName(nameof(GetBodyStatsController))
+            .WithMetadata(new ProducesAttribute("application/json"))
             .WithOpenApi();
     }
 }

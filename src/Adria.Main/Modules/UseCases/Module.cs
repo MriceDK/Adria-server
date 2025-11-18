@@ -1,3 +1,5 @@
+using Adria.Application.Analyses;
+using Adria.Application.BodyStats;
 using Adria.Application.Contracts;
 using Adria.Application.Contracts.Data;
 using Adria.Application.Subscriptions;
@@ -17,7 +19,7 @@ public static class UseCases
                 .AddScoped<IUseCase<SearchUserByIdInput, Task<UserData>>, SearchUserById>()
                 .AddScoped<IUseCase<Task<IReadOnlyCollection<UserData>>>, SearchAllUsers>()
                 .AddScoped<IUseCase<CreateUserInput, Task<Guid>>, CreateUser>()
-
-            ;
+                .AddScoped<IUseCase<CreateAnalyseInput, Task<Guid>>, CreateAnalyse>()
+                .AddScoped<IUseCase<GetLatestBodyStatsInput, Task<IReadOnlyCollection<BodyStatData>>>, GetLatestBodyStats>();
     }
 }
