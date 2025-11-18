@@ -24,7 +24,7 @@ public interface IAllUsersQuery
 
 public interface IOrderByUserIdQuery
 {
-    Task<OrderData> Fetch(Guid adrianId);
+    Task<OrderData?> Fetch(Guid adrianId);
 }
 
 public interface IOrderByIdQuery
