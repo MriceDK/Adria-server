@@ -32,6 +32,22 @@ public class AdoOrderRepository: AbstractAdoRepository, IOrderRepository
         FROM {TABLE_ORDERS}
         WHERE {COL_ID} = @Id;
     ";
+    
+    private static readonly string SELECT_ORDERS_BY_USER_ID = $@"
+        SELECT {COL_ID}, {COL_ADRIAN_ID}, {COL_DATE}, {COL_TOTAL_PRICE}
+        FROM {TABLE_ORDERS}
+        WHERE {COL_ADRIAN_ID} = @AdrianId;
+    ";
+    
+    private static readonly string DELETE_ORDER = $@"
+        DELETE FROM {TABLE_ORDERS}
+        WHERE {COL_ID} = @Id;
+    ";
+    
+    private static readonly string SELECT_ALL_ORDERS = $@"
+        SELECT {COL_ID}, {COL_ADRIAN_ID}, {COL_DATE}, {COL_TOTAL_PRICE}
+        FROM {TABLE_ORDERS};
+    ";
 
     public AdoOrderRepository(
         DbProviderFactory factory,
@@ -41,7 +57,44 @@ public class AdoOrderRepository: AbstractAdoRepository, IOrderRepository
     {
         _logger = logger;
     }
+    
+    public async Task<IReadOnlyCollection<Order>> GetAll()
+    {
+        _logger.LogInformation("Fetching all orders from the database.");
 
+        try
+        {
+            var orders = new List<Order>();
+
+            using var connection = _factory.CreateConnection();
+            connection.ConnectionString = _connectionString;
+            await connection.OpenAsync();
+
+            using var command = connection.CreateCommand();
+            command.CommandText = SELECT_ALL_ORDERS;
+
+            using var reader = await command.ExecuteReaderAsync();
+            while (await reader.ReadAsync())
+            {
+                var order = new Order(
+                    reader.GetGuid(reader.GetOrdinal(COL_ID)),
+                    reader.GetGuid(reader.GetOrdinal(COL_ADRIAN_ID)),
+                    reader.GetDateTime(reader.GetOrdinal(COL_DATE)),
+                    reader.GetDouble(reader.GetOrdinal(COL_TOTAL_PRICE))
+                );
+
+                orders.Add(order);
+            }
+
+            return orders;
+        }
+        catch (DbException ex)
+        {
+            _logger.LogError(ex, "Failed to retrieve all orders from the database.");
+            throw new NutriscanDatabaseException("Failed to retrieve orders from the database.", ex);
+        }
+    }
+    
     public async Task<Order?> ById(Guid orderId)
     {
         DbParameter id = CreateParameter("@Id", orderId.ToString().ToLower());
@@ -73,6 +126,50 @@ public class AdoOrderRepository: AbstractAdoRepository, IOrderRepository
             await dbDataReader.DisposeAsync();
         }
     }
+    
+    public async Task<IReadOnlyCollection<Order>> ByUserId(Guid adrianId)
+    {
+        _logger.LogInformation("Fetching orders for user with AdrianId {AdrianId}.", adrianId);
+
+        try
+        {
+            var orders = new List<Order>();
+
+            using var connection = _factory.CreateConnection();
+            connection.ConnectionString = _connectionString;
+            await connection.OpenAsync();
+
+            using var command = connection.CreateCommand();
+            command.CommandText = SELECT_ORDERS_BY_USER_ID;
+
+            var param = command.CreateParameter();
+            param.ParameterName = "@AdrianId";
+            param.Value = adrianId.ToString().ToLower();
+            command.Parameters.Add(param);
+
+            using var reader = await command.ExecuteReaderAsync();
+            while (await reader.ReadAsync())
+            {
+                orders.Add(new Order(
+                    reader.GetGuid(reader.GetOrdinal(COL_ID)),
+                    reader.GetGuid(reader.GetOrdinal(COL_ADRIAN_ID)),
+                    reader.GetDateTime(reader.GetOrdinal(COL_DATE)),
+                    reader.GetDouble(reader.GetOrdinal(COL_TOTAL_PRICE))
+                ));
+            }
+
+            return orders;
+        }
+        catch (DbException ex)
+        {
+            _logger.LogError(ex,
+                "Failed to fetch orders for user with AdrianId {AdrianId}.", adrianId);
+
+            throw new NutriscanDatabaseException(
+                "Failed to retrieve orders by user id from database.", ex);
+        }
+
+    }
 
     public async Task Save(Order order)
     {
@@ -101,6 +198,26 @@ public class AdoOrderRepository: AbstractAdoRepository, IOrderRepository
         {
             _logger.LogError(ex, "Failed to save order with ID {OrderId} to database.", order.OrderId);
             throw new NutriscanDatabaseException("Failed to save order to database.", ex);
+        }
+    }
+    
+    public async Task Remove(Order order)
+    {
+        _logger.LogInformation("Removing order with ID {OrderId} from database.", order.OrderId);
+
+        try
+        {
+            DbParameter[] parameters =
+            [
+                CreateParameter("@Id", order.OrderId.ToString().ToLower())
+            ];
+
+            await ExecuteNonQueryAsync(DELETE_ORDER, parameters);
+        }
+        catch (DbException ex)
+        {
+            _logger.LogError(ex, "Failed to remove order with ID {OrderId} from database.", order.OrderId);
+            throw new NutriscanDatabaseException("Failed to remove order from database.", ex);
         }
     }
 }
