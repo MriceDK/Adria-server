@@ -20,8 +20,8 @@ public sealed class CreateAnalyseTests
         _validUserId = Guid.NewGuid();
         _validDetails = new List<AnalyseDetailInput>
         {
-            new AnalyseDetailInput(Guid.NewGuid(), 75.5),
-            new AnalyseDetailInput(Guid.NewGuid(), 18.2)
+            new AnalyseDetailInput("bd2-calc-0001", 75.5),
+            new AnalyseDetailInput("bd2-iron-0002", 18.2)
         };
     }
 
