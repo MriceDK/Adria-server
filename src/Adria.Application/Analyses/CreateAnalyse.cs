@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 namespace Adria.Application.Analyses;
 
 public sealed record AnalyseDetailInput(
-    Guid BodyStatId,
+    string BodyStatId,
     double Value
 );
 

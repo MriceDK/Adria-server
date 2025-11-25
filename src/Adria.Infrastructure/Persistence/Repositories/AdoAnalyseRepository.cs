@@ -12,7 +12,7 @@ public class AdoAnalyseRepository : AbstractAdoRepository, IAnalyseRepository
 
     private static readonly string TABLE_ANALYSE = "analyse";
     private static readonly string TABLE_HEALTH_ANALYSE = "healthAnalyse";
-    
+    private readonly string _connectionString;
     private static readonly string COL_ANALYSE_ID = "AnalyseId";
     private static readonly string COL_ADRIAN_ID = "AdrianId";
     private static readonly string COL_DATE_TIME = "DateTime";
@@ -37,6 +37,7 @@ public class AdoAnalyseRepository : AbstractAdoRepository, IAnalyseRepository
     {
         _factory = factory; 
         _logger = logger;
+        _connectionString = connectionString;
     }
 
     public async Task Save(Analyse analyse)
@@ -45,7 +46,7 @@ public class AdoAnalyseRepository : AbstractAdoRepository, IAnalyseRepository
         
         using var connection = _factory.CreateConnection() 
              ?? throw new InvalidOperationException("Failed to create database connection.");
-        
+        connection.ConnectionString = _connectionString;
         await connection.OpenAsync();
 
         using var transaction = await connection.BeginTransactionAsync();
@@ -54,7 +55,7 @@ public class AdoAnalyseRepository : AbstractAdoRepository, IAnalyseRepository
         {
             var analyseParams = new[]
             {
-                CreateParameter("@AnalyseId", analyse.Id.ToString().ToLower()),
+                CreateParameter("@AnalyseId", analyse.Id),
                 CreateParameter("@AdrianId", analyse.AdrianId.ToString().ToLower()),
                 CreateParameter("@DateTime", analyse.DateTime)
             };

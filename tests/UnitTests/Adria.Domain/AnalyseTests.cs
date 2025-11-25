@@ -12,8 +12,8 @@ public sealed class AnalyseTests
         var dateTime = DateTime.UtcNow;
         var details = new List<AnalyseDetail>
         {
-            new AnalyseDetail(Guid.NewGuid(), 75.5),
-            new AnalyseDetail(Guid.NewGuid(), 18.2)
+            new AnalyseDetail("bd2-calc-0001", 75.5),
+            new AnalyseDetail("bd2-iron-0002", 18.2)
         };
 
         // Act
@@ -33,7 +33,7 @@ public sealed class AnalyseTests
         var id = Guid.NewGuid();
         var adrianId = Guid.NewGuid();
         var dateTime = DateTime.UtcNow;
-        var details = new List<AnalyseDetail> { new AnalyseDetail(Guid.NewGuid(), 10) };
+        var details = new List<AnalyseDetail> { new AnalyseDetail("bd2-magn-0003", 10) };
 
         // Act
         var analyse = new Analyse(adrianId, dateTime, details, id);
@@ -49,7 +49,7 @@ public sealed class AnalyseTests
         // Arrange
         var invalidUserId = Guid.Empty;
         var dateTime = DateTime.UtcNow;
-        var details = new List<AnalyseDetail> { new AnalyseDetail(Guid.NewGuid(), 10) };
+        var details = new List<AnalyseDetail> { new AnalyseDetail("bd2-magn-0003", 10) };
 
         // Act & Assert
         Assert.Throws<ArgumentException>(() => new Analyse(invalidUserId, dateTime, details));

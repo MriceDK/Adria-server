@@ -429,6 +429,31 @@ INSERT INTO `analyse` (`AnalyseId`, `AdrianId`, `DateTime`)
 VALUES ('an1-aaaa-bbbb-cccc-dddddddddddd', 'd4e5f6a7-b8c9-4d5e-1f2a-4b5c6d7e8f9a', '2025-11-18 08:30:00');
 
 INSERT INTO `healthAnalyse` (`AnalyseId`, `BodyStatId`, `Current`)
-VALUES ('an1-aaaa-bbbb-cccc-dddddddddddd', 'bd4-fatp-0001', 15.2),
-       ('an1-aaaa-bbbb-cccc-dddddddddddd', 'bd4-weig-0002', 78.5),
-       ('an1-aaaa-bbbb-cccc-dddddddddddd', 'bd4-hydr-0003', 72.0);
+VALUES
+-- 1. Daily Goals
+('an1-aaaa-bbbb-cccc-dddddddddddd', 'bd1-prot-0001', 1),
+('an1-aaaa-bbbb-cccc-dddddddddddd', 'bd1-carb-0002', 1),
+('an1-aaaa-bbbb-cccc-dddddddddddd', 'bd1-fats-0003', 1),
+('an1-aaaa-bbbb-cccc-dddddddddddd', 'bd1-watr-0004', 1),
+-- 2. Minerals
+('an1-aaaa-bbbb-cccc-dddddddddddd', 'bd2-calc-0001', 1),
+('an1-aaaa-bbbb-cccc-dddddddddddd', 'bd2-iron-0002', 1),
+('an1-aaaa-bbbb-cccc-dddddddddddd', 'bd2-magn-0003', 1),
+('an1-aaaa-bbbb-cccc-dddddddddddd', 'bd2-phos-0004', 1),
+('an1-aaaa-bbbb-cccc-dddddddddddd', 'bd2-pota-0005', 1),
+('an1-aaaa-bbbb-cccc-dddddddddddd', 'bd2-sodi-0006', 1),
+('an1-aaaa-bbbb-cccc-dddddddddddd', 'bd2-zinc-0007', 1),
+('an1-aaaa-bbbb-cccc-dddddddddddd', 'bd2-copp-0008', 1),
+('an1-aaaa-bbbb-cccc-dddddddddddd', 'bd2-mang-0009', 1),
+('an1-aaaa-bbbb-cccc-dddddddddddd', 'bd2-sele-0010', 1),
+('an1-aaaa-bbbb-cccc-dddddddddddd', 'bd2-iodi-0011', 1),
+-- 3. Cholesterol
+('an1-aaaa-bbbb-cccc-dddddddddddd', 'bd3-totl-0001', 1),
+('an1-aaaa-bbbb-cccc-dddddddddddd', 'bd3-hdlc-0002', 1),
+('an1-aaaa-bbbb-cccc-dddddddddddd', 'bd3-ldlc-0003', 1),
+('an1-aaaa-bbbb-cccc-dddddddddddd', 'bd3-trig-0004', 1),
+-- 4. Basic Stats
+('an1-aaaa-bbbb-cccc-dddddddddddd', 'bd4-fatp-0001', 1),
+('an1-aaaa-bbbb-cccc-dddddddddddd', 'bd4-weig-0002', 1),
+('an1-aaaa-bbbb-cccc-dddddddddddd', 'bd4-hydr-0003', 1),
+('an1-aaaa-bbbb-cccc-dddddddddddd', 'bd4-hear-0004', 1);
