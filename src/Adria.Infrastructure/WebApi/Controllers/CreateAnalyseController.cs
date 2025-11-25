@@ -40,6 +40,6 @@ public sealed record CreateAnalyseBody(
 );
 
 public sealed record AnalyseDetailBody(
-    Guid BodyStatId,
+    string BodyStatId,
     double Value
 );

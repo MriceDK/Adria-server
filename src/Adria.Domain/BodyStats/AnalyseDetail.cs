@@ -1,6 +1,6 @@
 ﻿namespace Adria.Domain.BodyStatus;
 
 public record AnalyseDetail(
-    Guid BodyStatId,
+    string BodyStatId,
     double CurrentValue
     );
