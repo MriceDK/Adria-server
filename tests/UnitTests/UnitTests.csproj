@@ -31,6 +31,7 @@
 
   <ItemGroup>
     <Folder Include="Adria.Application\Order\" />
+    <Folder Include="Adria.Infrastructure\" />
   </ItemGroup>
 
 </Project>
