@@ -5,15 +5,15 @@ using Microsoft.Extensions.Logging;
 
 namespace Adria.Infrastructure.Persistence.Repositories;
 
-public class AdoOrderRepository: AbstractAdoRepository, IOrderRepository
+public class AdoOrderRepository : AbstractAdoRepository, IOrderRepository
 {
-  private readonly ILogger<AdoOrderRepository> _logger;
+    private readonly ILogger<AdoOrderRepository> _logger;
     private static readonly string TABLE_ORDERS = "orders";
     private static readonly string COL_ID = "id";
     private static readonly string COL_ADRIAN_ID = "adrianId";
     private static readonly string COL_DATE = "date";
     private static readonly string COL_TOTAL_PRICE = "totalPrice";
-    
+
     private static readonly string INSERT_ORDER = $@"
         INSERT INTO {TABLE_ORDERS} ({COL_ID}, {COL_ADRIAN_ID}, {COL_DATE}, {COL_TOTAL_PRICE})
         VALUES (@Id, @AdrianId, @Date, @TotalPrice);
@@ -21,9 +21,9 @@ public class AdoOrderRepository: AbstractAdoRepository, IOrderRepository
 
     private static readonly string UPDATE_ORDER = $@"
         UPDATE {TABLE_ORDERS}
-        SET {COL_ADRIAN_ID} = @SubscriptionType, 
-            {COL_DATE} = @PricePerMonth, 
-            {COL_TOTAL_PRICE} = @Advantages
+        SET {COL_ADRIAN_ID} = @AdrianId, 
+            {COL_DATE} = @Date, 
+            {COL_TOTAL_PRICE} = @TotalPrice
         WHERE {COL_ID} = @Id;
     ";
 
@@ -32,18 +32,18 @@ public class AdoOrderRepository: AbstractAdoRepository, IOrderRepository
         FROM {TABLE_ORDERS}
         WHERE {COL_ID} = @Id;
     ";
-    
+
     private static readonly string SELECT_ORDERS_BY_USER_ID = $@"
         SELECT {COL_ID}, {COL_ADRIAN_ID}, {COL_DATE}, {COL_TOTAL_PRICE}
         FROM {TABLE_ORDERS}
         WHERE {COL_ADRIAN_ID} = @AdrianId;
     ";
-    
+
     private static readonly string DELETE_ORDER = $@"
         DELETE FROM {TABLE_ORDERS}
         WHERE {COL_ID} = @Id;
     ";
-    
+
     private static readonly string SELECT_ALL_ORDERS = $@"
         SELECT {COL_ID}, {COL_ADRIAN_ID}, {COL_DATE}, {COL_TOTAL_PRICE}
         FROM {TABLE_ORDERS};
@@ -57,7 +57,7 @@ public class AdoOrderRepository: AbstractAdoRepository, IOrderRepository
     {
         _logger = logger;
     }
-    
+
     public async Task<IReadOnlyCollection<Order>> GetAll()
     {
         _logger.LogInformation("Fetching all orders from the database.");
@@ -66,7 +66,8 @@ public class AdoOrderRepository: AbstractAdoRepository, IOrderRepository
         {
             var orders = new List<Order>();
 
-            using var connection = _factory.CreateConnection();
+            using var connection = _factory.CreateConnection()
+                               ?? throw new InvalidOperationException("Could not create DB connection.");
             connection.ConnectionString = _connectionString;
             await connection.OpenAsync();
 
@@ -94,17 +95,17 @@ public class AdoOrderRepository: AbstractAdoRepository, IOrderRepository
             throw new NutriscanDatabaseException("Failed to retrieve orders from the database.", ex);
         }
     }
-    
+
     public async Task<Order?> ById(Guid orderId)
     {
         DbParameter id = CreateParameter("@Id", orderId.ToString().ToLower());
-        DbDataReader dbDataReader = await ExecuteReaderAsync(SELECT_ORDER_BY_ID, [id]);
+        var dbDataReader = await ExecuteReaderAsync(SELECT_ORDER_BY_ID, [id])
+                           ?? throw new InvalidOperationException("Failed to create DbDataReader.");
 
         try
         {
             if (await dbDataReader.ReadAsync())
             {
-       
                 return new Order(
                     dbDataReader.GetGuid(dbDataReader.GetOrdinal(COL_ID)),
                     dbDataReader.GetGuid(dbDataReader.GetOrdinal(COL_ADRIAN_ID)),
@@ -126,7 +127,7 @@ public class AdoOrderRepository: AbstractAdoRepository, IOrderRepository
             await dbDataReader.DisposeAsync();
         }
     }
-    
+
     public async Task<IReadOnlyCollection<Order>> ByUserId(Guid adrianId)
     {
         _logger.LogInformation("Fetching orders for user with AdrianId {AdrianId}.", adrianId);
@@ -135,7 +136,8 @@ public class AdoOrderRepository: AbstractAdoRepository, IOrderRepository
         {
             var orders = new List<Order>();
 
-            using var connection = _factory.CreateConnection();
+            using var connection = _factory.CreateConnection()
+                               ?? throw new InvalidOperationException("Could not create DB connection.");
             connection.ConnectionString = _connectionString;
             await connection.OpenAsync();
 
@@ -168,7 +170,6 @@ public class AdoOrderRepository: AbstractAdoRepository, IOrderRepository
             throw new NutriscanDatabaseException(
                 "Failed to retrieve orders by user id from database.", ex);
         }
-
     }
 
     public async Task Save(Order order)
@@ -192,7 +193,6 @@ public class AdoOrderRepository: AbstractAdoRepository, IOrderRepository
             ];
 
             await ExecuteNonQueryAsync(orderQuery, parameters);
-
         }
         catch (DbException ex)
         {
@@ -200,7 +200,7 @@ public class AdoOrderRepository: AbstractAdoRepository, IOrderRepository
             throw new NutriscanDatabaseException("Failed to save order to database.", ex);
         }
     }
-    
+
     public async Task Remove(Order order)
     {
         _logger.LogInformation("Removing order with ID {OrderId} from database.", order.OrderId);
