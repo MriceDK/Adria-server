@@ -1,4 +1,5 @@
 using Adria.Infrastructure.WebApi.Controllers;
+using Adria.Infrastructure.WebApi.Controllers.FoodComposition;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -26,6 +27,7 @@ public static class Routes
     {
         MapSubscriptionRoutes(app);
         MapUserRoutes(app);
+        MapFoodCompositionRoutes(app);
         return app;
     }
 
@@ -47,6 +49,31 @@ public static class Routes
             .WithDescription("Get all users .")
             .WithName(nameof(SearchAllSubscriptionsController))
             .WithMetadata(new ProducesAttribute(APPLICATION_JSON))
+            .WithOpenApi();
+    }
+
+    private static void MapFoodCompositionRoutes(WebApplication app)
+    {
+        var foodCompositionRoutes = app.MapGroup("/api/FoodComposition")
+            .WithTags("FoodComposition")
+            .WithDescription("All endpoints related to Food Composition.")
+            .WithOpenApi();
+        foodCompositionRoutes
+            .MapPost("/create", CreateFoodCompositionController.Invoke)
+            .WithDescription("Create a new food composition.")
+            .WithName(nameof(CreateFoodCompositionController))
+            .WithMetadata(new ConsumesAttribute(APPLICATION_JSON))
+            .WithOpenApi();
+        foodCompositionRoutes
+            .MapGet("/by-food/{foodName}", GetFoodCompositionsByFoodController.Invoke)
+            .WithDescription("Get all foods by name.")
+            .WithName(nameof(GetFoodCompositionsByFoodController))
+            .WithOpenApi();
+
+        foodCompositionRoutes
+            .MapGet("/by-nutrient/{Type}", GetFoodCompositionsByNutrientController.Invoke)
+            .WithDescription("Get all foods by nutrient.")
+            .WithName(nameof(GetFoodCompositionsByNutrientController))
             .WithOpenApi();
     }
 

@@ -1,5 +1,8 @@
 using System.Data.Common;
 using Adria.Application.Contracts;
+using Adria.Application.Contracts.Data;
+using Adria.Application.FoodComposition;
+using Adria.Domain.Food;
 using Adria.Domain.Subcriptions;
 using Adria.Domain.Users;
 using Adria.Infrastructure.Persistence.Queries;
@@ -32,71 +35,92 @@ public static class PersistenceModule
         this IServiceCollection services
     )
     {
-        // Configure repositories here.
         return services
-                .AddScoped<ISubscriptionRepository, AdoSubscriptionRepository>(serviceProvider =>
-                {
-                    return new AdoSubscriptionRepository(
-                        serviceProvider.GetRequiredService<DbProviderFactory>(),
-                        _connectionString,
-                        serviceProvider.GetRequiredService<ILogger<AdoSubscriptionRepository>>()
-                    );
-                })
-                .AddScoped<IUserRepository, AdoUserRepository>(serviceProvider =>
-                {
-                    var factory = serviceProvider.GetRequiredService<DbProviderFactory>();
-                    return new AdoUserRepository(
+            .AddScoped<ISubscriptionRepository, AdoSubscriptionRepository>(serviceProvider =>
+            {
+                return new AdoSubscriptionRepository(
+                    serviceProvider.GetRequiredService<DbProviderFactory>(),
+                    _connectionString,
+                    serviceProvider.GetRequiredService<ILogger<AdoSubscriptionRepository>>()
+                );
+            })
+            .AddScoped<IUserRepository, AdoUserRepository>(serviceProvider =>
+            {
+                var factory = serviceProvider.GetRequiredService<DbProviderFactory>();
+                return new AdoUserRepository(
+                    factory,
+                    _connectionString,
+                    serviceProvider.GetRequiredService<ILogger<AdoUserRepository>>(),
+                    subscriptionRepository: new AdoSubscriptionRepository(
                         factory,
                         _connectionString,
-                        serviceProvider.GetRequiredService<ILogger<AdoUserRepository>>(),
-                        subscriptionRepository: new AdoSubscriptionRepository(factory,
-                            _connectionString,
-                            serviceProvider.GetRequiredService<ILogger<AdoSubscriptionRepository>>()
-                        )
-                    );
-                })
-            ;
+                        serviceProvider.GetRequiredService<ILogger<AdoSubscriptionRepository>>()
+                    )
+                );
+            })
+            .AddScoped<IFood, AdoFoodRepository>(sp =>
+            {
+                return new AdoFoodRepository(
+                    sp.GetRequiredService<DbProviderFactory>(),
+                    _connectionString
+                );
+            })
+            .AddScoped<INutrient, AdoNutrientRepository>(sp =>
+            {
+                return new AdoNutrientRepository(
+                    sp.GetRequiredService<DbProviderFactory>(),
+                    _connectionString
+                );
+            })
+            .AddScoped<IFoodComposition, AdoFoodCompositionRepository>(serviceProvider =>
+            {
+                return new AdoFoodCompositionRepository(
+                    serviceProvider.GetRequiredService<DbProviderFactory>(),
+                    _connectionString,
+                    serviceProvider.GetRequiredService<ILogger<AdoFoodCompositionRepository>>(),
+                    serviceProvider.GetRequiredService<IFood>(),
+                    serviceProvider.GetRequiredService<INutrient>()
+                );
+            });
     }
 
     private static IServiceCollection AddQueries(
         this IServiceCollection services
     )
     {
-        // Configure queries here.
         return services
-                .AddScoped<IAllSubscriptionsQuery, AllSubscriptionsQuery>(serviceProvider =>
-                {
-                    return new AllSubscriptionsQuery(
-                        serviceProvider.GetRequiredService<DbProviderFactory>(),
-                        _connectionString,
-                        serviceProvider.GetRequiredService<ILogger<AllSubscriptionsQuery>>()
-                    );
-                })
-                .AddScoped<ISubscriptionByIdQuery, SubscriptionByIdQuery>(serviceProvider =>
-                {
-                    return new SubscriptionByIdQuery(
-                        serviceProvider.GetRequiredService<DbProviderFactory>(),
-                        _connectionString,
-                        serviceProvider.GetRequiredService<ILogger<SubscriptionByIdQuery>>()
-                    );
-                })
-                .AddScoped<IUserByIdQuery, UserByIdQuery>(serviceProvider =>
-                {
-                    return new UserByIdQuery(
-                        serviceProvider.GetRequiredService<DbProviderFactory>(),
-                        _connectionString,
-                        serviceProvider.GetRequiredService<ILogger<UserByIdQuery>>()
-                    );
-                })
-                .AddScoped<IAllUsersQuery, AllUsersQuery>(serviceProvider =>
-                {
-                    return new AllUsersQuery(
-                        serviceProvider.GetRequiredService<DbProviderFactory>(),
-                        _connectionString,
-                        serviceProvider.GetRequiredService<ILogger<AllUsersQuery>>()
-                    );
-                })
-            ;
+            .AddScoped<IAllSubscriptionsQuery, AllSubscriptionsQuery>(serviceProvider =>
+            {
+                return new AllSubscriptionsQuery(
+                    serviceProvider.GetRequiredService<DbProviderFactory>(),
+                    _connectionString,
+                    serviceProvider.GetRequiredService<ILogger<AllSubscriptionsQuery>>()
+                );
+            })
+            .AddScoped<ISubscriptionByIdQuery, SubscriptionByIdQuery>(serviceProvider =>
+            {
+                return new SubscriptionByIdQuery(
+                    serviceProvider.GetRequiredService<DbProviderFactory>(),
+                    _connectionString,
+                    serviceProvider.GetRequiredService<ILogger<SubscriptionByIdQuery>>()
+                );
+            })
+            .AddScoped<IUserByIdQuery, UserByIdQuery>(serviceProvider =>
+            {
+                return new UserByIdQuery(
+                    serviceProvider.GetRequiredService<DbProviderFactory>(),
+                    _connectionString,
+                    serviceProvider.GetRequiredService<ILogger<UserByIdQuery>>()
+                );
+            })
+            .AddScoped<IAllUsersQuery, AllUsersQuery>(serviceProvider =>
+            {
+                return new AllUsersQuery(
+                    serviceProvider.GetRequiredService<DbProviderFactory>(),
+                    _connectionString,
+                    serviceProvider.GetRequiredService<ILogger<AllUsersQuery>>()
+                );
+            });
     }
 
     private static IServiceCollection AddAdoServices(
@@ -108,7 +132,7 @@ public static class PersistenceModule
 
         DbProviderFactories.RegisterFactory(provider, MySql.Data.MySqlClient.MySqlClientFactory.Instance);
 
-        return services.AddScoped(serviceProvider => { return DbProviderFactories.GetFactory(provider); });
+        return services.AddScoped(serviceProvider => DbProviderFactories.GetFactory(provider));
     }
 
     private static WebApplication ApplyMigrations(this WebApplication app)
