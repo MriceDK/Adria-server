@@ -6,14 +6,14 @@ using Microsoft.Extensions.Logging;
 
 namespace Adria.Application.OrderSupplement;
 
-public sealed record SearchOrderSupplementsByIdInput(Guid OrderId);
+public sealed record SearchOrderSupplementsByOrderIdInput(Guid OrderId);
 
-public sealed class SearchOrderSupplementsById(
+public sealed class SearchOrderSupplementsByOrderId(
     IOrderSupplementDetailsRepository orderSupplementDetailsRepository,
-    ILogger<SearchOrderSupplementsById> logger)
-    : IUseCase<SearchOrderSupplementsByIdInput, Task<IReadOnlyCollection<OrderSupplementDetails>>>
+    ILogger<SearchOrderSupplementsByOrderId> logger)
+    : IUseCase<SearchOrderSupplementsByOrderIdInput, Task<IReadOnlyCollection<OrderSupplementDetails>>>
 {
-    public async Task<IReadOnlyCollection<OrderSupplementDetails>> Execute(SearchOrderSupplementsByIdInput input)
+    public async Task<IReadOnlyCollection<OrderSupplementDetails>> Execute(SearchOrderSupplementsByOrderIdInput input)
     {
         logger.LogInformation(
             "Fetching order supplement details with order id '{OrderId}'.",
@@ -22,7 +22,7 @@ public sealed class SearchOrderSupplementsById(
 
         return (await orderSupplementDetailsRepository.ByOrderId(input.OrderId))
                ?? throw new ElementNotFoundException(
-                   $"OrderSupplementDetails with id {input.OrderId} not found."
+                   $"OrderSupplementDetails with order id {input.OrderId} not found."
                );
     }
 }
