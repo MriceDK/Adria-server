@@ -1,9 +1,13 @@
-﻿using Adria.Application.Contracts.Data;
+﻿using Adria.Application.Contracts;
+using Adria.Application.Contracts.Data;
 using Adria.Domain.Food;
 
 namespace Adria.Application.Scanner;
 
-public class GetFoodNutrients
+public sealed record GetFoodNutrientsInput(Guid FoodId);
+
+public sealed class GetFoodNutrients 
+    : IUseCase<GetFoodNutrientsInput, Task<IReadOnlyCollection<NutrientInfo>>>
 {
     private readonly IFoodComposition _foodCompositionRepository;
     private readonly INutrient _nutrientRepository;
@@ -14,17 +18,19 @@ public class GetFoodNutrients
         _nutrientRepository = nutrientRepository;
     }
 
-    public async Task<IReadOnlyCollection<NutrientInfo>> Execute(Guid foodId)
+    public async Task<IReadOnlyCollection<NutrientInfo>> Execute(GetFoodNutrientsInput input)
     {
-        IReadOnlyCollection<FoodComposition>
-            compositions = await _foodCompositionRepository.ByFoodId(foodId.ToString());
-        List<NutrientInfo> results = new List<NutrientInfo>();
-        foreach (FoodComposition comp in compositions)
+        IReadOnlyCollection<Domain.Food.FoodComposition> compositions =
+            await _foodCompositionRepository.ByFoodId(input.FoodId.ToString());
+
+        var results = new List<NutrientInfo>();
+
+        foreach (Domain.Food.FoodComposition comp in compositions)
         {
             Nutrient? nutrient = await _nutrientRepository.ById(comp.NutrientId.ToString());
             if (nutrient != null)
             {
-                NutrientInfo info = new NutrientInfo(
+                var info = new NutrientInfo(
                     nutrient.NutrientId,
                     nutrient.Type,
                     comp.Amount,
@@ -34,6 +40,6 @@ public class GetFoodNutrients
             }
         }
 
-        return results.AsReadOnly();
+        return results;
     }
 }

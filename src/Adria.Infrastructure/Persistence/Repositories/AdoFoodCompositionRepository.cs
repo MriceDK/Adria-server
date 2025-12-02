@@ -1,18 +1,19 @@
 ﻿using System.Data.Common;
 using Adria.Domain.Food;
-using Adria.Domain.Scanner;
 using Adria.Infrastructure.Persistence.Shared;
 using Microsoft.Extensions.Logging;
 
 namespace Adria.Infrastructure.Persistence.Repositories;
 
- public sealed class AdoFoodCompositionRepository : AbstractAdoRepository, IFoodComposition
-    {
-        private readonly ILogger<AdoFoodCompositionRepository> _logger;
+public sealed class AdoFoodCompositionRepository : AbstractAdoRepository, IFoodComposition
+{
+    private readonly ILogger<AdoFoodCompositionRepository> _logger;
+    private readonly IFood _foodRepository;
+    private readonly INutrient _nutrientRepository;
 
-    private static readonly string TABLE_FOOD_COMPOSITION = "FoodCompositions";
-    private static readonly string TABLE_FOODS = "Foods";
-    private static readonly string TABLE_NUTRIENTS = "Nutrients";
+    private static readonly string TABLE_FOOD_COMPOSITION = "foodCompositions";
+    private static readonly string TABLE_FOODS = "foods";
+    private static readonly string TABLE_NUTRIENTS = "nutrients";
 
     private static readonly string COL_FOOD_ID = "FoodId";
     private static readonly string COL_NUTRIENT_ID = "NutrientId";
@@ -44,10 +45,14 @@ namespace Adria.Infrastructure.Persistence.Repositories;
     public AdoFoodCompositionRepository(
         DbProviderFactory factory,
         string connectionString,
-        ILogger<AdoFoodCompositionRepository> logger
+        ILogger<AdoFoodCompositionRepository> logger,
+        IFood foodRepository,
+        INutrient nutrientRepository
     ) : base(factory, connectionString)
     {
         _logger = logger;
+        _foodRepository = foodRepository;
+        _nutrientRepository = nutrientRepository;
     }
 
     public async Task Save(FoodComposition foodComposition)
@@ -61,10 +66,10 @@ namespace Adria.Infrastructure.Persistence.Repositories;
             );
 
             if (!await ExistsInTable(TABLE_FOODS, COL_FOOD_ID, foodComposition.FoodId))
-                throw new ArgumentException("Invalid FoodId: does not exist in Foods table.");
+                throw new ArgumentException("Invalid FoodId: does not exist in foods table.");
 
             if (!await ExistsInTable(TABLE_NUTRIENTS, COL_NUTRIENT_ID, foodComposition.NutrientId))
-                throw new ArgumentException("Invalid NutrientId: does not exist in Nutrients table.");
+                throw new ArgumentException("Invalid NutrientId: does not exist in nutrients table.");
 
             await ExecuteNonQueryAsync(
                 INSERT_FOOD_COMPOSITION,
@@ -104,14 +109,24 @@ namespace Adria.Infrastructure.Persistence.Repositories;
         return false;
     }
 
-    public async Task<IReadOnlyCollection<FoodComposition>> ByFoodId(string foodId)
+    public async Task<IReadOnlyCollection<FoodComposition>> ByFoodId(string foodName)
     {
+        var ids = await _foodRepository.GetFoodIdByName(foodName);
+
+        if (ids.Count == 0)
+        {
+            _logger.LogInformation("No FoodId found for food name {FoodName}.", foodName);
+            return Array.Empty<FoodComposition>();
+        }
+
+        var foodId = ids.First();
+
         try
         {
             _logger.LogInformation("Reading FoodComposition entries for FoodId {FoodId}", foodId);
 
-            DbParameter foodParam = CreateParameter("@FoodId", foodId);
-            DbDataReader reader = await ExecuteReaderAsync(SELECT_BY_FOOD_ID, [foodParam]);
+            DbParameter foodParam = CreateParameter("@FoodId", foodId.ToString());
+            using DbDataReader reader = await ExecuteReaderAsync(SELECT_BY_FOOD_ID, [foodParam]);
 
             var result = new List<FoodComposition>();
 
@@ -133,14 +148,31 @@ namespace Adria.Infrastructure.Persistence.Repositories;
         }
     }
 
-    public async Task<IReadOnlyCollection<FoodComposition>> ByNutrientId(string nutrientId)
+    public async Task<IReadOnlyCollection<FoodComposition>> ByNutrientId(string type)
     {
+        if (string.IsNullOrWhiteSpace(type))
+        {
+            _logger.LogInformation("Type was null or empty.");
+            return Array.Empty<FoodComposition>();
+        }
+
+        var nutrientIds = await _nutrientRepository.GetNutrientIdBytype(type) 
+                          ?? Array.Empty<Guid>();
+
+        if (nutrientIds.Count == 0)
+        {
+            _logger.LogInformation("No NutrientId found for type {Type}.", type);
+            return Array.Empty<FoodComposition>();
+        }
+
+        var nutrientId = nutrientIds.First();
+
         try
         {
             _logger.LogInformation("Reading FoodComposition entries for NutrientId {NutrientId}", nutrientId);
 
-            DbParameter nutrientParam = CreateParameter("@NutrientId", nutrientId);
-            DbDataReader reader = await ExecuteReaderAsync(SELECT_BY_NUTRIENT_ID, [nutrientParam]);
+            DbParameter nutriParam = CreateParameter("@NutrientId", nutrientId.ToString());
+            using DbDataReader reader = await ExecuteReaderAsync(SELECT_BY_NUTRIENT_ID, new[] { nutriParam });
 
             var result = new List<FoodComposition>();
 
@@ -158,9 +190,11 @@ namespace Adria.Infrastructure.Persistence.Repositories;
         catch (DbException ex)
         {
             _logger.LogError(ex, "Failed to read FoodComposition entries for NutrientId {NutrientId}", nutrientId);
-            throw new NutriscanDatabaseException("Database error reading nutrient compositions.", ex);
+            throw new NutriscanDatabaseException("Database error reading food compositions.", ex);
         }
     }
+
+
 
     public async Task Remove(FoodComposition foodComposition)
     {
@@ -190,4 +224,4 @@ namespace Adria.Infrastructure.Persistence.Repositories;
             throw new NutriscanDatabaseException("Failed to remove FoodComposition.", ex);
         }
     }
-    }
+}
