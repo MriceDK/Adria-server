@@ -423,10 +423,10 @@ INSERT INTO `bodyStats` (`BodyStatId`, `Label`, `Unit`, `Goal`)
 VALUES ('bd4-fatp-0001', 'Body Fat', '%', 25),
        ('bd4-weig-0002', 'Weight', 'kg', 75.0),
        ('bd4-hydr-0003', 'Hydration', '%', 100.0),
-       ('bd4-hear-0004', 'Resting Heart Rate', 'bpm', 60.0),
-       ('bd4-bmi-0005', 'BMI', '-', 20.0),
+       ('bd4-hear-0004', 'Resting Heart Rate', 'bpm', 100.0),
+       ('bd4-bmi-0005', 'BMI', '-', 25.0),
        ('bd4-blood-0006', 'Blood Pressure', 'mmHg', 120.0),
-       ('bd4-glucose-0007', 'Fasting Blood Glucose', 'mg/dL', 80.0);
+       ('bd4-glucose-0007', 'Fasting Blood Glucose', 'mg/dL', 100.0);
 
 
 
