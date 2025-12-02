@@ -419,10 +419,14 @@ VALUES ('bd3-totl-0001', 'Cholesterol Total', 'mg/dL', 200),
 
 -- 4. Basic Stats 
 INSERT INTO `bodyStats` (`BodyStatId`, `Label`, `Unit`, `Goal`)
-VALUES ('bd4-fatp-0001', 'Body Fat', '%', 12.5),
+VALUES ('bd4-fatp-0001', 'Body Fat', '%', 25),
        ('bd4-weig-0002', 'Weight', 'kg', 75.0),
        ('bd4-hydr-0003', 'Hydration', '%', 100.0),
-       ('bd4-hear-0004', 'Resting Heart Rate', 'bpm', 60.0);
+       ('bd4-hear-0004', 'Resting Heart Rate', 'bpm', 60.0),
+       ('bd4-bmi-0005', 'BMI', '-', 20.0),
+       ('bd4-blood-0006', 'Blood Pressure', 'mmHg', 120.0),
+       ('bd4-glucose-0007', 'Fasting Blood Glucose', 'mg/dL', 80.0);
+
 
 
 INSERT INTO `analyse` (`AnalyseId`, `AdrianId`, `DateTime`)
@@ -456,4 +460,7 @@ VALUES
 ('an1-aaaa-bbbb-cccc-dddddddddddd', 'bd4-fatp-0001', 1),
 ('an1-aaaa-bbbb-cccc-dddddddddddd', 'bd4-weig-0002', 1),
 ('an1-aaaa-bbbb-cccc-dddddddddddd', 'bd4-hydr-0003', 1),
-('an1-aaaa-bbbb-cccc-dddddddddddd', 'bd4-hear-0004', 1);
+('an1-aaaa-bbbb-cccc-dddddddddddd', 'bd4-hear-0004', 1),
+('an1-aaaa-bbbb-cccc-dddddddddddd', 'bd4-bmi-0005', 1),
+('an1-aaaa-bbbb-cccc-dddddddddddd', 'bd4-blood-0006', 1),
+('an1-aaaa-bbbb-cccc-dddddddddddd', 'bd4-glucose-0007', 1);
