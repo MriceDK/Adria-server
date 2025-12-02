@@ -17,4 +17,14 @@ public sealed class BodyStat
     public string Label { get; private set; }
     public string? Unit { get; private set; }
     public double? Goal { get; private set; }
+    
+    public void UpdateGoal(double? newGoal)
+    {
+        if (newGoal is < 0)
+        {
+            throw new ArgumentException("Goal cannot be negative.", nameof(newGoal));
+        }
+        
+        Goal = newGoal;
+    }
 }
