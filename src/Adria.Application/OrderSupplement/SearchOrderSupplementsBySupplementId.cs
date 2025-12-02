@@ -20,7 +20,7 @@ public sealed class SearchOrderSupplementsBySupplementId(
             input.SupplementId
         );
 
-        return (await orderSupplementDetailsRepository.ByOrderId(input.SupplementId))
+        return (await orderSupplementDetailsRepository.BySupplementId(input.SupplementId))
                ?? throw new ElementNotFoundException(
                    $"OrderSupplementDetails with supplement id {input.SupplementId} not found."
                );
