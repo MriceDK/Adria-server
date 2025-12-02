@@ -30,24 +30,43 @@ public sealed class AdoBodyStatRepository(
         WHERE {COL_ID} = @Id;
     ";
 
-    public async Task<BodyStat?> ById(Guid id)
+
+    public async Task<BodyStat?> ById(string id)
     {
-        var param = CreateParameter("@Id", id.ToString().ToLower());
+        var param = CreateParameter("@Id", id);
+        
         var reader = await ExecuteReaderAsync(SELECT_BY_ID, [param]);
 
-        if (await reader.ReadAsync())
+        try
         {
-            var label = reader.GetString(reader.GetOrdinal(COL_LABEL));
-            var unit = reader.IsDBNull(reader.GetOrdinal(COL_UNIT)) ? null : reader.GetString(reader.GetOrdinal(COL_UNIT));
-            var goal = reader.IsDBNull(reader.GetOrdinal(COL_GOAL)) ? (double?)null : reader.GetDouble(reader.GetOrdinal(COL_GOAL));
-            var statId = Guid.Parse(reader.GetString(reader.GetOrdinal(COL_ID)));
+            if (await reader.ReadAsync())
+            {
+                var labelOrd = reader.GetOrdinal(COL_LABEL);
+                var unitOrd = reader.GetOrdinal(COL_UNIT);
+                var goalOrd = reader.GetOrdinal(COL_GOAL);
+                var idOrd = reader.GetOrdinal(COL_ID);
 
-            await reader.DisposeAsync();
-            return new BodyStat(label, unit, goal, statId);
+                var label = reader.GetString(labelOrd);
+                
+                var unit = reader.IsDBNull(unitOrd) 
+                    ? null 
+                    : reader.GetString(unitOrd);
+                    
+                var goal = reader.IsDBNull(goalOrd) 
+                    ? (double?)null 
+                    : reader.GetDouble(goalOrd);
+                
+                var statId = reader.GetString(idOrd);
+
+                return new BodyStat(label, unit, goal, statId);
+            }
+
+            return null;
         }
-        
-        await reader.DisposeAsync();
-        return null;
+        finally
+        {
+            await reader.DisposeAsync();
+        }
     }
 
     public async Task Update(BodyStat bodyStat)

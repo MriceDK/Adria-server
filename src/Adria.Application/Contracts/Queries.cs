@@ -30,7 +30,7 @@ public interface IAllUsersQuery
 
 public interface IBodyStatRepository
 {
-    Task<BodyStat?> ById(Guid id); 
+    Task<BodyStat?> ById(string id); 
     Task Update(BodyStat bodyStat);
 }
 

@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Adria.Application.BodyStats;
 
-public sealed record UpdateBodyStatGoalInput(Guid BodyStatId, double? NewGoal);
+public sealed record UpdateBodyStatGoalInput(string BodyStatId, double? NewGoal);
 
 public sealed class UpdateBodyStatGoal(IBodyStatRepository repository, ILogger<UpdateBodyStatGoal> logger)
     : IUseCase<UpdateBodyStatGoalInput, Task>
