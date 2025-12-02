@@ -6,13 +6,15 @@ public sealed class Supplement
     public string Name { get; private set; }
     public string Type { get; private set; }
     public double Price { get; private set; }
+    public int Stock { get; private set; }
     
-    public Supplement(Guid supplementId, string name, string type, double price)
+    public Supplement(Guid supplementId, string name, string type, double price, int stock)
     {
         SupplementId = supplementId;
         Name = EnsureNameIsValid(name);
         Type = EnsureNameIsValid(type);
         Price = EnsurePriceIsValid(price);
+        Stock = EnsureStockIsValid(stock);
     }
 
     public void SetName(string name)
@@ -30,6 +32,11 @@ public sealed class Supplement
         Price = EnsurePriceIsValid(price);  
     }
     
+    public void SetStock(int stock)
+    {
+        Stock = EnsureStockIsValid(stock);
+    }
+    
     private static double EnsurePriceIsValid(double price)
     {
         if (double.IsNegative(price))
@@ -42,5 +49,12 @@ public sealed class Supplement
         if (string.IsNullOrWhiteSpace(name))
             throw new ArgumentException("Name cannot be null or empty.", nameof(name));
         return name;
+    }
+    
+    private static int EnsureStockIsValid(int stock)
+    {
+        if (stock < 0)
+            throw new ArgumentException("New stock cannot be below 0.", nameof(stock));
+        return stock;
     }
 }

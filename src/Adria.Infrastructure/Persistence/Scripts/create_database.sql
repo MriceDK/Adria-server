@@ -4,8 +4,11 @@ HINT: start with dropping tables if they exist
 See example server for reference
 */
 
-SET FOREIGN_KEY_CHECKS = 0;
-
+SET
+FOREIGN_KEY_CHECKS = 0;
+DROP TABLE IF EXISTS `healthAnalyse`;
+DROP TABLE IF EXISTS `analyse`;
+DROP TABLE IF EXISTS `bodyStats`;
 DROP TABLE IF EXISTS `orderSupplementDetails`;
 DROP TABLE IF EXISTS `healthAnalyses`;
 DROP TABLE IF EXISTS `foodCompositions`;
@@ -17,16 +20,17 @@ DROP TABLE IF EXISTS `nutrients`;
 DROP TABLE IF EXISTS `users`;
 DROP TABLE IF EXISTS `subscriptions`;
 
-SET FOREIGN_KEY_CHECKS = 1;
+SET
+FOREIGN_KEY_CHECKS = 1;
 
 CREATE TABLE `subscriptions`
 (
-    `id`            VARCHAR(36) PRIMARY KEY NOT NULL,
-    `Type`          VARCHAR(100)            NOT NULL,
-    `PricePerMonth` DOUBLE                  NOT NULL,
-    `Advantages`    TEXT,
-    `StartDate`     DATETIME                NOT NULL,
-    `EndDate`       DATETIME                NOT NULL
+    `id`         VARCHAR(36) PRIMARY KEY NOT NULL,
+    `Type`       VARCHAR(100)            NOT NULL,
+    `PricePerMonth` DOUBLE NOT NULL,
+    `Advantages` TEXT,
+    `StartDate`  DATETIME                NOT NULL,
+    `EndDate`    DATETIME                NOT NULL
 );
 
 CREATE TABLE `users`
@@ -36,7 +40,7 @@ CREATE TABLE `users`
     `Job`            VARCHAR(255),
     `SubscriptionId` VARCHAR(36)             NOT NULL,
     CONSTRAINT `fk_users_subscription`
-        FOREIGN KEY (`SubscriptionId`) REFERENCES `subscriptions`(`id`)
+        FOREIGN KEY (`SubscriptionId`) REFERENCES `subscriptions` (`id`)
 );
 
 CREATE TABLE `foods`
@@ -52,7 +56,7 @@ CREATE TABLE `supplements`
     `SupplementId` VARCHAR(36) PRIMARY KEY NOT NULL,
     `Name`         VARCHAR(255)            NOT NULL,
     `Type`         VARCHAR(100)            NOT NULL,
-    `Price`        DOUBLE                  NOT NULL,
+    `Price` DOUBLE NOT NULL,
     `Stock`        INT                     NOT NULL DEFAULT 0
 );
 
@@ -60,7 +64,9 @@ CREATE TABLE `nutrients`
 (
     `NutrientId` VARCHAR(36) PRIMARY KEY NOT NULL,
     `Type`       VARCHAR(100)            NOT NULL,
-    `Unit`       VARCHAR(36)             NOT NULL
+    `Unit` DOUBLE NOT NULL,
+    `Minimum`    VARCHAR(36)             NOT NULL,
+    `Maximum`    VARCHAR(36)             NOT NULL
 );
 
 CREATE TABLE `orders`
@@ -70,7 +76,7 @@ CREATE TABLE `orders`
     `Date`       DATETIME                NOT NULL,
     `TotalPrice` INT                     NOT NULL,
     CONSTRAINT `fk_orders_user`
-        FOREIGN KEY (`AdrianId`) REFERENCES `users`(`AdrianId`)
+        FOREIGN KEY (`AdrianId`) REFERENCES `users` (`AdrianId`)
 );
 
 CREATE TABLE `scans`
@@ -81,9 +87,9 @@ CREATE TABLE `scans`
     `Result`   TEXT,
     `FoodId`   VARCHAR(36)             NOT NULL,
     CONSTRAINT `fk_scans_user`
-        FOREIGN KEY (`AdrianId`) REFERENCES `users`(`AdrianId`),
+        FOREIGN KEY (`AdrianId`) REFERENCES `users` (`AdrianId`),
     CONSTRAINT `fk_scans_food`
-        FOREIGN KEY (`FoodId`) REFERENCES `foods`(`FoodId`)
+        FOREIGN KEY (`FoodId`) REFERENCES `foods` (`FoodId`)
 );
 
 CREATE TABLE `foodCompositions`
@@ -93,9 +99,9 @@ CREATE TABLE `foodCompositions`
     `Amount`     DOUBLE NOT NULL,
     PRIMARY KEY (`FoodId`, `NutrientId`),
     CONSTRAINT `fk_foodcomp_food`
-        FOREIGN KEY (`FoodId`) REFERENCES `foods`(`FoodId`),
+        FOREIGN KEY (`FoodId`) REFERENCES `foods` (`FoodId`),
     CONSTRAINT `fk_foodcomp_nutrient`
-        FOREIGN KEY (`NutrientId`) REFERENCES `nutrients`(`NutrientId`)
+        FOREIGN KEY (`NutrientId`) REFERENCES `nutrients` (`NutrientId`)
 );
 
 CREATE TABLE `healthAnalyses`
@@ -106,7 +112,7 @@ CREATE TABLE `healthAnalyses`
     `Status`         VARCHAR(100)            NOT NULL,
     `Recommendation` TEXT,
     CONSTRAINT `fk_healthanalyses_user`
-        FOREIGN KEY (`AdrianId`) REFERENCES `users`(`AdrianId`)
+        FOREIGN KEY (`AdrianId`) REFERENCES `users` (`AdrianId`)
 );
 
 CREATE TABLE `orderSupplementDetails`
@@ -116,9 +122,36 @@ CREATE TABLE `orderSupplementDetails`
     `Amount`       VARCHAR(50) NOT NULL,
     PRIMARY KEY (`OrderId`, `SupplementId`),
     CONSTRAINT `fk_ordersupp_order`
-        FOREIGN KEY (`OrderId`) REFERENCES `orders`(`OrderId`),
+        FOREIGN KEY (`OrderId`) REFERENCES `orders` (`OrderId`),
     CONSTRAINT `fk_ordersupp_supplement`
-        FOREIGN KEY (`SupplementId`) REFERENCES `supplements`(`SupplementId`)
+        FOREIGN KEY (`SupplementId`) REFERENCES `supplements` (`SupplementId`)
+);
+
+
+CREATE TABLE `bodyStats`
+(
+    `BodyStatId` VARCHAR(36) PRIMARY KEY NOT NULL,
+    `Label`      VARCHAR(100)            NOT NULL,
+    `Unit`       VARCHAR(20),
+    `Goal` DOUBLE
+);
+
+CREATE TABLE `analyse`
+(
+    `AnalyseId` VARCHAR(36) PRIMARY KEY NOT NULL,
+    `AdrianId`  VARCHAR(36)             NOT NULL,
+    `DateTime`  DATETIME                NOT NULL,
+    FOREIGN KEY (`AdrianId`) REFERENCES `users` (`AdrianId`)
+);
+
+CREATE TABLE `healthAnalyse`
+(
+    `AnalyseId`  VARCHAR(36) NOT NULL,
+    `BodyStatId` VARCHAR(36) NOT NULL,
+    `Current` DOUBLE NOT NULL,
+    PRIMARY KEY (`AnalyseId`, `BodyStatId`),
+    FOREIGN KEY (`AnalyseId`) REFERENCES `analyse` (`AnalyseId`),
+    FOREIGN KEY (`BodyStatId`) REFERENCES `bodyStats` (`BodyStatId`)
 );
 
 /* ========== SEED DATA ========== */
@@ -155,29 +188,29 @@ INSERT INTO users (`AdrianId`, `Name`, `Job`, `SubscriptionId`)
 VALUES ('b8c9d0e1-f2a3-4b5c-5d6e-8f9a0b1c2d3e', 'David Brown', 'Chef', 'a1b2c3d4-e5f6-4a5b-8c9d-1e2f3a4b5c6d');
 
 -- Insert Nutrients
-INSERT INTO nutrients (`NutrientId`, `Type`, `Unit`)
-VALUES ('c9d0e1f2-a3b4-4c5d-6e7f-9a0b1c2d3e4f', 'Protein','g' );
+INSERT INTO nutrients (`NutrientId`, `Type`, `Unit`, `Minimum`, `Maximum`)
+VALUES ('c9d0e1f2-a3b4-4c5d-6e7f-9a0b1c2d3e4f', 'Protein', 50, '45', '60');
 
-INSERT INTO nutrients (`NutrientId`, `Type`, `Unit`)
-VALUES ('d0e1f2a3-b4c5-4d5e-7f8a-0b1c2d3e4f5a', 'Carbohydrates', 'g');
+INSERT INTO nutrients (`NutrientId`, `Type`, `Unit`, `Minimum`, `Maximum`)
+VALUES ('d0e1f2a3-b4c5-4d5e-7f8a-0b1c2d3e4f5a', 'Carbohydrates', 300, '200', '350');
 
-INSERT INTO nutrients (`NutrientId`, `Type`, `Unit`)
-VALUES ('e1f2a3b4-c5d6-4e5f-8a9b-1c2d3e4f5a6b', 'Fiber','g');
+INSERT INTO nutrients (`NutrientId`, `Type`, `Unit`, `Minimum`, `Maximum`)
+VALUES ('e1f2a3b4-c5d6-4e5f-8a9b-1c2d3e4f5a6b', 'Fiber', 25, '20', '35');
 
-INSERT INTO nutrients (`NutrientId`, `Type`, `Unit`)
-VALUES ('f2a3b4c5-d6e7-4f5a-9b0c-2d3e4f5a6b7c', 'Vitamin C','g');
+INSERT INTO nutrients (`NutrientId`, `Type`, `Unit`, `Minimum`, `Maximum`)
+VALUES ('f2a3b4c5-d6e7-4f5a-9b0c-2d3e4f5a6b7c', 'Vitamin C', 90, '70', '120');
 
-INSERT INTO nutrients (`NutrientId`, `Type`, `Unit`)
-VALUES ('a3b4c5d6-e7f8-4a5b-0c1d-3e4f5a6b7c8d', 'Calcium','g');
+INSERT INTO nutrients (`NutrientId`, `Type`, `Unit`, `Minimum`, `Maximum`)
+VALUES ('a3b4c5d6-e7f8-4a5b-0c1d-3e4f5a6b7c8d', 'Calcium', 1000, '800', '1500');
 
-INSERT INTO nutrients (`NutrientId`, `Type`, `Unit`)
-VALUES ('b4c5d6e7-f8a9-4b5c-1d2e-4f5a6b7c8d9e', 'Iron','g');
+INSERT INTO nutrients (`NutrientId`, `Type`, `Unit`, `Minimum`, `Maximum`)
+VALUES ('b4c5d6e7-f8a9-4b5c-1d2e-4f5a6b7c8d9e', 'Iron', 18, '8', '27');
 
-INSERT INTO nutrients (`NutrientId`, `Type`, `Unit`)
-VALUES ('c5d6e7f8-a9b0-4c5d-2e3f-5a6b7c8d9e0f', 'Vitamin D','g');
+INSERT INTO nutrients (`NutrientId`, `Type`, `Unit`, `Minimum`, `Maximum`)
+VALUES ('c5d6e7f8-a9b0-4c5d-2e3f-5a6b7c8d9e0f', 'Vitamin D', 600, '400', '800');
 
-INSERT INTO nutrients (`NutrientId`, `Type`, `Unit`)
-VALUES ('d6e7f8a9-b0c1-4d5e-3f4a-6b7c8d9e0f1a', 'Omega-3','g');
+INSERT INTO nutrients (`NutrientId`, `Type`, `Unit`, `Minimum`, `Maximum`)
+VALUES ('d6e7f8a9-b0c1-4d5e-3f4a-6b7c8d9e0f1a', 'Omega-3', 250, '200', '500');
 
 -- Insert Foods
 INSERT INTO foods (`FoodId`, `Name`, `Type`, `Edible`)
@@ -355,3 +388,73 @@ INSERT INTO orderSupplementDetails (`OrderId`, `SupplementId`, `Amount`)
 VALUES ('c9d0e1f2-a3b4-4c5d-6e7f-9a0b1c2d3e4f', 'a1b2c3d4-e5f6-4a5b-8c9d-1e2f3a4b5c6d', '2');
 INSERT INTO orderSupplementDetails (`OrderId`, `SupplementId`, `Amount`)
 VALUES ('c9d0e1f2-a3b4-4c5d-6e7f-9a0b1c2d3e4f', 'c3d4e5f6-a7b8-4c5d-0e1f-3a4b5c6d7e8f', '1');
+
+
+-- 1. Daily Goals
+INSERT INTO `bodyStats` (`BodyStatId`, `Label`, `Unit`, `Goal`)
+VALUES ('bd1-prot-0001', 'Protein', 'g', 150),
+       ('bd1-carb-0002', 'Carbohydrates', 'g', 250),
+       ('bd1-fats-0003', 'Fats', 'g', 65),
+       ('bd1-watr-0004', 'Water', 'ml', 2500);
+
+-- 2. Minerals
+INSERT INTO `bodyStats` (`BodyStatId`, `Label`, `Unit`, `Goal`)
+VALUES ('bd2-calc-0001', 'Calcium', 'mg', 1000),
+       ('bd2-iron-0002', 'Iron', 'mg', 18),
+       ('bd2-magn-0003', 'Magnesium', 'mg', 400),
+       ('bd2-phos-0004', 'Phosphorus', 'mg', 700),
+       ('bd2-pota-0005', 'Potassium', 'mg', 3500),
+       ('bd2-sodi-0006', 'Sodium', 'mg', 2300),
+       ('bd2-zinc-0007', 'Zinc', 'mg', 11),
+       ('bd2-copp-0008', 'Copper', 'mg', 0.9),
+       ('bd2-mang-0009', 'Manganese', 'mg', 2.3),
+       ('bd2-sele-0010', 'Selenium', 'μg', 55),
+       ('bd2-iodi-0011', 'Iodine', 'μg', 150);
+
+-- 3. Cholesterol
+INSERT INTO `bodyStats` (`BodyStatId`, `Label`, `Unit`, `Goal`)
+VALUES ('bd3-totl-0001', 'Cholesterol Total', 'mg/dL', 200),
+       ('bd3-hdlc-0002', 'HDL Cholesterol', 'mg/dL', 40),
+       ('bd3-ldlc-0003', 'LDL Cholesterol', 'mg/dL', 100),
+       ('bd3-trig-0004', 'Triglycerides', 'mg/dL', 150);
+
+-- 4. Basic Stats 
+INSERT INTO `bodyStats` (`BodyStatId`, `Label`, `Unit`, `Goal`)
+VALUES ('bd4-fatp-0001', 'Body Fat', '%', 12.5),
+       ('bd4-weig-0002', 'Weight', 'kg', 75.0),
+       ('bd4-hydr-0003', 'Hydration', '%', 100.0),
+       ('bd4-hear-0004', 'Resting Heart Rate', 'bpm', 60.0);
+
+
+INSERT INTO `analyse` (`AnalyseId`, `AdrianId`, `DateTime`)
+VALUES ('an1-aaaa-bbbb-cccc-dddddddddddd', 'd4e5f6a7-b8c9-4d5e-1f2a-4b5c6d7e8f9a', '2025-11-18 08:30:00');
+
+INSERT INTO `healthAnalyse` (`AnalyseId`, `BodyStatId`, `Current`)
+VALUES
+-- 1. Daily Goals
+('an1-aaaa-bbbb-cccc-dddddddddddd', 'bd1-prot-0001', 1),
+('an1-aaaa-bbbb-cccc-dddddddddddd', 'bd1-carb-0002', 1),
+('an1-aaaa-bbbb-cccc-dddddddddddd', 'bd1-fats-0003', 1),
+('an1-aaaa-bbbb-cccc-dddddddddddd', 'bd1-watr-0004', 1),
+-- 2. Minerals
+('an1-aaaa-bbbb-cccc-dddddddddddd', 'bd2-calc-0001', 1),
+('an1-aaaa-bbbb-cccc-dddddddddddd', 'bd2-iron-0002', 1),
+('an1-aaaa-bbbb-cccc-dddddddddddd', 'bd2-magn-0003', 1),
+('an1-aaaa-bbbb-cccc-dddddddddddd', 'bd2-phos-0004', 1),
+('an1-aaaa-bbbb-cccc-dddddddddddd', 'bd2-pota-0005', 1),
+('an1-aaaa-bbbb-cccc-dddddddddddd', 'bd2-sodi-0006', 1),
+('an1-aaaa-bbbb-cccc-dddddddddddd', 'bd2-zinc-0007', 1),
+('an1-aaaa-bbbb-cccc-dddddddddddd', 'bd2-copp-0008', 1),
+('an1-aaaa-bbbb-cccc-dddddddddddd', 'bd2-mang-0009', 1),
+('an1-aaaa-bbbb-cccc-dddddddddddd', 'bd2-sele-0010', 1),
+('an1-aaaa-bbbb-cccc-dddddddddddd', 'bd2-iodi-0011', 1),
+-- 3. Cholesterol
+('an1-aaaa-bbbb-cccc-dddddddddddd', 'bd3-totl-0001', 1),
+('an1-aaaa-bbbb-cccc-dddddddddddd', 'bd3-hdlc-0002', 1),
+('an1-aaaa-bbbb-cccc-dddddddddddd', 'bd3-ldlc-0003', 1),
+('an1-aaaa-bbbb-cccc-dddddddddddd', 'bd3-trig-0004', 1),
+-- 4. Basic Stats
+('an1-aaaa-bbbb-cccc-dddddddddddd', 'bd4-fatp-0001', 1),
+('an1-aaaa-bbbb-cccc-dddddddddddd', 'bd4-weig-0002', 1),
+('an1-aaaa-bbbb-cccc-dddddddddddd', 'bd4-hydr-0003', 1),
+('an1-aaaa-bbbb-cccc-dddddddddddd', 'bd4-hear-0004', 1);

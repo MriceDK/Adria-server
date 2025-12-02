@@ -12,9 +12,10 @@ public class SupplementTests
         var name = "Vitamin C";
         var type = "Vitamin";
         var price = 19.99;
+        var stock = 20;
 
         // Act
-        var supplement = new Supplement(supplementId, name, type, price);
+        var supplement = new Supplement(supplementId, name, type, price, stock);
 
         // Assert
         Assert.Equal(supplementId, supplement.SupplementId);
@@ -27,7 +28,7 @@ public class SupplementTests
     public void SetPrice_ShouldThrow_WhenNegative()
     {
         // Arrange
-        var supplement = new Supplement(Guid.NewGuid(), "Vitamin C", "Vitamin", 10);
+        var supplement = new Supplement(Guid.NewGuid(), "Vitamin C", "Vitamin", 10, 20);
 
         // Act & Assert
         var ex = Assert.Throws<ArgumentException>(() => supplement.SetPrice(-5));
@@ -41,7 +42,7 @@ public class SupplementTests
     public void SetName_ShouldThrow_WhenInvalid(string invalidName)
     {
         // Arrange
-        var supplement = new Supplement(Guid.NewGuid(), "Vitamin C", "Vitamin", 10);
+        var supplement = new Supplement(Guid.NewGuid(), "Vitamin C", "Vitamin", 10, 20);
 
         // Act & Assert
         var ex = Assert.Throws<ArgumentException>(() => supplement.SetName(invalidName));
@@ -52,7 +53,7 @@ public class SupplementTests
     public void SetNameAndType_ShouldUpdateValues()
     {
         // Arrange
-        var supplement = new Supplement(Guid.NewGuid(), "Vitamin C", "Vitamin", 10);
+        var supplement = new Supplement(Guid.NewGuid(), "Vitamin C", "Vitamin", 10, 20);
         var newName = "Omega 3";
         var newType = "Fatty Acid";
 

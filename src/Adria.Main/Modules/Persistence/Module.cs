@@ -3,6 +3,7 @@ using Adria.Application.Contracts;
 using Adria.Application.Contracts.Data;
 using Adria.Application.FoodComposition;
 using Adria.Domain.Food;
+using Adria.Domain.BodyStatus;
 using Adria.Domain.Subcriptions;
 using Adria.Domain.Users;
 using Adria.Infrastructure.Persistence.Queries;
@@ -53,6 +54,7 @@ public static class PersistenceModule
                     serviceProvider.GetRequiredService<ILogger<AdoUserRepository>>(),
                     subscriptionRepository: new AdoSubscriptionRepository(
                         factory,
+                    subscriptionRepository: new AdoSubscriptionRepository(factory,
                         _connectionString,
                         serviceProvider.GetRequiredService<ILogger<AdoSubscriptionRepository>>()
                     )
@@ -80,6 +82,12 @@ public static class PersistenceModule
                     serviceProvider.GetRequiredService<ILogger<AdoFoodCompositionRepository>>(),
                     serviceProvider.GetRequiredService<IFood>(),
                     serviceProvider.GetRequiredService<INutrient>()
+            }).AddScoped<IAnalyseRepository, AdoAnalyseRepository>(serviceProvider =>
+            {
+                return new AdoAnalyseRepository(
+                    serviceProvider.GetRequiredService<DbProviderFactory>(),
+                    _connectionString,
+                    serviceProvider.GetRequiredService<ILogger<AdoAnalyseRepository>>()
                 );
             });
     }
@@ -119,6 +127,13 @@ public static class PersistenceModule
                     serviceProvider.GetRequiredService<DbProviderFactory>(),
                     _connectionString,
                     serviceProvider.GetRequiredService<ILogger<AllUsersQuery>>()
+                );
+            }).AddScoped<IBodyStatsQuery, LatestBodyStatsQuery>(serviceProvider =>
+            {
+                return new LatestBodyStatsQuery(
+                    serviceProvider.GetRequiredService<DbProviderFactory>(),
+                    _connectionString,
+                    serviceProvider.GetRequiredService<ILogger<LatestBodyStatsQuery>>()
                 );
             });
     }
