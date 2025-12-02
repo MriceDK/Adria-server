@@ -56,3 +56,18 @@ public interface IAllSupplementsQuery
 {
     Task<IReadOnlyCollection<SupplementData?>> Fetch();
 }
+
+public interface IOrderSupplementDetailsByOrderIdQuery
+{
+    Task<IReadOnlyCollection<OrderSupplementDetailsData?>> Fetch(Guid orderId);
+}
+
+public interface IOrderSupplementDetailsBySupplementIdQuery
+{
+    Task<IReadOnlyCollection<OrderSupplementDetailsData?>> Fetch(Guid supplementId);
+}
+
+public interface IOrderSupplementDetailsByOrderAndSupplementIdQuery
+{
+    Task<IReadOnlyCollection<OrderSupplementDetailsData?>> Fetch(Guid orderId, Guid supplementId);
+}
