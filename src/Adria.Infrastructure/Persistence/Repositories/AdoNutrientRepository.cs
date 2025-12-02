@@ -27,11 +27,12 @@ public class AdoNutrientRepository : AbstractAdoRepository, INutrient
     public async Task<IReadOnlyCollection<Nutrient>> GetAllNutrients()
     {
         var nutrients = new List<Nutrient>();
-        
-        using var connection = _factory.CreateConnection();
+
+        using var connection = _factory.CreateConnection() 
+            ?? throw new InvalidOperationException("Could not create DB connection.");
         connection.ConnectionString = _connectionString;
         await connection.OpenAsync();
-        
+
         using var command = connection.CreateCommand();
         command.CommandText = "SELECT NutrientId, Type, RecommendedAmount FROM Nutrients";
 
@@ -42,19 +43,20 @@ public class AdoNutrientRepository : AbstractAdoRepository, INutrient
                 reader.GetGuid(reader.GetOrdinal("NutrientId")),
                 reader.GetString(reader.GetOrdinal("Type")),
                 reader.GetDouble(reader.GetOrdinal("RecommendedAmount"))
-                
             ));
         }
+
         return nutrients;
     }
 
     public async Task<IReadOnlyCollection<Guid>> GetNutrientIdBytype(string type)
     {
-        var Type = new List<Guid>();
+        var nutrientIds = new List<Guid>();
 
         const string query = "SELECT NutrientId FROM Nutrients WHERE Type = @Type LIMIT 1;";
 
-        using var connection = _factory.CreateConnection();
+        using var connection = _factory.CreateConnection() 
+            ?? throw new InvalidOperationException("Could not create DB connection.");
         connection.ConnectionString = _connectionString;
         await connection.OpenAsync();
 
@@ -69,26 +71,33 @@ public class AdoNutrientRepository : AbstractAdoRepository, INutrient
         using var reader = await command.ExecuteReaderAsync();
         if (await reader.ReadAsync())
         {
-            Type.Add(reader.GetGuid(reader.GetOrdinal("NutrientId")));
+            nutrientIds.Add(reader.GetGuid(reader.GetOrdinal("NutrientId")));
         }
 
-        return Type;
-        
+        return nutrientIds;
     }
-    
-    public async Task<Guid> AddNutrient(string Type, double RecommendedAmount)
+
+    public async Task<Guid> AddNutrient(string type, double recommendedAmount)
     {
-        Guid newId = Guid.NewGuid();
-        const string query = "INSERT INTO Nutrients (NutrientId, Type, RecommendedAmount) VALUES (@Id, @Type, @RecommendedAmount);";
-        using var connection = _factory.CreateConnection();
+        var newId = Guid.NewGuid();
+
+        const string query =
+            "INSERT INTO Nutrients (NutrientId, Type, RecommendedAmount) VALUES (@Id, @Type, @RecommendedAmount);";
+
+        using var connection = _factory.CreateConnection() 
+            ?? throw new InvalidOperationException("Could not create DB connection.");
         connection.ConnectionString = _connectionString;
         await connection.OpenAsync();
+
         using var command = connection.CreateCommand();
         command.CommandText = query;
+
         command.Parameters.Add(CreateParameter("@Id", newId.ToString()));
-        command.Parameters.Add(CreateParameter("@Type", Type));
-        command.Parameters.Add(CreateParameter("@RecommendedAmount", RecommendedAmount));
+        command.Parameters.Add(CreateParameter("@Type", type));
+        command.Parameters.Add(CreateParameter("@RecommendedAmount", recommendedAmount));
+
         await command.ExecuteNonQueryAsync();
+
         return newId;
     }
 }

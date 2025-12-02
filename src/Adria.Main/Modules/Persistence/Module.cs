@@ -1,5 +1,8 @@
 using System.Data.Common;
 using Adria.Application.Contracts;
+using Adria.Application.Contracts.Data;
+using Adria.Application.FoodComposition;
+using Adria.Domain.Food;
 using Adria.Domain.BodyStatus;
 using Adria.Domain.Subcriptions;
 using Adria.Domain.Users;
@@ -33,7 +36,6 @@ public static class PersistenceModule
         this IServiceCollection services
     )
     {
-        // Configure repositories here.
         return services
             .AddScoped<ISubscriptionRepository, AdoSubscriptionRepository>(serviceProvider =>
             {
@@ -50,11 +52,36 @@ public static class PersistenceModule
                     factory,
                     _connectionString,
                     serviceProvider.GetRequiredService<ILogger<AdoUserRepository>>(),
+                    subscriptionRepository: new AdoSubscriptionRepository(
+                        factory,
                     subscriptionRepository: new AdoSubscriptionRepository(factory,
                         _connectionString,
                         serviceProvider.GetRequiredService<ILogger<AdoSubscriptionRepository>>()
                     )
                 );
+            })
+            .AddScoped<IFood, AdoFoodRepository>(sp =>
+            {
+                return new AdoFoodRepository(
+                    sp.GetRequiredService<DbProviderFactory>(),
+                    _connectionString
+                );
+            })
+            .AddScoped<INutrient, AdoNutrientRepository>(sp =>
+            {
+                return new AdoNutrientRepository(
+                    sp.GetRequiredService<DbProviderFactory>(),
+                    _connectionString
+                );
+            })
+            .AddScoped<IFoodComposition, AdoFoodCompositionRepository>(serviceProvider =>
+            {
+                return new AdoFoodCompositionRepository(
+                    serviceProvider.GetRequiredService<DbProviderFactory>(),
+                    _connectionString,
+                    serviceProvider.GetRequiredService<ILogger<AdoFoodCompositionRepository>>(),
+                    serviceProvider.GetRequiredService<IFood>(),
+                    serviceProvider.GetRequiredService<INutrient>()
             }).AddScoped<IAnalyseRepository, AdoAnalyseRepository>(serviceProvider =>
             {
                 return new AdoAnalyseRepository(
@@ -69,7 +96,6 @@ public static class PersistenceModule
         this IServiceCollection services
     )
     {
-        // Configure queries here.
         return services
             .AddScoped<IAllSubscriptionsQuery, AllSubscriptionsQuery>(serviceProvider =>
             {
@@ -121,7 +147,7 @@ public static class PersistenceModule
 
         DbProviderFactories.RegisterFactory(provider, MySql.Data.MySqlClient.MySqlClientFactory.Instance);
 
-        return services.AddScoped(serviceProvider => { return DbProviderFactories.GetFactory(provider); });
+        return services.AddScoped(serviceProvider => DbProviderFactories.GetFactory(provider));
     }
 
     private static WebApplication ApplyMigrations(this WebApplication app)
