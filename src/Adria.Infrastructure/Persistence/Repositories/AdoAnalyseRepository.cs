@@ -7,12 +7,10 @@ namespace Adria.Infrastructure.Persistence.Repositories;
 
 public class AdoAnalyseRepository : AbstractAdoRepository, IAnalyseRepository 
 {
-   private readonly ILogger<AdoAnalyseRepository> _logger;
-    private readonly DbProviderFactory _factory; 
+    private readonly ILogger<AdoAnalyseRepository> _logger;
 
     private static readonly string TABLE_ANALYSE = "analyse";
     private static readonly string TABLE_HEALTH_ANALYSE = "healthAnalyse";
-    private readonly string _connectionString;
     private static readonly string COL_ANALYSE_ID = "AnalyseId";
     private static readonly string COL_ADRIAN_ID = "AdrianId";
     private static readonly string COL_DATE_TIME = "DateTime";
@@ -35,9 +33,7 @@ public class AdoAnalyseRepository : AbstractAdoRepository, IAnalyseRepository
         ILogger<AdoAnalyseRepository> logger
     ) : base(factory, connectionString)
     {
-        _factory = factory; 
         _logger = logger;
-        _connectionString = connectionString;
     }
 
     public async Task Save(Analyse analyse)
@@ -96,5 +92,4 @@ public class AdoAnalyseRepository : AbstractAdoRepository, IAnalyseRepository
             throw new NutriscanDatabaseException("Failed to save analyse to database.", ex);
         }
     }
-    
 }

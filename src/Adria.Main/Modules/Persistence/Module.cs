@@ -52,8 +52,6 @@ public static class PersistenceModule
                     factory,
                     _connectionString,
                     serviceProvider.GetRequiredService<ILogger<AdoUserRepository>>(),
-                    subscriptionRepository: new AdoSubscriptionRepository(
-                        factory,
                     subscriptionRepository: new AdoSubscriptionRepository(factory,
                         _connectionString,
                         serviceProvider.GetRequiredService<ILogger<AdoSubscriptionRepository>>()
@@ -79,9 +77,9 @@ public static class PersistenceModule
                 return new AdoFoodCompositionRepository(
                     serviceProvider.GetRequiredService<DbProviderFactory>(),
                     _connectionString,
-                    serviceProvider.GetRequiredService<ILogger<AdoFoodCompositionRepository>>(),
+                    serviceProvider.GetRequiredService<ILogger<AdoFoodCompositionRepository>>(),    
                     serviceProvider.GetRequiredService<IFood>(),
-                    serviceProvider.GetRequiredService<INutrient>()
+                    serviceProvider.GetRequiredService<INutrient>());
             }).AddScoped<IAnalyseRepository, AdoAnalyseRepository>(serviceProvider =>
             {
                 return new AdoAnalyseRepository(
