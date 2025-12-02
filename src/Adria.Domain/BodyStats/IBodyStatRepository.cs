@@ -1,4 +1,4 @@
-﻿namespace Adria.Domain.BodyStatus;
+﻿namespace Adria.Domain.BodyStats;
 
 public interface IBodyStatRepository
 {

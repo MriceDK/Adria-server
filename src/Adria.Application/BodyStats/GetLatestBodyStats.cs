@@ -22,7 +22,6 @@ public class GetLatestBodyStats : IUseCase<GetLatestBodyStatsInput, Task<IReadOn
     public async Task<IReadOnlyCollection<BodyStatData>> Execute(GetLatestBodyStatsInput input)
     {
         _logger.LogInformation("Fetching latest body stats for user {UserId}", input.UserId);
-        return await _bodyStatsQuery.Fetch(input.UserId);
-        ;
+        return await _bodyStatsQuery.Fetch(input.UserId) ?? throw new InvalidOperationException();
     }
 }

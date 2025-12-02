@@ -1,4 +1,4 @@
-﻿using Adria.Domain.BodyStatus;
+﻿using Adria.Domain.BodyStats;
 
 namespace UnitTests.Mocks;
 
