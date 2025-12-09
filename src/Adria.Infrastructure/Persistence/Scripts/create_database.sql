@@ -6,6 +6,7 @@ See example server for reference
 
 SET
 FOREIGN_KEY_CHECKS = 0;
+DROP TABLE IF EXISTS `pushSubscriptions`;
 DROP TABLE IF EXISTS `healthAnalyse`;
 DROP TABLE IF EXISTS `analyse`;
 DROP TABLE IF EXISTS `bodyStats`;
@@ -42,7 +43,15 @@ CREATE TABLE `users`
     CONSTRAINT `fk_users_subscription`
         FOREIGN KEY (`SubscriptionId`) REFERENCES `subscriptions` (`id`)
 );
-
+CREATE TABLE `pushSubscriptions`
+(
+    `SubscriptionId` VARCHAR(36) PRIMARY KEY NOT NULL,
+    `UserId`         VARCHAR(36)             NOT NULL,
+    `Endpoint`       TEXT                    NOT NULL,
+    `P256dh`         VARCHAR(255)            NOT NULL,
+    `Auth`           VARCHAR(255)            NOT NULL,
+    FOREIGN KEY (`UserId`) REFERENCES `users` (`AdrianId`)
+);
 CREATE TABLE `foods`
 (
     `FoodId` VARCHAR(36) PRIMARY KEY NOT NULL,
