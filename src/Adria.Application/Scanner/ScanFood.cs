@@ -27,13 +27,23 @@ public sealed class ScanFood
 
     public async Task<ScannedFoodResult> Execute(ScanFoodInput input)
     {
-        Food food = await _getRandomFood.Execute();
+        Console.WriteLine("SCANFOOD: Starting scan");
+
+        Domain.Food.Food food = await _getRandomFood.Execute();
+        Console.WriteLine($"SCANFOOD: Random food -> Id={food.FoodId}, Name={food.Name}");
 
         IReadOnlyCollection<NutrientInfo> nutrients =
             await _getFoodNutrients.Execute(new GetFoodNutrientsInput(food.FoodId));
 
+        Console.WriteLine($"SCANFOOD: Nutrients count returned = {nutrients.Count}");
+
+        foreach (var n in nutrients)
+            Console.WriteLine($"SCANFOOD: Nutrient -> {n.NutrientId}, Type={n.Type}, Amount={n.Amount}");
+
         Guid scanId = Guid.NewGuid();
         DateTime scanDateTime = DateTime.UtcNow;
+
+        Console.WriteLine($"SCANFOOD: Saving scan entry...");
 
         Scan scan = new Scan(
             scanId,
@@ -44,6 +54,8 @@ public sealed class ScanFood
         );
 
         await _scanRepository.Save(scan);
+
+        Console.WriteLine("SCANFOOD: Scan saved successfully");
 
         return new ScannedFoodResult(
             scanId,
@@ -56,4 +68,6 @@ public sealed class ScanFood
             scanDateTime
         );
     }
+
+
 }
