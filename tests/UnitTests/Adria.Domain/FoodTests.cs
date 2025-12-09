@@ -65,7 +65,7 @@ public class FoodTests
     {
         // Arrange
         var emptyFoodId = Guid.Empty;
-        var nutrientId = Guid.NewGuid();
+        var nutrientId = "bd1-prot-0001";
         double amount = 10;
 
         // Act
@@ -82,7 +82,7 @@ public class FoodTests
     {
         // Arrange
         var foodId = Guid.NewGuid();
-        var emptyNutrientId = Guid.Empty;
+        var emptyNutrientId = "";
         double amount = 10;
 
         // Act
@@ -98,7 +98,7 @@ public class FoodTests
     public void ChangeAmount_WithAmountCausingValidationFailure_ThrowsArgumentException()
     {
         // Arrange
-        var comp = new FoodComposition(Guid.NewGuid(), Guid.NewGuid(), 10);
+        var comp = new FoodComposition(Guid.NewGuid(), "bd1-prot-0001", 10);
 
         Assert.Throws<ArgumentException>(() => comp.ChangeAmount(-20));
     }

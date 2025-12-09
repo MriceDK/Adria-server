@@ -20,7 +20,7 @@ public sealed class GetRandomFood: IUseCase <Task<Domain.Food.Food>>
         if (allFoods == null || allFoods.Count == 0)
             throw new InvalidOperationException("No foods available.");
 
-        List<Food> foodsList = new List<Food>(allFoods);
+        List<Domain.Food.Food> foodsList = new List<Domain.Food.Food>(allFoods);
         
 
         return foodsList[RandomNumberGenerator.GetInt32(foodsList.Count)];
