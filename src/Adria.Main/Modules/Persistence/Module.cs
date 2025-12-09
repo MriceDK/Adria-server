@@ -11,6 +11,7 @@ using Adria.Domain.Subcriptions;
 using Adria.Domain.Users;
 using Adria.Infrastructure.Persistence.Queries;
 using Adria.Infrastructure.Persistence.Repositories;
+using IBodyStatRepository = Adria.Application.Contracts.IBodyStatRepository;
 
 namespace Adria.Main.Modules.Persistence;
 
@@ -101,6 +102,13 @@ public static class PersistenceModule
                     sp.GetRequiredService<DbProviderFactory>(),
                     _connectionString,
                     sp.GetRequiredService<ILogger<AdoScanFood>>()
+                );
+            }).AddScoped<IBodyStatRepository, AdoBodyStatRepository>(serviceProvider =>
+            {
+                return new AdoBodyStatRepository(
+                    serviceProvider.GetRequiredService<DbProviderFactory>(),
+                    _connectionString,
+                    serviceProvider.GetRequiredService<ILogger<AdoBodyStatRepository>>()
                 );
             });
     }

@@ -1,5 +1,5 @@
 ﻿using Adria.Application.Contracts;
-using Adria.Domain.BodyStatus;
+using Adria.Domain.BodyStats;
 using Microsoft.Extensions.Logging;
 
 namespace Adria.Application.Analyses;

@@ -2,9 +2,9 @@
 
 public interface IOrderSupplementDetailsRepository
 {
-    Task<OrderSupplementDetails?> ByOrderId(Guid orderId);
+    Task<IReadOnlyCollection<OrderSupplementDetails>> ByOrderId(Guid orderId);
     Task<IReadOnlyCollection<OrderSupplementDetails>> BySupplementId(Guid supplementId);
-    Task<IReadOnlyCollection<OrderSupplementDetails>> GetAll();
+    Task<OrderSupplementDetails> ByOrderAndSupplementId(Guid orderId, Guid supplementId);
     Task Save(OrderSupplementDetails orderSupplementDetails);
     Task Remove(OrderSupplementDetails orderSupplementDetails);
 }

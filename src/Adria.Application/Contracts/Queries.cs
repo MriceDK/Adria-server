@@ -1,4 +1,5 @@
 using Adria.Application.Contracts.Data;
+using Adria.Domain.BodyStats;
 
 namespace Adria.Application.Contracts;
 
@@ -25,6 +26,12 @@ public interface IAllSubscriptionsQuery
 public interface IAllUsersQuery
 {
     Task<IReadOnlyCollection<UserData>> Fetch();
+}
+
+public interface IBodyStatRepository
+{
+    Task<BodyStat?> ById(string id); 
+    Task Update(BodyStat bodyStat);
 }
 
 public interface IOrderByUserIdQuery
@@ -55,4 +62,19 @@ public interface ISupplementsByIdQuery
 public interface IAllSupplementsQuery
 {
     Task<IReadOnlyCollection<SupplementData?>> Fetch();
+}
+
+public interface IOrderSupplementDetailsByOrderIdQuery
+{
+    Task<IReadOnlyCollection<OrderSupplementDetailsData?>> Fetch(Guid orderId);
+}
+
+public interface IOrderSupplementDetailsBySupplementIdQuery
+{
+    Task<IReadOnlyCollection<OrderSupplementDetailsData?>> Fetch(Guid supplementId);
+}
+
+public interface IOrderSupplementDetailsByOrderAndSupplementIdQuery
+{
+    Task<IReadOnlyCollection<OrderSupplementDetailsData?>> Fetch(Guid orderId, Guid supplementId);
 }
