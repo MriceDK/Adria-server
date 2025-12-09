@@ -7,5 +7,5 @@ public interface INutrient
     Task Remove(Nutrient nutrient);
     Task<IReadOnlyCollection<Nutrient>> GetAllNutrients();
     
-    Task<IReadOnlyCollection<Guid>> GetNutrientIdBytype(string type);
+    Task<IReadOnlyCollection<string>> GetNutrientIdBytype(string type);
 }

@@ -48,11 +48,11 @@ public sealed class AdoBodyStatRepository(
 
                 var label = reader.GetString(labelOrd);
                 
-                var unit = reader.IsDBNull(unitOrd) 
+                var unit = await reader.IsDBNullAsync(unitOrd) 
                     ? null 
                     : reader.GetString(unitOrd);
                     
-                var goal = reader.IsDBNull(goalOrd) 
+                var goal = await reader.IsDBNullAsync(goalOrd) 
                     ? (double?)null 
                     : reader.GetDouble(goalOrd);
                 

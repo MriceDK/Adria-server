@@ -3,18 +3,18 @@
 public class FoodComposition
 {
     public Guid FoodId { get; private init; }
-    public Guid NutrientId { get; private init; }
+    public string NutrientId { get; private init; }
     public double Amount { get; private set; }
 
-    public FoodComposition(Guid foodId, Guid nutrientId, double amount)
+    public FoodComposition(Guid foodId, string nutrientId, double amount)
     {
         EnsureIdIsValid(foodId, nameof(foodId));
-        EnsureIdIsValid(nutrientId, nameof(nutrientId));
         EnsureAmountIsValid(amount);
         FoodId = foodId;
         NutrientId = nutrientId;
         Amount = amount;
     }
+
 
     public void ChangeAmount(double newAmount)
     {
@@ -24,7 +24,7 @@ public class FoodComposition
 
     private static void EnsureIdIsValid(Guid id, string paramName)
     {
-        if (string.IsNullOrWhiteSpace(id.ToString()))
+        if (Guid.Empty.Equals(id))
             throw new ArgumentException("ID cannot be null or empty.", paramName);
     }
 
@@ -32,5 +32,6 @@ public class FoodComposition
     {
         if (string.IsNullOrWhiteSpace(amount.ToString()))
             throw new ArgumentException("Amount cannot be null or empty.", nameof(amount));
+        if (amount < 0) throw new ArgumentException("Amount cannot be negative.");
     }
 }

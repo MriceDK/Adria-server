@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Adria.Infrastructure.WebApi.Controllers;
 
-public class GetBodyStatsController
+public static class GetBodyStatsController
 {
     public static async Task<Ok<IReadOnlyCollection<BodyStatData>>> Invoke(
         [FromRoute] Guid userId,

@@ -8,6 +8,8 @@ namespace Adria.Infrastructure.WebApi.Controllers;
 
 public sealed class CreateAnalyseController
 {
+    private CreateAnalyseController(){}
+    
     public static async Task<Results<Created, BadRequest<string>>> Invoke(
         [FromBody] CreateAnalyseBody body,
         [FromServices] IUseCase<CreateAnalyseInput, Task<Guid>> createAnalyse

@@ -2,9 +2,12 @@ using System.Data.Common;
 using Adria.Application.Contracts;
 using Adria.Application.Contracts.Data;
 using Adria.Application.FoodComposition;
-using Adria.Domain.BodyStats;
+using Adria.Application.Scanner;
+using Adria.Application.Food;
 using Adria.Domain.Food;
 using Adria.Domain.PushNotifications;
+using Adria.Domain.BodyStats;
+using Adria.Domain.Scanner;
 using Adria.Domain.Subcriptions;
 using Adria.Domain.Users;
 using Adria.Infrastructure.Persistence.Queries;
@@ -26,7 +29,8 @@ public static class PersistenceModule
         return services
             .AddAdoServices(configuration)
             .AddRepositories()
-            .AddQueries();
+            .AddQueries()
+            .AddUseCases();
     }
 
     public static WebApplication UsePersistenceModule(this WebApplication app)
@@ -39,24 +43,25 @@ public static class PersistenceModule
     )
     {
         return services
-            .AddScoped<ISubscriptionRepository, AdoSubscriptionRepository>(serviceProvider =>
+            .AddScoped<ISubscriptionRepository, AdoSubscriptionRepository>(sp =>
             {
                 return new AdoSubscriptionRepository(
-                    serviceProvider.GetRequiredService<DbProviderFactory>(),
+                    sp.GetRequiredService<DbProviderFactory>(),
                     _connectionString,
-                    serviceProvider.GetRequiredService<ILogger<AdoSubscriptionRepository>>()
+                    sp.GetRequiredService<ILogger<AdoSubscriptionRepository>>()
                 );
             })
-            .AddScoped<IUserRepository, AdoUserRepository>(serviceProvider =>
+            .AddScoped<IUserRepository, AdoUserRepository>(sp =>
             {
-                var factory = serviceProvider.GetRequiredService<DbProviderFactory>();
+                var factory = sp.GetRequiredService<DbProviderFactory>();
                 return new AdoUserRepository(
                     factory,
                     _connectionString,
-                    serviceProvider.GetRequiredService<ILogger<AdoUserRepository>>(),
-                    subscriptionRepository: new AdoSubscriptionRepository(factory,
+                    sp.GetRequiredService<ILogger<AdoUserRepository>>(),
+                    new AdoSubscriptionRepository(
+                        factory,
                         _connectionString,
-                        serviceProvider.GetRequiredService<ILogger<AdoSubscriptionRepository>>()
+                        sp.GetRequiredService<ILogger<AdoSubscriptionRepository>>()
                     )
                 );
             })
@@ -74,20 +79,30 @@ public static class PersistenceModule
                     _connectionString
                 );
             })
-            .AddScoped<IFoodComposition, AdoFoodCompositionRepository>(serviceProvider =>
+            .AddScoped<IFoodComposition, AdoFoodCompositionRepository>(sp =>
             {
                 return new AdoFoodCompositionRepository(
-                    serviceProvider.GetRequiredService<DbProviderFactory>(),
+                    sp.GetRequiredService<DbProviderFactory>(),
                     _connectionString,
-                    serviceProvider.GetRequiredService<ILogger<AdoFoodCompositionRepository>>(),
-                    serviceProvider.GetRequiredService<IFood>(),
-                    serviceProvider.GetRequiredService<INutrient>());
-            }).AddScoped<IAnalyseRepository, AdoAnalyseRepository>(serviceProvider =>
+                    sp.GetRequiredService<ILogger<AdoFoodCompositionRepository>>(),
+                    sp.GetRequiredService<IFood>(),
+                    sp.GetRequiredService<INutrient>()
+                );
+            })
+            .AddScoped<IAnalyseRepository, AdoAnalyseRepository>(sp =>
             {
                 return new AdoAnalyseRepository(
-                    serviceProvider.GetRequiredService<DbProviderFactory>(),
+                    sp.GetRequiredService<DbProviderFactory>(),
                     _connectionString,
-                    serviceProvider.GetRequiredService<ILogger<AdoAnalyseRepository>>()
+                    sp.GetRequiredService<ILogger<AdoAnalyseRepository>>()
+                );
+            })
+            .AddScoped<IScan, AdoScanFood>(sp =>
+            {
+                return new AdoScanFood(
+                    sp.GetRequiredService<DbProviderFactory>(),
+                    _connectionString,
+                    sp.GetRequiredService<ILogger<AdoScanFood>>()
                 );
             }).AddScoped<IBodyStatRepository, AdoBodyStatRepository>(serviceProvider =>
             {
@@ -104,43 +119,44 @@ public static class PersistenceModule
     )
     {
         return services
-            .AddScoped<IAllSubscriptionsQuery, AllSubscriptionsQuery>(serviceProvider =>
+            .AddScoped<IAllSubscriptionsQuery, AllSubscriptionsQuery>(sp =>
             {
                 return new AllSubscriptionsQuery(
-                    serviceProvider.GetRequiredService<DbProviderFactory>(),
+                    sp.GetRequiredService<DbProviderFactory>(),
                     _connectionString,
-                    serviceProvider.GetRequiredService<ILogger<AllSubscriptionsQuery>>()
+                    sp.GetRequiredService<ILogger<AllSubscriptionsQuery>>()
                 );
             })
-            .AddScoped<ISubscriptionByIdQuery, SubscriptionByIdQuery>(serviceProvider =>
+            .AddScoped<ISubscriptionByIdQuery, SubscriptionByIdQuery>(sp =>
             {
                 return new SubscriptionByIdQuery(
-                    serviceProvider.GetRequiredService<DbProviderFactory>(),
+                    sp.GetRequiredService<DbProviderFactory>(),
                     _connectionString,
-                    serviceProvider.GetRequiredService<ILogger<SubscriptionByIdQuery>>()
+                    sp.GetRequiredService<ILogger<SubscriptionByIdQuery>>()
                 );
             })
-            .AddScoped<IUserByIdQuery, UserByIdQuery>(serviceProvider =>
+            .AddScoped<IUserByIdQuery, UserByIdQuery>(sp =>
             {
                 return new UserByIdQuery(
-                    serviceProvider.GetRequiredService<DbProviderFactory>(),
+                    sp.GetRequiredService<DbProviderFactory>(),
                     _connectionString,
-                    serviceProvider.GetRequiredService<ILogger<UserByIdQuery>>()
+                    sp.GetRequiredService<ILogger<UserByIdQuery>>()
                 );
             })
-            .AddScoped<IAllUsersQuery, AllUsersQuery>(serviceProvider =>
+            .AddScoped<IAllUsersQuery, AllUsersQuery>(sp =>
             {
                 return new AllUsersQuery(
-                    serviceProvider.GetRequiredService<DbProviderFactory>(),
+                    sp.GetRequiredService<DbProviderFactory>(),
                     _connectionString,
-                    serviceProvider.GetRequiredService<ILogger<AllUsersQuery>>()
+                    sp.GetRequiredService<ILogger<AllUsersQuery>>()
                 );
-            }).AddScoped<IBodyStatsQuery, LatestBodyStatsQuery>(serviceProvider =>
+            })
+            .AddScoped<IBodyStatsQuery, LatestBodyStatsQuery>(sp =>
             {
                 return new LatestBodyStatsQuery(
-                    serviceProvider.GetRequiredService<DbProviderFactory>(),
+                    sp.GetRequiredService<DbProviderFactory>(),
                     _connectionString,
-                    serviceProvider.GetRequiredService<ILogger<LatestBodyStatsQuery>>()
+                    sp.GetRequiredService<ILogger<LatestBodyStatsQuery>>()
                 );
             }).AddScoped<IPushSubscriptionRepository, AdoPushSubscriptionRepository>(serviceProvider =>
             {
@@ -152,16 +168,23 @@ public static class PersistenceModule
             });
     }
 
+    private static IServiceCollection AddUseCases(this IServiceCollection services)
+    {
+        return services
+            .AddScoped<GetRandomFood>()
+            .AddScoped<IUseCase<GetFoodNutrientsInput, Task<IReadOnlyCollection<NutrientInfo>>>, GetFoodNutrients>()
+            .AddScoped<ScanFood>()
+            .AddScoped<GetScanHistory>();
+    }
+
     private static IServiceCollection AddAdoServices(
         this IServiceCollection services,
         IConfiguration configuration
     )
     {
         string provider = configuration["Persistence:Provider"]!;
-
         DbProviderFactories.RegisterFactory(provider, MySql.Data.MySqlClient.MySqlClientFactory.Instance);
-
-        return services.AddScoped(serviceProvider => DbProviderFactories.GetFactory(provider));
+        return services.AddScoped(sp => DbProviderFactories.GetFactory(provider));
     }
 
     private static WebApplication ApplyMigrations(this WebApplication app)

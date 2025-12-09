@@ -198,29 +198,37 @@ VALUES ('b8c9d0e1-f2a3-4b5c-5d6e-8f9a0b1c2d3e', 'David Brown', 'Chef', 'a1b2c3d4
 
 -- Insert Nutrients
 INSERT INTO nutrients (`NutrientId`, `Type`, `Unit`, `Minimum`, `Maximum`)
-VALUES ('c9d0e1f2-a3b4-4c5d-6e7f-9a0b1c2d3e4f', 'Protein', 50, '45', '60');
-
+VALUES ('bd1-prot-0001', 'Protein', 50, '45', '60');
 INSERT INTO nutrients (`NutrientId`, `Type`, `Unit`, `Minimum`, `Maximum`)
-VALUES ('d0e1f2a3-b4c5-4d5e-7f8a-0b1c2d3e4f5a', 'Carbohydrates', 300, '200', '350');
-
+VALUES ('bd1-carb-0002', 'Carbohydrates', 300, '200', '350');
 INSERT INTO nutrients (`NutrientId`, `Type`, `Unit`, `Minimum`, `Maximum`)
-VALUES ('e1f2a3b4-c5d6-4e5f-8a9b-1c2d3e4f5a6b', 'Fiber', 25, '20', '35');
-
+VALUES ('bd1-fats-0003', 'Fats', 25, '20', '35');
 INSERT INTO nutrients (`NutrientId`, `Type`, `Unit`, `Minimum`, `Maximum`)
-VALUES ('f2a3b4c5-d6e7-4f5a-9b0c-2d3e4f5a6b7c', 'Vitamin C', 90, '70', '120');
-
+VALUES ('bd1-watr-0004', 'Water', 90, '70', '120');
 INSERT INTO nutrients (`NutrientId`, `Type`, `Unit`, `Minimum`, `Maximum`)
-VALUES ('a3b4c5d6-e7f8-4a5b-0c1d-3e4f5a6b7c8d', 'Calcium', 1000, '800', '1500');
-
+VALUES ('bd1-cali-0005', 'Calories', 1000, '2000', '3000');
 INSERT INTO nutrients (`NutrientId`, `Type`, `Unit`, `Minimum`, `Maximum`)
-VALUES ('b4c5d6e7-f8a9-4b5c-1d2e-4f5a6b7c8d9e', 'Iron', 18, '8', '27');
-
+VALUES ('bd2-calc-0001', 'Calcium', 1000, '800', '1500');
 INSERT INTO nutrients (`NutrientId`, `Type`, `Unit`, `Minimum`, `Maximum`)
-VALUES ('c5d6e7f8-a9b0-4c5d-2e3f-5a6b7c8d9e0f', 'Vitamin D', 600, '400', '800');
-
+VALUES ('bd2-iron-0002', 'Iron', 18, '8', '27');
 INSERT INTO nutrients (`NutrientId`, `Type`, `Unit`, `Minimum`, `Maximum`)
-VALUES ('d6e7f8a9-b0c1-4d5e-3f4a-6b7c8d9e0f1a', 'Omega-3', 250, '200', '500');
-
+VALUES ('bd2-magn-0003', 'Magnesium', 600, '400', '800');
+INSERT INTO nutrients (`NutrientId`, `Type`, `Unit`, `Minimum`, `Maximum`)
+VALUES ('bd2-phos-0004', 'Phosphorus', 600, '400', '800');
+INSERT INTO nutrients (`NutrientId`, `Type`, `Unit`, `Minimum`, `Maximum`)
+VALUES ('bd2-pota-0005', 'Potassium', 600, '400', '800');
+INSERT INTO nutrients (`NutrientId`, `Type`, `Unit`, `Minimum`, `Maximum`)
+VALUES ('bd2-sodi-0006', 'Sodium', 600, '400', '800');
+INSERT INTO nutrients (`NutrientId`, `Type`, `Unit`, `Minimum`, `Maximum`)
+VALUES ('bd2-zinc-0007', 'Zinc', 600, '400', '800');
+INSERT INTO nutrients (`NutrientId`, `Type`, `Unit`, `Minimum`, `Maximum`)
+VALUES ('bd2-copp-0008', 'Copper', 600, '400', '800');
+INSERT INTO nutrients (`NutrientId`, `Type`, `Unit`, `Minimum`, `Maximum`)
+VALUES ('bd2-mang-0009', 'Manganese', 600, '400', '800');
+INSERT INTO nutrients (`NutrientId`, `Type`, `Unit`, `Minimum`, `Maximum`)
+VALUES ('bd2-sele-0010', 'Selenium', 600, '400', '800');
+INSERT INTO nutrients (`NutrientId`, `Type`, `Unit`, `Minimum`, `Maximum`)
+VALUES ('bd2-iodi-0011', 'Iodine', 600, '400', '800');
 -- Insert Foods
 INSERT INTO foods (`FoodId`, `Name`, `Type`, `Edible`)
 VALUES ('e7f8a9b0-c1d2-4e5f-4a5b-7c8d9e0f1a2b', 'Apple', 'Fruit', TRUE);
@@ -254,74 +262,68 @@ VALUES ('b6c7d8e9-f0a1-4b5c-3d4e-6f7a8b9c0d1e', 'Plastic Wrapper', 'Packaging', 
 
 -- Insert FoodCompositions
 -- Apple composition
-INSERT INTO foodCompositions (`FoodId`, `NutrientId`, `Amount`)
-VALUES ('e7f8a9b0-c1d2-4e5f-4a5b-7c8d9e0f1a2b', 'd0e1f2a3-b4c5-4d5e-7f8a-0b1c2d3e4f5a', 25);
-INSERT INTO foodCompositions (`FoodId`, `NutrientId`, `Amount`)
-VALUES ('e7f8a9b0-c1d2-4e5f-4a5b-7c8d9e0f1a2b', 'e1f2a3b4-c5d6-4e5f-8a9b-1c2d3e4f5a6b', 4.4);
-INSERT INTO foodCompositions (`FoodId`, `NutrientId`, `Amount`)
-VALUES ('e7f8a9b0-c1d2-4e5f-4a5b-7c8d9e0f1a2b', 'f2a3b4c5-d6e7-4f5a-9b0c-2d3e4f5a6b7c', 8);
+INSERT INTO foodCompositions (FoodId, NutrientId, Amount)
+VALUES ('e7f8a9b0-c1d2-4e5f-4a5b-7c8d9e0f1a2b', 'bd1-carb-0002', 25);
+INSERT INTO foodCompositions (FoodId, NutrientId, Amount)
+VALUES ('e7f8a9b0-c1d2-4e5f-4a5b-7c8d9e0f1a2b', 'bd1-cali-0005', 52);
 
 -- Banana
-INSERT INTO foodCompositions (`FoodId`, `NutrientId`, `Amount`)
-VALUES ('f8a9b0c1-d2e3-4f5a-5b6c-8d9e0f1a2b3c', 'd0e1f2a3-b4c5-4d5e-7f8a-0b1c2d3e4f5a', 27);
-INSERT INTO foodCompositions (`FoodId`, `NutrientId`, `Amount`)
-VALUES ('f8a9b0c1-d2e3-4f5a-5b6c-8d9e0f1a2b3c', 'e1f2a3b4-c5d6-4e5f-8a9b-1c2d3e4f5a6b', 2.6);
-INSERT INTO foodCompositions (`FoodId`, `NutrientId`, `Amount`)
-VALUES ('f8a9b0c1-d2e3-4f5a-5b6c-8d9e0f1a2b3c', 'f2a3b4c5-d6e7-4f5a-9b0c-2d3e4f5a6b7c', 10);
+INSERT INTO foodCompositions (FoodId, NutrientId, Amount)
+VALUES ('f8a9b0c1-d2e3-4f5a-5b6c-8d9e0f1a2b3c', 'bd1-carb-0002', 27);
+INSERT INTO foodCompositions (FoodId, NutrientId, Amount)
+VALUES ('f8a9b0c1-d2e3-4f5a-5b6c-8d9e0f1a2b3c', 'bd1-cali-0005', 89);
 
 -- Chicken Breast
-INSERT INTO foodCompositions (`FoodId`, `NutrientId`, `Amount`)
-VALUES ('a9b0c1d2-e3f4-4a5b-6c7d-9e0f1a2b3c4d', 'c9d0e1f2-a3b4-4c5d-6e7f-9a0b1c2d3e4f', 31);
-INSERT INTO foodCompositions (`FoodId`, `NutrientId`, `Amount`)
-VALUES ('a9b0c1d2-e3f4-4a5b-6c7d-9e0f1a2b3c4d', 'b4c5d6e7-f8a9-4b5c-1d2e-4f5a6b7c8d9e', 1);
+INSERT INTO foodCompositions (FoodId, NutrientId, Amount)
+VALUES ('a9b0c1d2-e3f4-4a5b-6c7d-9e0f1a2b3c4d', 'bd1-prot-0001', 31);
+INSERT INTO foodCompositions (FoodId, NutrientId, Amount)
+VALUES ('a9b0c1d2-e3f4-4a5b-6c7d-9e0f1a2b3c4d', 'bd2-iron-0002', 1);
+INSERT INTO foodCompositions (FoodId, NutrientId, Amount)
+VALUES ('a9b0c1d2-e3f4-4a5b-6c7d-9e0f1a2b3c4d', 'bd1-cali-0005', 165);
 
 -- Brown Rice
-INSERT INTO foodCompositions (`FoodId`, `NutrientId`, `Amount`)
-VALUES ('b0c1d2e3-f4a5-4b5c-7d8e-0f1a2b3c4d5e', 'd0e1f2a3-b4c5-4d5e-7f8a-0b1c2d3e4f5a', 77);
-INSERT INTO foodCompositions (`FoodId`, `NutrientId`, `Amount`)
-VALUES ('b0c1d2e3-f4a5-4b5c-7d8e-0f1a2b3c4d5e', 'e1f2a3b4-c5d6-4e5f-8a9b-1c2d3e4f5a6b', 3.5);
-INSERT INTO foodCompositions (`FoodId`, `NutrientId`, `Amount`)
-VALUES ('b0c1d2e3-f4a5-4b5c-7d8e-0f1a2b3c4d5e', 'b4c5d6e7-f8a9-4b5c-1d2e-4f5a6b7c8d9e', 1.5);
+INSERT INTO foodCompositions (FoodId, NutrientId, Amount)
+VALUES ('b0c1d2e3-f4a5-4b5c-7d8e-0f1a2b3c4d5e', 'bd1-carb-0002', 77);
+INSERT INTO foodCompositions (FoodId, NutrientId, Amount)
+VALUES ('b0c1d2e3-f4a5-4b5c-7d8e-0f1a2b3c4d5e', 'bd2-iron-0002', 1.5);
+INSERT INTO foodCompositions (FoodId, NutrientId, Amount)
+VALUES ('b0c1d2e3-f4a5-4b5c-7d8e-0f1a2b3c4d5e', 'bd1-cali-0005', 123);
 
 -- Broccoli
-INSERT INTO foodCompositions (`FoodId`, `NutrientId`, `Amount`)
-VALUES ('c1d2e3f4-a5b6-4c5d-8e9f-1a2b3c4d5e6f', 'e1f2a3b4-c5d6-4e5f-8a9b-1c2d3e4f5a6b', 2.6);
-INSERT INTO foodCompositions (`FoodId`, `NutrientId`, `Amount`)
-VALUES ('c1d2e3f4-a5b6-4c5d-8e9f-1a2b3c4d5e6f', 'f2a3b4c5-d6e7-4f5a-9b0c-2d3e4f5a6b7c', 89);
-INSERT INTO foodCompositions (`FoodId`, `NutrientId`, `Amount`)
-VALUES ('c1d2e3f4-a5b6-4c5d-8e9f-1a2b3c4d5e6f', 'a3b4c5d6-e7f8-4a5b-0c1d-3e4f5a6b7c8d', 47);
+INSERT INTO foodCompositions (FoodId, NutrientId, Amount)
+VALUES ('c1d2e3f4-a5b6-4c5d-8e9f-1a2b3c4d5e6f', 'bd2-calc-0001', 47);
+INSERT INTO foodCompositions (FoodId, NutrientId, Amount)
+VALUES ('c1d2e3f4-a5b6-4c5d-8e9f-1a2b3c4d5e6f', 'bd1-cali-0005', 34);
 
 -- Salmon
-INSERT INTO foodCompositions (`FoodId`, `NutrientId`, `Amount`)
-VALUES ('d2e3f4a5-b6c7-4d5e-9f0a-2b3c4d5e6f7a', 'c9d0e1f2-a3b4-4c5d-6e7f-9a0b1c2d3e4f', 20);
-INSERT INTO foodCompositions (`FoodId`, `NutrientId`, `Amount`)
-VALUES ('d2e3f4a5-b6c7-4d5e-9f0a-2b3c4d5e6f7a', 'c5d6e7f8-a9b0-4c5d-2e3f-5a6b7c8d9e0f', 570);
-INSERT INTO foodCompositions (`FoodId`, `NutrientId`, `Amount`)
-VALUES ('d2e3f4a5-b6c7-4d5e-9f0a-2b3c4d5e6f7a', 'd6e7f8a9-b0c1-4d5e-3f4a-6b7c8d9e0f1a', 2260);
+INSERT INTO foodCompositions (FoodId, NutrientId, Amount)
+VALUES ('d2e3f4a5-b6c7-4d5e-9f0a-2b3c4d5e6f7a', 'bd1-prot-0001', 20);
+INSERT INTO foodCompositions (FoodId, NutrientId, Amount)
+VALUES ('d2e3f4a5-b6c7-4d5e-9f0a-2b3c4d5e6f7a', 'bd1-cali-0005', 208);
 
 -- Milk
-INSERT INTO foodCompositions (`FoodId`, `NutrientId`, `Amount`)
-VALUES ('e3f4a5b6-c7d8-4e5f-0a1b-3c4d5e6f7a8b', 'c9d0e1f2-a3b4-4c5d-6e7f-9a0b1c2d3e4f', 3.4);
-INSERT INTO foodCompositions (`FoodId`, `NutrientId`, `Amount`)
-VALUES ('e3f4a5b6-c7d8-4e5f-0a1b-3c4d5e6f7a8b', 'a3b4c5d6-e7f8-4a5b-0c1d-3e4f5a6b7c8d', 125);
-INSERT INTO foodCompositions (`FoodId`, `NutrientId`, `Amount`)
-VALUES ('e3f4a5b6-c7d8-4e5f-0a1b-3c4d5e6f7a8b', 'c5d6e7f8-a9b0-4c5d-2e3f-5a6b7c8d9e0f', 50);
+INSERT INTO foodCompositions (FoodId, NutrientId, Amount)
+VALUES ('e3f4a5b6-c7d8-4e5f-0a1b-3c4d5e6f7a8b', 'bd1-prot-0001', 3.4);
+INSERT INTO foodCompositions (FoodId, NutrientId, Amount)
+VALUES ('e3f4a5b6-c7d8-4e5f-0a1b-3c4d5e6f7a8b', 'bd2-calc-0001', 125);
+INSERT INTO foodCompositions (FoodId, NutrientId, Amount)
+VALUES ('e3f4a5b6-c7d8-4e5f-0a1b-3c4d5e6f7a8b', 'bd1-cali-0005', 42);
 
 -- Spinach
-INSERT INTO foodCompositions (`FoodId`, `NutrientId`, `Amount`)
-VALUES ('f4a5b6c7-d8e9-4f5a-1b2c-4d5e6f7a8b9c', 'b4c5d6e7-f8a9-4b5c-1d2e-4f5a6b7c8d9e', 2.7);
-INSERT INTO foodCompositions (`FoodId`, `NutrientId`, `Amount`)
-VALUES ('f4a5b6c7-d8e9-4f5a-1b2c-4d5e6f7a8b9c', 'f2a3b4c5-d6e7-4f5a-9b0c-2d3e4f5a6b7c', 28);
-INSERT INTO foodCompositions (`FoodId`, `NutrientId`, `Amount`)
-VALUES ('f4a5b6c7-d8e9-4f5a-1b2c-4d5e6f7a8b9c', 'a3b4c5d6-e7f8-4a5b-0c1d-3e4f5a6b7c8d', 99);
+INSERT INTO foodCompositions (FoodId, NutrientId, Amount)
+VALUES ('f4a5b6c7-d8e9-4f5a-1b2c-4d5e6f7a8b9c', 'bd2-iron-0002', 2.7);
+INSERT INTO foodCompositions (FoodId, NutrientId, Amount)
+VALUES ('f4a5b6c7-d8e9-4f5a-1b2c-4d5e6f7a8b9c', 'bd2-calc-0001', 99);
+INSERT INTO foodCompositions (FoodId, NutrientId, Amount)
+VALUES ('f4a5b6c7-d8e9-4f5a-1b2c-4d5e6f7a8b9c', 'bd1-cali-0005', 23);
 
 -- Almonds
-INSERT INTO foodCompositions (`FoodId`, `NutrientId`, `Amount`)
-VALUES ('a5b6c7d8-e9f0-4a5b-2c3d-5e6f7a8b9c0d', 'c9d0e1f2-a3b4-4c5d-6e7f-9a0b1c2d3e4f', 21);
-INSERT INTO foodCompositions (`FoodId`, `NutrientId`, `Amount`)
-VALUES ('a5b6c7d8-e9f0-4a5b-2c3d-5e6f7a8b9c0d', 'e1f2a3b4-c5d6-4e5f-8a9b-1c2d3e4f5a6b', 12.5);
-INSERT INTO foodCompositions (`FoodId`, `NutrientId`, `Amount`)
-VALUES ('a5b6c7d8-e9f0-4a5b-2c3d-5e6f7a8b9c0d', 'a3b4c5d6-e7f8-4a5b-0c1d-3e4f5a6b7c8d', 269);
+INSERT INTO foodCompositions (FoodId, NutrientId, Amount)
+VALUES ('a5b6c7d8-e9f0-4a5b-2c3d-5e6f7a8b9c0d', 'bd1-prot-0001', 21);
+INSERT INTO foodCompositions (FoodId, NutrientId, Amount)
+VALUES ('a5b6c7d8-e9f0-4a5b-2c3d-5e6f7a8b9c0d', 'bd2-calc-0001', 269);
+INSERT INTO foodCompositions (FoodId, NutrientId, Amount)
+VALUES ('a5b6c7d8-e9f0-4a5b-2c3d-5e6f7a8b9c0d', 'bd1-cali-0005', 579);
 
 
 -- Insert Supplements
