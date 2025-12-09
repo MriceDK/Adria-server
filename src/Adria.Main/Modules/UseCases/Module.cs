@@ -25,6 +25,7 @@ public static class UseCases
                 .AddScoped<IUseCase<SearchFoodCompositionsByNutrientIdInput, Task<IReadOnlyCollection<FoodCompositionData>>>, SearchFoodCompositionsByNutrientId>()
                 .AddScoped<IUseCase<RemoveFoodCompositionInput, Task>, RemoveFoodComposition>()
                 .AddScoped<IUseCase<CreateAnalyseInput, Task<Guid>>, CreateAnalyse>()
+                .AddScoped<IUseCase<UpdateBodyStatGoalInput, Task>, UpdateBodyStatGoal>()
                 .AddScoped<IUseCase<GetLatestBodyStatsInput, Task<IReadOnlyCollection<BodyStatData>>>, GetLatestBodyStats>();
     }
 }

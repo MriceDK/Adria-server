@@ -2,12 +2,13 @@ using System.Data.Common;
 using Adria.Application.Contracts;
 using Adria.Application.Contracts.Data;
 using Adria.Application.FoodComposition;
+using Adria.Domain.BodyStats;
 using Adria.Domain.Food;
-using Adria.Domain.BodyStatus;
 using Adria.Domain.Subcriptions;
 using Adria.Domain.Users;
 using Adria.Infrastructure.Persistence.Queries;
 using Adria.Infrastructure.Persistence.Repositories;
+using IBodyStatRepository = Adria.Application.Contracts.IBodyStatRepository;
 
 namespace Adria.Main.Modules.Persistence;
 
@@ -77,7 +78,7 @@ public static class PersistenceModule
                 return new AdoFoodCompositionRepository(
                     serviceProvider.GetRequiredService<DbProviderFactory>(),
                     _connectionString,
-                    serviceProvider.GetRequiredService<ILogger<AdoFoodCompositionRepository>>(),    
+                    serviceProvider.GetRequiredService<ILogger<AdoFoodCompositionRepository>>(),
                     serviceProvider.GetRequiredService<IFood>(),
                     serviceProvider.GetRequiredService<INutrient>());
             }).AddScoped<IAnalyseRepository, AdoAnalyseRepository>(serviceProvider =>
@@ -86,6 +87,13 @@ public static class PersistenceModule
                     serviceProvider.GetRequiredService<DbProviderFactory>(),
                     _connectionString,
                     serviceProvider.GetRequiredService<ILogger<AdoAnalyseRepository>>()
+                );
+            }).AddScoped<IBodyStatRepository, AdoBodyStatRepository>(serviceProvider =>
+            {
+                return new AdoBodyStatRepository(
+                    serviceProvider.GetRequiredService<DbProviderFactory>(),
+                    _connectionString,
+                    serviceProvider.GetRequiredService<ILogger<AdoBodyStatRepository>>()
                 );
             });
     }

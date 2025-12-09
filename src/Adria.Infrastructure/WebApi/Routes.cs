@@ -128,5 +128,12 @@ public static class Routes
             .WithName(nameof(GetBodyStatsController))
             .WithMetadata(new ProducesAttribute("application/json"))
             .WithOpenApi();
+        
+        analyseRoutes
+            .MapPut("/definitions/{id}/goal", UpdateBodyStatController.Invoke)
+            .WithDescription("Update the goal for a specific body stat definition.")
+            .WithName(nameof(UpdateBodyStatController))
+            .WithMetadata(new ConsumesAttribute("application/json"))
+            .WithOpenApi();
     }
 }

@@ -1,5 +1,5 @@
 ﻿using System.Data.Common;
-using Adria.Domain.BodyStatus;
+using Adria.Domain.BodyStats;
 using Adria.Infrastructure.Persistence.Shared;
 using Microsoft.Extensions.Logging;
 

@@ -1,8 +1,8 @@
-﻿namespace Adria.Domain.BodyStatus;
+﻿namespace Adria.Domain.BodyStats;
 
 public interface IBodyStatRepository
 {
-    Task<BodyStat?> ById(Guid bodyStatId);
+    Task<BodyStat?> ById(string bodyStatId);
 
     Task Save(BodyStat bodyStat);
 }

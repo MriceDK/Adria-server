@@ -1,4 +1,4 @@
-﻿using Adria.Domain.BodyStatus;
+﻿using Adria.Domain.BodyStats;
 
 namespace UnitTests.Adria.Domain;
 
@@ -19,7 +19,7 @@ public sealed class BodyStatTests
         Assert.Equal(label, bodyStat.Label);
         Assert.Equal(unit, bodyStat.Unit);
         Assert.Equal(goal, bodyStat.Goal);
-        Assert.NotEqual(Guid.Empty, bodyStat.Id);
+        Assert.NotNull(bodyStat.Id);
     }
 
     [Fact]
@@ -29,7 +29,7 @@ public sealed class BodyStatTests
         const string label = "Weight";
         const string unit = "kg";
         const double goal = 80;
-        var id = Guid.NewGuid();
+        var id = "test-001";
 
         // Act
         var bodyStat = new BodyStat(label, unit, goal, id);

@@ -1,4 +1,5 @@
 using Adria.Application.Contracts.Data;
+using Adria.Domain.BodyStats;
 
 namespace Adria.Application.Contracts;
 
@@ -25,6 +26,12 @@ public interface IAllSubscriptionsQuery
 public interface IAllUsersQuery
 {
     Task<IReadOnlyCollection<UserData>> Fetch();
+}
+
+public interface IBodyStatRepository
+{
+    Task<BodyStat?> ById(string id); 
+    Task Update(BodyStat bodyStat);
 }
 
 public interface IOrderByUserIdQuery
