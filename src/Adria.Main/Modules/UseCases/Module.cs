@@ -3,6 +3,7 @@ using Adria.Application.BodyStats;
 using Adria.Application.Contracts;
 using Adria.Application.Contracts.Data;
 using Adria.Application.FoodComposition;
+using Adria.Application.PushNotifications;
 using Adria.Application.Subscriptions;
 using Adria.Application.Users;
 using Adria.Infrastructure.Persistence.Queries;
@@ -26,6 +27,7 @@ public static class UseCases
                 .AddScoped<IUseCase<RemoveFoodCompositionInput, Task>, RemoveFoodComposition>()
                 .AddScoped<IUseCase<CreateAnalyseInput, Task<Guid>>, CreateAnalyse>()
                 .AddScoped<IUseCase<UpdateBodyStatGoalInput, Task>, UpdateBodyStatGoal>()
+                .AddScoped<IUseCase<SubscribeToPushInput, Task>, SubscribeToPush>()
                 .AddScoped<IUseCase<GetLatestBodyStatsInput, Task<IReadOnlyCollection<BodyStatData>>>, GetLatestBodyStats>();
     }
 }
