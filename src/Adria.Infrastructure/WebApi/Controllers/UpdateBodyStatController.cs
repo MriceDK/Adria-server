@@ -8,6 +8,7 @@ namespace Adria.Infrastructure.WebApi.Controllers;
 
 public sealed class UpdateBodyStatController
 {
+    private UpdateBodyStatController(){}
     public static async Task<Results<NoContent, NotFound, BadRequest>> Invoke(
         [FromRoute] string id, 
         [FromBody] UpdateGoalBody body, 
