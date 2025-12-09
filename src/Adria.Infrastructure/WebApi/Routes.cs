@@ -119,21 +119,21 @@ public static class Routes
             .MapPost("/", CreateAnalyseController.Invoke)
             .WithDescription("Create a new health analyse.")
             .WithName(nameof(CreateAnalyseController))
-            .WithMetadata(new ConsumesAttribute("application/json"))
+            .WithMetadata(new ConsumesAttribute(APPLICATION_JSON))
             .WithOpenApi();
             
         analyseRoutes
             .MapGet("/user/{userId}/stats", GetBodyStatsController.Invoke)
             .WithDescription("Get the latest body statistics for a user.")
             .WithName(nameof(GetBodyStatsController))
-            .WithMetadata(new ProducesAttribute("application/json"))
+            .WithMetadata(new ProducesAttribute(APPLICATION_JSON))
             .WithOpenApi();
         
         analyseRoutes
             .MapPut("/definitions/{id}/goal", UpdateBodyStatController.Invoke)
             .WithDescription("Update the goal for a specific body stat definition.")
             .WithName(nameof(UpdateBodyStatController))
-            .WithMetadata(new ConsumesAttribute("application/json"))
+            .WithMetadata(new ConsumesAttribute(APPLICATION_JSON))
             .WithOpenApi();
     }
 }
