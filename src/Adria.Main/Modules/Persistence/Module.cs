@@ -6,6 +6,8 @@ using Adria.Application.Scanner;
 using Adria.Application.Food;
 using Adria.Domain.BodyStats;
 using Adria.Domain.Food;
+using Adria.Domain.PushNotifications;
+using Adria.Domain.BodyStats;
 using Adria.Domain.Scanner;
 using Adria.Domain.Subcriptions;
 using Adria.Domain.Users;
@@ -156,6 +158,13 @@ public static class PersistenceModule
                     sp.GetRequiredService<DbProviderFactory>(),
                     _connectionString,
                     sp.GetRequiredService<ILogger<LatestBodyStatsQuery>>()
+                );
+            }).AddScoped<IPushSubscriptionRepository, AdoPushSubscriptionRepository>(serviceProvider =>
+            {
+                return new AdoPushSubscriptionRepository(
+                    serviceProvider.GetRequiredService<DbProviderFactory>(),
+                    _connectionString,
+                    serviceProvider.GetRequiredService<ILogger<AdoPushSubscriptionRepository>>()
                 );
             });
     }

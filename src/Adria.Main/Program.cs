@@ -9,10 +9,11 @@ builder
     .Services
         .AddPersistenceModule(configuration)
         .AddWebApiModule(configuration)
+        .AddHostedService<Adria.Main.Workers.NotificationWorker>()
         .AddUseCases();
 
 await builder
     .Build()
     .UsePersistenceModule()
     .UseWebApiModule()
-    .RunAsync();
+    .RunAsync(); 

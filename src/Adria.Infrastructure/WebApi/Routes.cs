@@ -30,8 +30,15 @@ public static class Routes
         MapUserRoutes(app);
         MapFoodCompositionRoutes(app);
         MapAnalyseRoutes(app);
+        MapPushRoutes(app);
         MapScannerRoutes(app);
         return app;
+    }
+    
+    private static void MapPushRoutes(WebApplication app)
+    {
+        app.MapPost("/subscribe", PushNotificationsController.Subscribe)
+            .WithTags("PushNotifications");
     }
 
     private static void MapSubscriptionRoutes(WebApplication app)
