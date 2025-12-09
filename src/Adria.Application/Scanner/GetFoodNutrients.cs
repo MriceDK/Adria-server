@@ -38,7 +38,8 @@ public sealed class GetFoodNutrients
             results.Add(new NutrientInfo(
                 nutrient.NutrientId,
                 nutrient.Type,
-                comp.Amount
+                comp.Amount,
+                nutrient.Unit
             ));
         }
 

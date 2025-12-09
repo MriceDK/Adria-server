@@ -4,15 +4,14 @@ public class Nutrient
 {
     public string NutrientId { get; private init; }
     public string Type { get; private set; }
-    public double RecommendedAmount { get; private set; }
+    public string Unit { get; private set; }
 
-    public Nutrient(string nutrientId, string type, double recommendedAmount)
+    public Nutrient(string nutrientId, string type, string unit)
     {
         EnsureTypeIsValid(type);
-        EnsureRecommendedAmountIsValid(recommendedAmount);
         NutrientId = nutrientId;
         Type = type;
-        RecommendedAmount = recommendedAmount;
+        Unit = unit;
     }
 
     public void ChangeType(string newType)
@@ -21,11 +20,7 @@ public class Nutrient
         Type = newType;
     }
 
-    public void ChangeRecommendedAmount(double newAmount)
-    {
-        EnsureRecommendedAmountIsValid(newAmount);
-        RecommendedAmount = newAmount;
-    }
+
 
     private static void EnsureTypeIsValid(string type)
     {
@@ -33,9 +28,5 @@ public class Nutrient
             throw new ArgumentException("Type cannot be null or empty.", nameof(type));
     }
 
-    private static void EnsureRecommendedAmountIsValid(double recommendedAmount)
-    {
-        if (string.IsNullOrWhiteSpace(recommendedAmount.ToString()))
-            throw new ArgumentException("Recommended amount cannot be null or empty.", nameof(recommendedAmount));
-    }
+
 }
