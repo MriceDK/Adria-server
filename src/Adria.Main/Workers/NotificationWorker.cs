@@ -21,24 +21,54 @@ public class NotificationWorker : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        _logger.LogInformation("Notification Worker started running...");
-
         using PeriodicTimer timer = new PeriodicTimer(TimeSpan.FromMinutes(1));
+    
+        int executionCount = 0;
 
         while (await timer.WaitForNextTickAsync(stoppingToken))
         {
+            executionCount++;
+
             try
             {
-                await SendNotifications();
+                if (executionCount == 1)
+                {
+                    await SendNotifications(
+                        "Welcome to Nutriscan! 🚀", 
+                        "First minute passed! Don't forget to hydrate. 💧"
+                    );
+                }
+
+                else if (executionCount == 3)
+                {
+                    await SendNotifications(
+                        "Feeling Hungry? 🥗", 
+                        "It's been 3 minutes! Time for a healthy snack."
+                    );
+                }
+
+                else if (executionCount == 5)
+                {
+                    await SendNotifications(
+                        "Time to Move! 🏃‍♂️", 
+                        "5 minutes in! Stretch your legs."
+                    );
+                }
+                
+                if (executionCount >= 15)
+                {
+                    executionCount = 0; 
+                }
+                
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error occurred while sending notifications.");
+                _logger.LogError(ex, "Notification error.");
             }
         }
     }
 
-    private async Task SendNotifications()
+    private async Task SendNotifications(string title,string body)
     {
         using var scope = _serviceProvider.CreateScope();
         var repository = scope.ServiceProvider.GetRequiredService<IPushSubscriptionRepository>();
@@ -69,8 +99,8 @@ public class NotificationWorker : BackgroundService
 
                 var payload = System.Text.Json.JsonSerializer.Serialize(new 
                 { 
-                    title = "Don't forget drink water! 💧", 
-                    body = $"Hi, it's perfect time to drink water! : {DateTime.Now:HH:mm}" 
+                    title = title, 
+                    body = body
                 });
 
                 await webPushClient.SendNotificationAsync(pushSubscription, payload, vapidDetails);
