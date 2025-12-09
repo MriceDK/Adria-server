@@ -4,7 +4,7 @@ using Adria.Domain.Food;
 
 namespace Adria.Application.Scanner;
 
-public sealed class GetRandomFood: IUseCase <Task<Food>>
+public sealed class GetRandomFood: IUseCase <Task<Domain.Food.Food>>
 {
     private readonly IFood _food;
 
@@ -14,9 +14,9 @@ public sealed class GetRandomFood: IUseCase <Task<Food>>
         _food = food;
     }
 
-    public async Task<Food> Execute()
+    public async Task<Domain.Food.Food> Execute()
     {
-        IReadOnlyCollection<Food> allFoods = await _food.GetAll();
+        IReadOnlyCollection<Domain.Food.Food> allFoods = await _food.GetAll();
         if (allFoods == null || allFoods.Count == 0)
             throw new InvalidOperationException("No foods available.");
 

@@ -2,11 +2,11 @@
 
 public class Nutrient
 {
-    public Guid NutrientId { get; private init; }
+    public string NutrientId { get; private init; }
     public string Type { get; private set; }
     public double RecommendedAmount { get; private set; }
 
-    public Nutrient(Guid nutrientId, string type, double recommendedAmount)
+    public Nutrient(string nutrientId, string type, double recommendedAmount)
     {
         EnsureTypeIsValid(type);
         EnsureRecommendedAmountIsValid(recommendedAmount);

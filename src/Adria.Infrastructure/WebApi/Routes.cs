@@ -1,5 +1,6 @@
 using Adria.Infrastructure.WebApi.Controllers;
 using Adria.Infrastructure.WebApi.Controllers.FoodComposition;
+using Adria.Infrastructure.WebApi.Controllers.Scanner;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -29,6 +30,7 @@ public static class Routes
         MapUserRoutes(app);
         MapFoodCompositionRoutes(app);
         MapAnalyseRoutes(app);
+        MapScannerRoutes(app);
         return app;
     }
 
@@ -72,10 +74,38 @@ public static class Routes
             .WithOpenApi();
 
         foodCompositionRoutes
-            .MapGet("/by-nutrient/{Type}", GetFoodCompositionsByNutrientController.Invoke)
+            .MapGet("/by-nutrient/{type}", GetFoodCompositionsByNutrientController.Invoke)
             .WithDescription("Get all foods by nutrient.")
             .WithName(nameof(GetFoodCompositionsByNutrientController))
             .WithOpenApi();
+        foodCompositionRoutes
+            .MapPost("/food/create", CreateNewFoodController.Invoke)
+            .WithDescription("Create a new food.")
+            .WithName(nameof(CreateNewFoodController))
+            .WithMetadata(new ConsumesAttribute(APPLICATION_JSON))
+            .WithOpenApi();
+        foodCompositionRoutes
+            .MapGet("/food/allfood", GetAllFoodsController.Invoke)
+            .WithDescription("Get all foods")
+            .WithName(nameof(GetAllFoodsController))
+            .WithOpenApi();
+
+    }
+
+    private static void MapScannerRoutes(WebApplication app)
+    {
+        var ScannerRoutes = app.MapGroup("/api/Scanner")
+            .WithTags("Scanner")
+            .WithDescription("All endpoints related to scanner.")
+            .WithOpenApi();
+        ScannerRoutes
+            .MapPost("/ScanFood/{adrianId}", ScanFoodController.Invoke)
+            .WithOpenApi()
+            .WithDescription("Scan a random food for a user.");
+        ScannerRoutes
+            .MapGet("/history/{adrianId}", ScanFoodHistoryController.Invoke)
+            .WithOpenApi()
+            .WithDescription("Get full scan history including food & nutrients.");
     }
 
     private static void MapUserRoutes(WebApplication app)

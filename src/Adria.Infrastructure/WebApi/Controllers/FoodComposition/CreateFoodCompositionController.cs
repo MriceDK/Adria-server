@@ -41,6 +41,6 @@ public class CreateFoodCompositionController
 
 public sealed record FoodCompositionBody(
     Guid FoodId,
-    Guid NutrientId,
+    string NutrientId,
     double Amount
 );

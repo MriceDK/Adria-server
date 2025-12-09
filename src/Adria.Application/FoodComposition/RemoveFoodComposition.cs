@@ -6,7 +6,7 @@ namespace Adria.Application.FoodComposition;
 
 public sealed record RemoveFoodCompositionInput(
     Guid FoodId,
-    Guid NutrientId,
+    string NutrientId,
     double Amount
 );
 

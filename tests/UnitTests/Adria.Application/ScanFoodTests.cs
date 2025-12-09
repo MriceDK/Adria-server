@@ -22,14 +22,13 @@ public class ScanFoodTests
     {
         Guid adrianId = Guid.NewGuid();
         Guid foodId = Guid.NewGuid();
-        Guid nutrientId = Guid.NewGuid();
         string foodName = "Chicken Breast";
         string foodType = "Poultry";
         bool foodEdible = true;
 
         var food = new Food(foodId, foodName, foodType, foodEdible);
-        var nutrient = new Nutrient(nutrientId, "Protein", 50.0);
-        var composition = new FoodComposition(foodId, nutrientId, 31.0);
+        var nutrient = new Nutrient("bd1-prot-0001", "Protein", 50.0);
+        var composition = new FoodComposition(foodId, "bd1-prot-0001", 31.0);
 
         var mockFoodRepo = new MockFoodRepository(new List<Food> { food });
         var mockNutrientRepo = new MockNutrientRepository(new List<Nutrient> { nutrient });
@@ -46,7 +45,7 @@ public class ScanFoodTests
         foreach (var nut in result.Nutrients)
         {
             _testOutputHelper.WriteLine(
-                $"Nutrient: {nut.Type}, Amount: {nut.Amount}, Recommended: {nut.RecommendedAmount}, ScanTime: {result.ScanDateTime}");
+                $"Nutrient: {nut.Type}, Amount: {nut.Amount}, ScanTime: {result.ScanDateTime}");
         }
 
         Assert.Equal(foodName, result.FoodName);
@@ -64,26 +63,22 @@ public class ScanFoodTests
         Guid food2Id = Guid.NewGuid();
         var food2 = new Food(food2Id, "Broccoli", "Vegetable", true);
 
-        Guid proteinId = Guid.NewGuid();
-        Guid fiberId = Guid.NewGuid();
-        Guid vitaminCId = Guid.NewGuid();
-
-        var protein = new Nutrient(proteinId, "Protein", 50.0);
-        var fiber = new Nutrient(fiberId, "Fiber", 25.0);
-        var vitaminC = new Nutrient(vitaminCId, "Vitamin C", 90.0);
+        var protein = new Nutrient("bd1-prot-0001", "Protein", 50.0);
+        var Carbohydrates = new Nutrient("bd1-carb-0002", "Carbohydrates", 25.0);
+        var Calories = new Nutrient("bd1-cali-0005", "Calories", 90.0);
 
         var compositions = new List<FoodComposition>
         {
-            new(food1Id, proteinId, 31.0),
-            new(food1Id, fiberId, 0.5),
+            new(food1Id, "bd1-cali-0005", 31.0),
+            new(food1Id, "bd1-prot-0001", 0.5),
 
-            new(food2Id, proteinId, 2.8),
-            new(food2Id, fiberId, 2.6),
-            new(food2Id, vitaminCId, 89.0)
+            new(food2Id, "bd1-cali-0005", 2.8),
+            new(food2Id, "bd1-prot-0001", 2.6),
+            new(food2Id, "bd1-carb-0002", 89.0)
         };
 
         var mockFoodRepo = new MockFoodRepository(new List<Food> { food1, food2 });
-        var mockNutrientRepo = new MockNutrientRepository(new List<Nutrient> { protein, fiber, vitaminC });
+        var mockNutrientRepo = new MockNutrientRepository(new List<Nutrient> { protein, Carbohydrates, Calories });
         var mockFoodCompRepo = new MockFoodCompositionRepository(compositions);
         var mockScanRepo = new MockScanRepository();
 
@@ -97,7 +92,7 @@ public class ScanFoodTests
         foreach (var nutrient in result.Nutrients)
         {
             _testOutputHelper.WriteLine(
-                $"Nutrient: {nutrient.Type}, Amount: {nutrient.Amount}, Recommended: {nutrient.RecommendedAmount}");
+                $"Nutrient: {nutrient.Type}, Amount: {nutrient.Amount}");
         }
         _testOutputHelper.WriteLine(
             $"{result.FoodName}{result.Nutrients.Count}{result.ScanDateTime}{result.ScanId}");
