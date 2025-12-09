@@ -2,6 +2,6 @@
 
 public record FoodCompositionData(
     Guid FoodId,
-    Guid NutrientId,
+    string NutrientId,
     double Amount
     );

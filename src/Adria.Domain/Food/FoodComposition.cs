@@ -3,18 +3,18 @@
 public class FoodComposition
 {
     public Guid FoodId { get; private init; }
-    public Guid NutrientId { get; private init; }
+    public string NutrientId { get; private init; }
     public double Amount { get; private set; }
 
-    public FoodComposition(Guid foodId, Guid nutrientId, double amount)
+    public FoodComposition(Guid foodId, string nutrientId, double amount)
     {
         EnsureIdIsValid(foodId, nameof(foodId));
-        EnsureIdIsValid(nutrientId, nameof(nutrientId));
         EnsureAmountIsValid(amount);
         FoodId = foodId;
         NutrientId = nutrientId;
         Amount = amount;
     }
+
 
     public void ChangeAmount(double newAmount)
     {
