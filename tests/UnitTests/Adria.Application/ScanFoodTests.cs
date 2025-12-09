@@ -10,6 +10,7 @@ namespace UnitTests.Adria.Application;
 public class ScanFoodTests
 {
     private readonly ITestOutputHelper _testOutputHelper;
+    private static readonly string[] COLLECTION = ["Chicken Breast", "Broccoli"];
 
     public ScanFoodTests(ITestOutputHelper testOutputHelper)
     {
@@ -96,7 +97,7 @@ public class ScanFoodTests
         _testOutputHelper.WriteLine(
             $"{result.FoodName}{result.Nutrients.Count}{result.ScanDateTime}{result.ScanId}");
 
-        Assert.Contains(result.FoodName, new[] { "Chicken Breast", "Broccoli" });
+        Assert.Contains(result.FoodName, COLLECTION);
         Assert.True(result.Nutrients.Count > 0);
     }
 }

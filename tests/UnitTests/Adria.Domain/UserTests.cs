@@ -47,7 +47,6 @@ public sealed class UserTests
     public void Constructor_WithInvalidName_ThrowsArgumentException(string invalidName)
     {
         // Arrange
-        string email = "valid@email.com";
         const string job = "Doctor";
         var subscription = new Subscription(SubscriptionType.Basic, 10, "not so much");
 
@@ -64,7 +63,6 @@ public sealed class UserTests
     {
         // Arrange
         const string name = "John Doe";
-        const string job = "Doctor";
         var subscription = new Subscription(SubscriptionType.Basic, 10, "not so much");
 
         // Act & Assert

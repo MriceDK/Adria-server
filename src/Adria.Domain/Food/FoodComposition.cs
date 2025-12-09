@@ -24,7 +24,7 @@ public class FoodComposition
 
     private static void EnsureIdIsValid(Guid id, string paramName)
     {
-        if (string.IsNullOrWhiteSpace(id.ToString()))
+        if (Guid.Empty.Equals(id))
             throw new ArgumentException("ID cannot be null or empty.", paramName);
     }
 
@@ -32,5 +32,6 @@ public class FoodComposition
     {
         if (string.IsNullOrWhiteSpace(amount.ToString()))
             throw new ArgumentException("Amount cannot be null or empty.", nameof(amount));
+        if (amount < 0) throw new ArgumentException("Amount cannot be negative.");
     }
 }

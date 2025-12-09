@@ -60,4 +60,46 @@ public class FoodTests
         Assert.Equal(nutrient.NutrientId, comp.NutrientId);
         Assert.Equal(amount, comp.Amount);
     }
+    [Fact]
+    public void Constructor_WithEmptyFoodId_ThrowsArgumentException()
+    {
+        // Arrange
+        var emptyFoodId = Guid.Empty;
+        var nutrientId = Guid.NewGuid();
+        double amount = 10;
+
+        // Act
+        var ex = Assert.Throws<ArgumentException>(
+            () => new FoodComposition(emptyFoodId, nutrientId, amount));
+
+        // Assert
+        Assert.Equal("ID cannot be null or empty. (Parameter 'foodId')", ex.Message);
+        Assert.Equal("foodId", ex.ParamName);
+    }
+
+    [Fact]
+    public void Constructor_WithEmptyNutrientId_ThrowsArgumentException()
+    {
+        // Arrange
+        var foodId = Guid.NewGuid();
+        var emptyNutrientId = Guid.Empty;
+        double amount = 10;
+
+        // Act
+        var ex = Assert.Throws<ArgumentException>(
+            () => new FoodComposition(foodId, emptyNutrientId, amount));
+
+        // Assert
+        Assert.Equal("ID cannot be null or empty. (Parameter 'nutrientId')", ex.Message);
+        Assert.Equal("nutrientId", ex.ParamName);
+    }
+    
+    [Fact]
+    public void ChangeAmount_WithAmountCausingValidationFailure_ThrowsArgumentException()
+    {
+        // Arrange
+        var comp = new FoodComposition(Guid.NewGuid(), Guid.NewGuid(), 10);
+
+        Assert.Throws<ArgumentException>(() => comp.ChangeAmount(-20));
+    }
 }
