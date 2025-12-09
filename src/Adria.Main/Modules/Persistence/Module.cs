@@ -4,6 +4,7 @@ using Adria.Application.Contracts.Data;
 using Adria.Application.FoodComposition;
 using Adria.Application.Scanner;
 using Adria.Application.Food;
+using Adria.Domain.BodyStats;
 using Adria.Domain.Food;
 using Adria.Domain.PushNotifications;
 using Adria.Domain.BodyStats;

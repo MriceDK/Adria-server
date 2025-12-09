@@ -20,31 +20,20 @@ public sealed class GetFoodNutrients
 
     public async Task<IReadOnlyCollection<NutrientInfo>> Execute(GetFoodNutrientsInput input)
     {
-        Console.WriteLine($"GETFOODNUTRIENTS: Looking up compositions for FoodId={input.FoodId}");
 
         IReadOnlyCollection<Domain.Food.FoodComposition> compositions =
             await _foodCompositionRepository.ByFoodId(input.FoodId.ToString());
 
-        Console.WriteLine($"GETFOODNUTRIENTS: Found {compositions.Count} compositions");
-
-        foreach (var c in compositions)
-            Console.WriteLine($"GETFOODNUTRIENTS: Composition -> NutrientId={c.NutrientId}, Amount={c.Amount}");
 
         var results = new List<NutrientInfo>();
 
         foreach (var comp in compositions)
         {
-            Console.WriteLine($"GETFOODNUTRIENTS: Fetching nutrient {comp.NutrientId}");
 
             Nutrient? nutrient = await _nutrientRepository.ById(comp.NutrientId);
 
-            if (nutrient == null)
-            {
-                Console.WriteLine($"GETFOODNUTRIENTS: NutrientId {comp.NutrientId} NOT FOUND in nutrient table!");
-                continue;
-            }
+    
 
-            Console.WriteLine($"GETFOODNUTRIENTS: Nutrient found -> {nutrient.NutrientId}, {nutrient.Type}");
 
             results.Add(new NutrientInfo(
                 nutrient.NutrientId,
@@ -53,7 +42,6 @@ public sealed class GetFoodNutrients
             ));
         }
 
-        Console.WriteLine($"GETFOODNUTRIENTS: Returning {results.Count} nutrients");
         return results;
     }
 
