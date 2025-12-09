@@ -27,7 +27,7 @@ public class FoodTests
     public void Constructor_WithTypeAndAmount_CreatesNutrient()
     {
         // Arrange
-        var nutrientId = Guid.NewGuid();
+        var nutrientId = "bd1-prot-0001";
         var type = "Protein";
         var recommendedAmount = 50;
 
@@ -45,7 +45,7 @@ public class FoodTests
     {
         // Arrange
         var foodId = Guid.NewGuid();
-        var nutrientId = Guid.NewGuid();
+        var nutrientId = "bd1-prot-0001";
 
         var food = new Food(foodId,"Chicken Breast", "Poultry", true);
         var nutrient = new Nutrient(nutrientId,"Protein", 50);

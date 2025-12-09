@@ -3,7 +3,7 @@ using Adria.Domain.Food;
 
 namespace Adria.Application.Scanner;
 
-public sealed class GetRandomFood: IUseCase <Task<Food>>
+public sealed class GetRandomFood: IUseCase <Task<Domain.Food.Food>>
 {
     private readonly IFood _food;
     private static readonly Random _random = new Random();
@@ -14,13 +14,13 @@ public sealed class GetRandomFood: IUseCase <Task<Food>>
         _food = food;
     }
 
-    public async Task<Food> Execute()
+    public async Task<Domain.Food.Food> Execute()
     {
-        IReadOnlyCollection<Food> allFoods = await _food.GetAll();
+        IReadOnlyCollection<Domain.Food.Food> allFoods = await _food.GetAll();
         if (allFoods == null || allFoods.Count == 0)
             throw new InvalidOperationException("No foods available.");
 
-        List<Food> foodsList = new List<Food>(allFoods);
+        List<Domain.Food.Food> foodsList = new List<Domain.Food.Food>(allFoods);
 
         int i;
         lock (_random)

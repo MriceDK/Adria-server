@@ -48,4 +48,9 @@ public class MockFoodRepository : IFood
     {
         throw new NotImplementedException();
     }
+
+    public Task<Food?> ById(Guid id)
+    {
+        throw new NotImplementedException();
+    }
 }
