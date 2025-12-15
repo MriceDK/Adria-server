@@ -55,4 +55,7 @@ create-image:
     - docker build --build-arg BUILD_ENV=test -f config/docker/Dockerfile -t hcr.technet.howest.be/adria-server-group-08:latest .
     - docker push hcr.technet.howest.be/adria-server-group-08:latest
 
+
+
+
 # Create a job to push the Docker image to the registry see project documentation for more info.

@@ -23,7 +23,7 @@ public sealed class CreateAnalyseController
         var detailsInput = body.Details
             .Select(d => new AnalyseDetailInput(d.BodyStatId, d.Value))
             .ToList();
-
+    
         var input = new CreateAnalyseInput(
             AdrianId: body.UserId,
             DateTime: DateTime.UtcNow, 
