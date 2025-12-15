@@ -27,7 +27,7 @@ public sealed class CreateOrderController
         CreateOrderInput input = new(
             OrderId: Guid.NewGuid(),
             AdrianId: body.AdrianId,
-            Date: DateTime.UtcNow, // Use current UTC time for creation
+            Date: DateTime.UtcNow,
             TotalPrice: body.TotalPrice
         );
 
@@ -48,5 +48,4 @@ public sealed class CreateOrderController
 public sealed record CreateOrderBody(
     Guid AdrianId,
     double TotalPrice 
-    // Simplified: Does not include order line items/supplements for this basic implementation
 );

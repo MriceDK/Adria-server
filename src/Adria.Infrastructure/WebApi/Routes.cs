@@ -188,8 +188,7 @@ public static class Routes
             .WithTags("Supplement")
             .WithDescription("All endpoints related to Supplements.")
             .WithOpenApi();
-
-        // POST /api/Supplement/create
+        
         supplementRoutes
             .MapPost("/create", CreateSupplementController.Invoke)
             .WithDescription("Create a new supplement.")
@@ -197,22 +196,19 @@ public static class Routes
             .WithMetadata(new ConsumesAttribute(APPLICATION_JSON))
             .WithOpenApi();
 
-        // DELETE /api/Supplement/delete
         supplementRoutes
-            .MapDelete("/delete", DeleteSupplementController.Invoke) // Using MapDelete for deletion commands
+            .MapDelete("/delete", DeleteSupplementController.Invoke)
             .WithDescription("Delete an existing supplement by ID.")
             .WithName(nameof(DeleteSupplementController))
             .WithMetadata(new ConsumesAttribute(APPLICATION_JSON))
             .WithOpenApi();
 
-        // GET /api/Supplement/all
         supplementRoutes
             .MapGet("/all", SearchAllSupplementsController.Invoke)
             .WithDescription("Get all supplements.")
             .WithName(nameof(SearchAllSupplementsController))
             .WithOpenApi();
 
-        // GET /api/Supplement/by-id/{id}
         supplementRoutes
             .MapGet("/{id}", SearchSupplementsByIdController.Invoke)
             .WithDescription("Get a supplement by its ID.")
@@ -228,7 +224,6 @@ public static class Routes
             .WithDescription("All endpoints related to Orders.")
             .WithOpenApi();
 
-        // POST /api/order/create
         orderRoutes
             .MapPost("/create", CreateOrderController.Invoke)
             .WithDescription("Create a new order.")
@@ -236,7 +231,6 @@ public static class Routes
             .WithMetadata(new ConsumesAttribute(APPLICATION_JSON))
             .WithOpenApi();
 
-        // DELETE /api/order/delete
         orderRoutes
             .MapDelete("/delete", DeleteOrderController.Invoke) 
             .WithDescription("Delete an existing order by ID.")
@@ -244,14 +238,12 @@ public static class Routes
             .WithMetadata(new ConsumesAttribute(APPLICATION_JSON))
             .WithOpenApi();
 
-        // GET /api/order/{id}
         orderRoutes
             .MapGet("/{id}", SearchOrderByIdController.Invoke)
             .WithDescription("Get an order by its ID.")
             .WithName(nameof(SearchOrderByIdController))
             .WithOpenApi();
 
-        // GET /api/order/user/{adrianId}
         orderRoutes
             .MapGet("/user/{adrianId}", SearchOrderByUserIdController.Invoke)
             .WithDescription("Get all orders for a specific user (AdrianId).")
