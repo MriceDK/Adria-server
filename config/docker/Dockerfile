@@ -19,11 +19,12 @@ COPY src/Adria.Application/Adria.Application.csproj ./src/Adria.Application/
 COPY src/Adria.Infrastructure/Adria.Infrastructure.csproj ./src/Adria.Infrastructure/
 COPY tests/UnitTests/UnitTests.csproj ./tests/UnitTests/
 
-# Restore dependencies
-RUN dotnet restore
-
 # Copy the entire source code
 COPY . .
+
+# Restore dependencies  
+RUN dotnet restore
+
 
 # Build the solution
 RUN dotnet build --configuration Release --no-restore
