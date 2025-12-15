@@ -53,7 +53,6 @@ public static class UseCases
         
         // --- Supplement Use Cases ---
         .AddScoped<IUseCase<CreateSupplementInput, Task<Guid>>, CreateSupplement>()
-        .AddScoped<IUseCase<DeleteSupplementInput, Task>, DeleteSupplement>()
         .AddScoped<IUseCase<SearchSupplementsByIdInput, Task<SupplementData?>>, SearchSupplementsById>()
         .AddScoped<IUseCase<Task<IReadOnlyCollection<SupplementData?>>>, SearchAllSupplements>()
         

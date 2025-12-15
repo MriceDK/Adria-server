@@ -11,11 +11,12 @@ public class AdoSupplementRepository :  AbstractAdoRepository, ISupplementReposi
 
     private static readonly string TABLE_SUPPLEMENTS = "supplements";
 
-    private static readonly string COL_ID = "id";
-    private static readonly string COL_NAME = "name";
-    private static readonly string COL_TYPE = "type";
-    private static readonly string COL_PRICE = "price";
-    private static readonly string COL_STOCK = "stock";
+    private static readonly string COL_ID = "SupplementId";
+    private static readonly string COL_NAME = "Name";
+    private static readonly string COL_TYPE = "Type";
+    private static readonly string COL_PRICE = "Price";
+    private static readonly string COL_STOCK = "Stock";
+
 
     private static readonly string INSERT_SUPPLEMENT = $@"
     INSERT INTO {TABLE_SUPPLEMENTS} ({COL_ID}, {COL_NAME}, {COL_TYPE}, {COL_PRICE}, {COL_STOCK})
@@ -53,10 +54,10 @@ public class AdoSupplementRepository :  AbstractAdoRepository, ISupplementReposi
     SELECT {COL_ID}, {COL_NAME}, {COL_TYPE}, {COL_PRICE}, {COL_STOCK}
     FROM {TABLE_SUPPLEMENTS};
 ";
-
+   
     private static readonly string DELETE_SUPPLEMENT = $@"
     DELETE FROM {TABLE_SUPPLEMENTS}
-    WHERE {COL_ID} = @Id;
+    WHERE {COL_ID} = @SupplementId;
 ";
 
     public AdoSupplementRepository(
@@ -252,13 +253,19 @@ public class AdoSupplementRepository :  AbstractAdoRepository, ISupplementReposi
     
     public async Task Remove(Supplement supplement)
     {
-        _logger.LogInformation("Removing supplement with ID {SupplementId} from database.", supplement.SupplementId);
+        _logger.LogInformation(
+            "Removing supplement with ID {SupplementId} from database.",
+            supplement.SupplementId
+        );
 
         try
         {
             DbParameter[] parameters =
             [
-                CreateParameter("@Id", supplement.SupplementId.ToString().ToLower())
+                CreateParameter(
+                    "@SupplementId",
+                    supplement.SupplementId.ToString().ToLower()
+                )
             ];
 
             await ExecuteNonQueryAsync(DELETE_SUPPLEMENT, parameters);
@@ -271,9 +278,10 @@ public class AdoSupplementRepository :  AbstractAdoRepository, ISupplementReposi
                 supplement.SupplementId
             );
 
-            throw new NutriscanDatabaseException("Failed to remove supplement from database.", ex);
+            throw new NutriscanDatabaseException(
+                "Failed to remove supplement from database.",
+                ex
+            );
         }
     }
-
-
 }

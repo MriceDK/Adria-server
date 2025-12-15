@@ -188,7 +188,7 @@ public static class Routes
             .WithTags("Supplement")
             .WithDescription("All endpoints related to Supplements.")
             .WithOpenApi();
-        
+
         supplementRoutes
             .MapPost("/create", CreateSupplementController.Invoke)
             .WithDescription("Create a new supplement.")

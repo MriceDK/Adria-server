@@ -1,6 +1,7 @@
 ﻿using System.Data.Common;
 using Adria.Application.Contracts;
 using Adria.Application.Contracts.Data;
+using Adria.Domain.BodyStats;
 using Microsoft.Extensions.Logging;
 
 namespace Adria.Infrastructure.Persistence.Queries;
@@ -13,6 +14,7 @@ public sealed class LatestBodyStatsQuery : IBodyStatsQuery
 
     private static readonly string QRY = @"
         SELECT 
+            bs.BodyStatId,
             bs.Label,
             bs.Unit,
             bs.Goal,
@@ -60,14 +62,15 @@ public sealed class LatestBodyStatsQuery : IBodyStatsQuery
         var result = new List<BodyStatData>();
 
         while (await reader.ReadAsync())
-        {
+        {   
+            var bodyStatIdOrd = reader.GetOrdinal("BodyStatId");
             var labelOrd = reader.GetOrdinal("Label");
             var unitOrd = reader.GetOrdinal("Unit");
             var goalOrd = reader.GetOrdinal("Goal");
             var currentOrd = reader.GetOrdinal("Current");
 
             var label = reader.GetString(labelOrd);
-            
+            var bodyStatId = reader.GetString(bodyStatIdOrd);
             var unit = await reader.IsDBNullAsync(unitOrd) 
                 ? null 
                 : reader.GetString(unitOrd);
@@ -78,9 +81,8 @@ public sealed class LatestBodyStatsQuery : IBodyStatsQuery
                 
             var val = reader.GetDouble(currentOrd);
 
-            string formattedCurrent = (unit == "%") ? $"{val}%" : val.ToString();
 
-            result.Add(new BodyStatData(label, formattedCurrent, goal, unit));
+            result.Add(new BodyStatData(bodyStatId,label, val, goal, unit));
         }
 
         return result.AsReadOnly();
