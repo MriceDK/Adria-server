@@ -55,7 +55,6 @@ public static class UseCases
         .AddScoped<IUseCase<SubscribeToPushInput, Task>, SubscribeToPush>()
         .AddScoped<IUseCase<GetLatestBodyStatsInput, Task<IReadOnlyCollection<BodyStatData>>>, GetLatestBodyStats>()
         .AddScoped<IUseCase<CreateSupplementInput, Task<Guid>>, CreateSupplement>()
-        .AddScoped<IUseCase<DeleteSupplementInput, Task>, DeleteSupplement>()
         .AddScoped<IUseCase<SearchSupplementsByIdInput, Task<SupplementData?>>, SearchSupplementsById>()
         .AddScoped<IUseCase<Task<IReadOnlyCollection<SupplementData?>>>, SearchAllSupplements>()
         .AddScoped<RemoveScanFood>()
