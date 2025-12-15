@@ -33,7 +33,7 @@ public class AdoNutrientRepository : AbstractAdoRepository, INutrient
         return new Nutrient(
             reader.GetString(reader.GetOrdinal("NutrientId")),
             reader.GetString(reader.GetOrdinal("Type")),
-            reader.GetDouble(reader.GetOrdinal("Unit"))
+            reader.GetString(reader.GetOrdinal("Unit"))
         );
     }
 
@@ -66,7 +66,7 @@ public class AdoNutrientRepository : AbstractAdoRepository, INutrient
             nutrients.Add(new Nutrient(
                 reader.GetString(reader.GetOrdinal("NutrientId")),
                 reader.GetString(reader.GetOrdinal("Type")),
-                reader.GetDouble(reader.GetOrdinal("RecommendedAmount"))
+                reader.GetString(reader.GetOrdinal("Unit"))
             ));
         }
 
@@ -114,7 +114,7 @@ public class AdoNutrientRepository : AbstractAdoRepository, INutrient
             nutrients.Add(new Nutrient(
                 reader.GetString(reader.GetOrdinal("NutrientId")),
                 reader.GetString(reader.GetOrdinal("Type")),
-                reader.GetDouble(reader.GetOrdinal("RecommendedAmount"))
+                reader.GetString(reader.GetOrdinal("Unit"))
             ));
         }
 

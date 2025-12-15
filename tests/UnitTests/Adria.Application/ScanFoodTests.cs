@@ -27,7 +27,7 @@ public class ScanFoodTests
         bool foodEdible = true;
 
         var food = new Food(foodId, foodName, foodType, foodEdible);
-        var nutrient = new Nutrient("bd1-prot-0001", "Protein", 50.0);
+        var nutrient = new Nutrient("bd1-prot-0001", "Protein", "g");
         var composition = new FoodComposition(foodId, "bd1-prot-0001", 31.0);
 
         var mockFoodRepo = new MockFoodRepository(new List<Food> { food });
@@ -63,9 +63,9 @@ public class ScanFoodTests
         Guid food2Id = Guid.NewGuid();
         var food2 = new Food(food2Id, "Broccoli", "Vegetable", true);
 
-        var protein = new Nutrient("bd1-prot-0001", "Protein", 50.0);
-        var Carbohydrates = new Nutrient("bd1-carb-0002", "Carbohydrates", 25.0);
-        var Calories = new Nutrient("bd1-cali-0005", "Calories", 90.0);
+        var protein = new Nutrient("bd1-prot-0001", "Protein", "g");
+        var Carbohydrates = new Nutrient("bd1-carb-0002", "Carbohydrates", "g");
+        var Calories = new Nutrient("bd1-cali-0005", "Calories", "g");
 
         var compositions = new List<FoodComposition>
         {

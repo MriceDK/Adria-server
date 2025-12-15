@@ -29,14 +29,14 @@ public class FoodTests
         // Arrange
         var nutrientId = "bd1-prot-0001";
         var type = "Protein";
-        var recommendedAmount = 50;
+        var unit = "g";
 
         // Act
-        var nutrient = new Nutrient(nutrientId, type, recommendedAmount);
+        var nutrient = new Nutrient(nutrientId, type,unit);
 
         // Assert
         Assert.Equal(type, nutrient.Type);
-        Assert.Equal(recommendedAmount, nutrient.RecommendedAmount);
+        Assert.Equal(unit, nutrient.Unit);
         Assert.False(string.IsNullOrWhiteSpace(nutrient.NutrientId.ToString()));
     }
     
@@ -48,7 +48,7 @@ public class FoodTests
         var nutrientId = "bd1-prot-0001";
 
         var food = new Food(foodId,"Chicken Breast", "Poultry", true);
-        var nutrient = new Nutrient(nutrientId,"Protein", 50);
+        var nutrient = new Nutrient(nutrientId,"Protein", "g");
         
         double amount = 20;
 
