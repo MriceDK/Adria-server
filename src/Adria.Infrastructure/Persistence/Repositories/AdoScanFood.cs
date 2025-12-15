@@ -1,4 +1,5 @@
-﻿using System.Data.Common;
+﻿using System.Data;
+using System.Data.Common;
 using Adria.Domain.Scanner;
 using Adria.Infrastructure.Persistence.Shared;
 using Microsoft.Extensions.Logging;
@@ -72,6 +73,26 @@ public class AdoScanFood : AbstractAdoRepository, IScan
         }
     }
 
+    public async Task Remove(Guid scanId)
+    {
+        try
+        {
+            await ExecuteNonQueryAsync(
+                DELETE_QUERY,
+                new[]
+                {
+                    CreateParameter("@ScanId", scanId)
+                }
+            );
+        }
+        catch (DbException ex)
+        {
+            _logger.LogError(ex, "Failed to remove scan {ScanId}", scanId);
+            throw;
+        }
+    }
+
+
     public async Task<Scan?> ById(Guid scanId)
     {
         using var reader = await ExecuteReaderAsync(
@@ -115,20 +136,7 @@ public class AdoScanFood : AbstractAdoRepository, IScan
 
         return scans;
     }
+    
 
-    public async Task Remove(Scan scan)
-    {
-        try
-        {
-            await ExecuteNonQueryAsync(
-                DELETE_QUERY,
-                new[] { CreateParameter("@ScanId", scan.ScanId) }
-            );
-        }
-        catch (DbException ex)
-        {
-            _logger.LogError(ex, "Failed to delete scan {ScanId}", scan.ScanId);
-            throw;
-        }
-    }
+
 }

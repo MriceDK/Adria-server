@@ -19,6 +19,7 @@ public static class UseCases
 {
     public static IServiceCollection AddUseCases(this IServiceCollection services)
     {
+<<<<<<< src/Adria.Main/Modules/UseCases/Module.cs
     return services
         .AddScoped<IUseCase<CreateSubscriptionInput, Task<Guid>>, CreateSubscription>()
         .AddScoped<IUseCase<Task<IReadOnlyCollection<SubscriptionData>>>, SearchAllSubscriptions>()
@@ -66,5 +67,7 @@ public static class UseCases
         .AddScoped<IUseCase<DeleteSupplementInput, Task>, DeleteSupplement>()
         .AddScoped<IUseCase<SearchSupplementsByIdInput, Task<SupplementData?>>, SearchSupplementsById>()
         .AddScoped<IUseCase<Task<IReadOnlyCollection<SupplementData?>>>, SearchAllSupplements>();
+        .AddScoped<RemoveScanFood>()
+        .AddScoped<ScanFood>();
     }
 }

@@ -110,11 +110,15 @@ public static class Routes
         ScannerRoutes
             .MapPost("/ScanFood/{adrianId}", ScanFoodController.Invoke)
             .WithOpenApi()
-            .WithDescription("Scan a random food for a user.");
+            .WithDescription("Scan a random food preview for a user.");
         ScannerRoutes
             .MapGet("/history/{adrianId}", ScanFoodHistoryController.Invoke)
             .WithOpenApi()
             .WithDescription("Get full scan history including food & nutrients.");
+        ScannerRoutes
+            .MapDelete("ScanFood/scan/{scanId}", RemoveScanFoodController.Invoke)
+            .WithOpenApi()
+            .WithDescription("Delete an existing scan.");
     }
 
     private static void MapUserRoutes(WebApplication app)
