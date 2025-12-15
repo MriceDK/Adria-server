@@ -19,7 +19,6 @@ public static class UseCases
 {
     public static IServiceCollection AddUseCases(this IServiceCollection services)
     {
-<<<<<<< src/Adria.Main/Modules/UseCases/Module.cs
     return services
         .AddScoped<IUseCase<CreateSubscriptionInput, Task<Guid>>, CreateSubscription>()
         .AddScoped<IUseCase<Task<IReadOnlyCollection<SubscriptionData>>>, SearchAllSubscriptions>()
@@ -28,16 +27,11 @@ public static class UseCases
         .AddScoped<IUseCase<Task<IReadOnlyCollection<UserData>>>, SearchAllUsers>()
         .AddScoped<IUseCase<CreateUserInput, Task<Guid>>, CreateUser>()
         .AddScoped<IUseCase<CreateFoodCompositionInput, Task>, CreateFoodComposition>()
-        .AddScoped<IUseCase<SearchFoodCompositionsByFoodIdInput, Task<IReadOnlyCollection<FoodCompositionData>>>
-            ,
-            SearchFoodCompositionsByFoodName>()
-        .AddScoped<IUseCase<SearchFoodCompositionsByNutrientIdInput,
-                Task<IReadOnlyCollection<FoodCompositionData>>>,
-            SearchFoodCompositionsByNutrientId>()
+        .AddScoped<IUseCase<SearchFoodCompositionsByFoodIdInput, Task<IReadOnlyCollection<FoodCompositionData>>>, SearchFoodCompositionsByFoodName>()
+        .AddScoped<IUseCase<SearchFoodCompositionsByNutrientIdInput, Task<IReadOnlyCollection<FoodCompositionData>>>, SearchFoodCompositionsByNutrientId>()
         .AddScoped<IUseCase<RemoveFoodCompositionInput, Task>, RemoveFoodComposition>()
         .AddScoped<IUseCase<CreateAnalyseInput, Task<Guid>>, CreateAnalyse>()
-        .AddScoped<IUseCase<GetLatestBodyStatsInput, Task<IReadOnlyCollection<BodyStatData>>>,
-            GetLatestBodyStats>()
+        .AddScoped<IUseCase<GetLatestBodyStatsInput, Task<IReadOnlyCollection<BodyStatData>>>, GetLatestBodyStats>()
         .AddScoped<IUseCase<FoodData, Task<Guid>>, CreateNewFood>()
         .AddScoped<GetAllFoods>()
         .AddScoped<GetRandomFood>()
@@ -53,20 +47,17 @@ public static class UseCases
         .AddScoped<IUseCase<Task<IReadOnlyCollection<UserData>>>, SearchAllUsers>()
         .AddScoped<IUseCase<CreateUserInput, Task<Guid>>, CreateUser>()
         .AddScoped<IUseCase<CreateFoodCompositionInput, Task>, CreateFoodComposition>()
-        .AddScoped<IUseCase<SearchFoodCompositionsByFoodIdInput, Task<IReadOnlyCollection<FoodCompositionData>>>,
-            SearchFoodCompositionsByFoodName>()
-        .AddScoped<IUseCase<SearchFoodCompositionsByNutrientIdInput, Task<IReadOnlyCollection<FoodCompositionData>>>
-            , SearchFoodCompositionsByNutrientId>()
+        .AddScoped<IUseCase<SearchFoodCompositionsByFoodIdInput, Task<IReadOnlyCollection<FoodCompositionData>>>, SearchFoodCompositionsByFoodName>()
+        .AddScoped<IUseCase<SearchFoodCompositionsByNutrientIdInput, Task<IReadOnlyCollection<FoodCompositionData>>>, SearchFoodCompositionsByNutrientId>()
         .AddScoped<IUseCase<RemoveFoodCompositionInput, Task>, RemoveFoodComposition>()
         .AddScoped<IUseCase<CreateAnalyseInput, Task<Guid>>, CreateAnalyse>()
         .AddScoped<IUseCase<UpdateBodyStatGoalInput, Task>, UpdateBodyStatGoal>()
         .AddScoped<IUseCase<SubscribeToPushInput, Task>, SubscribeToPush>()
-        .AddScoped<IUseCase<GetLatestBodyStatsInput, Task<IReadOnlyCollection<BodyStatData>>>,
-            GetLatestBodyStats>()
+        .AddScoped<IUseCase<GetLatestBodyStatsInput, Task<IReadOnlyCollection<BodyStatData>>>, GetLatestBodyStats>()
         .AddScoped<IUseCase<CreateSupplementInput, Task<Guid>>, CreateSupplement>()
         .AddScoped<IUseCase<DeleteSupplementInput, Task>, DeleteSupplement>()
         .AddScoped<IUseCase<SearchSupplementsByIdInput, Task<SupplementData?>>, SearchSupplementsById>()
-        .AddScoped<IUseCase<Task<IReadOnlyCollection<SupplementData?>>>, SearchAllSupplements>();
+        .AddScoped<IUseCase<Task<IReadOnlyCollection<SupplementData?>>>, SearchAllSupplements>()
         .AddScoped<RemoveScanFood>()
         .AddScoped<ScanFood>();
     }
