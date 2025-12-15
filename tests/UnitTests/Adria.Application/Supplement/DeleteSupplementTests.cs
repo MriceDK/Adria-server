@@ -5,12 +5,12 @@ using UnitTests.Mocks;
 using Xunit;
 using System;
 using System.Threading.Tasks;
+using Xunit.Abstractions;
 
 namespace UnitTests.Adria.Application.Supplement;
 
 public sealed class DeleteSupplementTests
 {
-    // Note: Reusing MockSupplementRepository and MockLogger for consistency.
     private readonly MockSupplementRepository _mockSupplementRepository;
     private readonly MockLogger<CreateSupplement> _mockLogger; 
     private readonly DeleteSupplement _useCase;
@@ -24,9 +24,8 @@ public sealed class DeleteSupplementTests
     {
         // Arrange Setup
         _mockSupplementRepository = new MockSupplementRepository();
-        _mockLogger = new MockLogger<CreateSupplement>(); // Logger type matches the use case constructor
+        _mockLogger = new MockLogger<CreateSupplement>();
 
-        // Create a fake existing supplement (assuming standard Supplement constructor)
         _existingSupplement = new global::Adria.Domain.Order.Supplement(
             _supplementIdToDelete, 
             "Existing Protein", 
@@ -35,10 +34,8 @@ public sealed class DeleteSupplementTests
             20
         );
 
-        // Seed the repository with the existing supplement
         _mockSupplementRepository.Save(_existingSupplement).Wait();
         
-        // Initialize the use case
         _useCase = new DeleteSupplement(_mockSupplementRepository, _mockLogger);
     }
 
