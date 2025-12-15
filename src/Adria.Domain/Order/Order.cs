@@ -14,10 +14,9 @@ public sealed class Order
         SetDate(date);
         SetTotalPrice(totalPrice);
     }
-
-    public void SetDate(DateTime date)
+    public void SetDate(DateTime? date)
     {
-        Date = date;
+        Date = date ?? DateTime.UtcNow;
     }
     
     public void SetTotalPrice(double totalPrice)

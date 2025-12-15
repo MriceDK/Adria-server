@@ -2,6 +2,7 @@ using Adria.Infrastructure.WebApi.Controllers;
 using Adria.Infrastructure.WebApi.Controllers.FoodComposition;
 using Adria.Infrastructure.WebApi.Controllers.Scanner;
 using Adria.Infrastructure.WebApi.Controllers.Supplement;
+using Adria.Infrastructure.WebApi.Controllers.Order;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -34,6 +35,7 @@ public static class Routes
         MapPushRoutes(app);
         MapScannerRoutes(app);
         MapSupplementRoutes(app);
+        MapOrderRoutes(app);
         return app;
     }
     
@@ -195,6 +197,13 @@ public static class Routes
             .WithOpenApi();
 
         supplementRoutes
+            .MapDelete("/delete", DeleteSupplementController.Invoke)
+            .WithDescription("Delete an existing supplement by ID.")
+            .WithName(nameof(DeleteSupplementController))
+            .WithMetadata(new ConsumesAttribute(APPLICATION_JSON))
+            .WithOpenApi();
+
+        supplementRoutes
             .MapGet("/all", SearchAllSupplementsController.Invoke)
             .WithDescription("Get all supplements.")
             .WithName(nameof(SearchAllSupplementsController))
@@ -206,5 +215,39 @@ public static class Routes
             .WithName(nameof(SearchSupplementsByIdController))
             .WithOpenApi();
         
+    }
+    
+    private static void MapOrderRoutes(WebApplication app)
+    {
+        var orderRoutes = app.MapGroup("/api/order")
+            .WithTags("Order")
+            .WithDescription("All endpoints related to Orders.")
+            .WithOpenApi();
+
+        orderRoutes
+            .MapPost("/create", CreateOrderController.Invoke)
+            .WithDescription("Create a new order.")
+            .WithName(nameof(CreateOrderController))
+            .WithMetadata(new ConsumesAttribute(APPLICATION_JSON))
+            .WithOpenApi();
+
+        orderRoutes
+            .MapDelete("/delete", DeleteOrderController.Invoke) 
+            .WithDescription("Delete an existing order by ID.")
+            .WithName(nameof(DeleteOrderController))
+            .WithMetadata(new ConsumesAttribute(APPLICATION_JSON))
+            .WithOpenApi();
+
+        orderRoutes
+            .MapGet("/{id}", SearchOrderByIdController.Invoke)
+            .WithDescription("Get an order by its ID.")
+            .WithName(nameof(SearchOrderByIdController))
+            .WithOpenApi();
+
+        orderRoutes
+            .MapGet("/user/{adrianId}", SearchOrderByUserIdController.Invoke)
+            .WithDescription("Get all orders for a specific user (AdrianId).")
+            .WithName(nameof(SearchOrderByUserIdController))
+            .WithOpenApi();
     }
 }

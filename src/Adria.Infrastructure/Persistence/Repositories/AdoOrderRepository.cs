@@ -9,10 +9,10 @@ public class AdoOrderRepository : AbstractAdoRepository, IOrderRepository
 {
     private readonly ILogger<AdoOrderRepository> _logger;
     private static readonly string TABLE_ORDERS = "orders";
-    private static readonly string COL_ID = "id";
-    private static readonly string COL_ADRIAN_ID = "adrianId";
-    private static readonly string COL_DATE = "date";
-    private static readonly string COL_TOTAL_PRICE = "totalPrice";
+    private static readonly string COL_ID = "OrderId";
+    private static readonly string COL_ADRIAN_ID = "AdrianId";
+    private static readonly string COL_DATE = "Date";
+    private static readonly string COL_TOTAL_PRICE = "TotalPrice";
 
     private static readonly string INSERT_ORDER = $@"
         INSERT INTO {TABLE_ORDERS} ({COL_ID}, {COL_ADRIAN_ID}, {COL_DATE}, {COL_TOTAL_PRICE})

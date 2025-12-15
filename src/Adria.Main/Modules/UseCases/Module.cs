@@ -19,19 +19,28 @@ public static class UseCases
 {
     public static IServiceCollection AddUseCases(this IServiceCollection services)
     {
-    return services
+        return services
+        // --- Subscription & User Use Cases ---
         .AddScoped<IUseCase<CreateSubscriptionInput, Task<Guid>>, CreateSubscription>()
         .AddScoped<IUseCase<Task<IReadOnlyCollection<SubscriptionData>>>, SearchAllSubscriptions>()
         .AddScoped<IUseCase<SearchSubscriptionByIdInput, Task<SubscriptionData>>, SearchSubscriptionById>()
         .AddScoped<IUseCase<SearchUserByIdInput, Task<UserData>>, SearchUserById>()
         .AddScoped<IUseCase<Task<IReadOnlyCollection<UserData>>>, SearchAllUsers>()
         .AddScoped<IUseCase<CreateUserInput, Task<Guid>>, CreateUser>()
+
+        // --- Food Composition Use Cases ---
         .AddScoped<IUseCase<CreateFoodCompositionInput, Task>, CreateFoodComposition>()
         .AddScoped<IUseCase<SearchFoodCompositionsByFoodIdInput, Task<IReadOnlyCollection<FoodCompositionData>>>, SearchFoodCompositionsByFoodName>()
         .AddScoped<IUseCase<SearchFoodCompositionsByNutrientIdInput, Task<IReadOnlyCollection<FoodCompositionData>>>, SearchFoodCompositionsByNutrientId>()
         .AddScoped<IUseCase<RemoveFoodCompositionInput, Task>, RemoveFoodComposition>()
+
+        // --- Analysis, Body Stat, and Push Use Cases ---
         .AddScoped<IUseCase<CreateAnalyseInput, Task<Guid>>, CreateAnalyse>()
+        .AddScoped<IUseCase<UpdateBodyStatGoalInput, Task>, UpdateBodyStatGoal>()
+        .AddScoped<IUseCase<SubscribeToPushInput, Task>, SubscribeToPush>()
         .AddScoped<IUseCase<GetLatestBodyStatsInput, Task<IReadOnlyCollection<BodyStatData>>>, GetLatestBodyStats>()
+        
+        // --- Food and Scanning Use Cases (Some are non-IUseCase classes) ---
         .AddScoped<IUseCase<FoodData, Task<Guid>>, CreateNewFood>()
         .AddScoped<GetAllFoods>()
         .AddScoped<GetRandomFood>()
@@ -40,24 +49,17 @@ public static class UseCases
         .AddScoped<ScanFood>()
         .AddScoped<GetScanHistory>()
         .AddScoped<IUseCase<GetScanHistoryInput, Task<IReadOnlyCollection<ScannedFoodResult>>>, GetScanHistory>()
-        .AddScoped<IUseCase<CreateSubscriptionInput, Task<Guid>>, CreateSubscription>()
-        .AddScoped<IUseCase<Task<IReadOnlyCollection<SubscriptionData>>>, SearchAllSubscriptions>()
-        .AddScoped<IUseCase<SearchSubscriptionByIdInput, Task<SubscriptionData>>, SearchSubscriptionById>()
-        .AddScoped<IUseCase<SearchUserByIdInput, Task<UserData>>, SearchUserById>()
-        .AddScoped<IUseCase<Task<IReadOnlyCollection<UserData>>>, SearchAllUsers>()
-        .AddScoped<IUseCase<CreateUserInput, Task<Guid>>, CreateUser>()
-        .AddScoped<IUseCase<CreateFoodCompositionInput, Task>, CreateFoodComposition>()
-        .AddScoped<IUseCase<SearchFoodCompositionsByFoodIdInput, Task<IReadOnlyCollection<FoodCompositionData>>>, SearchFoodCompositionsByFoodName>()
-        .AddScoped<IUseCase<SearchFoodCompositionsByNutrientIdInput, Task<IReadOnlyCollection<FoodCompositionData>>>, SearchFoodCompositionsByNutrientId>()
-        .AddScoped<IUseCase<RemoveFoodCompositionInput, Task>, RemoveFoodComposition>()
-        .AddScoped<IUseCase<CreateAnalyseInput, Task<Guid>>, CreateAnalyse>()
-        .AddScoped<IUseCase<UpdateBodyStatGoalInput, Task>, UpdateBodyStatGoal>()
-        .AddScoped<IUseCase<SubscribeToPushInput, Task>, SubscribeToPush>()
-        .AddScoped<IUseCase<GetLatestBodyStatsInput, Task<IReadOnlyCollection<BodyStatData>>>, GetLatestBodyStats>()
+        .AddScoped<RemoveScanFood>()
+        
+        // --- Supplement Use Cases ---
         .AddScoped<IUseCase<CreateSupplementInput, Task<Guid>>, CreateSupplement>()
         .AddScoped<IUseCase<SearchSupplementsByIdInput, Task<SupplementData?>>, SearchSupplementsById>()
         .AddScoped<IUseCase<Task<IReadOnlyCollection<SupplementData?>>>, SearchAllSupplements>()
-        .AddScoped<RemoveScanFood>()
-        .AddScoped<ScanFood>();
+        
+        // --- Order Use Cases ---
+        .AddScoped<IUseCase<CreateOrderInput, Task<Guid>>, CreateOrder>()
+        .AddScoped<IUseCase<DeleteOrderInput, Task>, DeleteOrder>()
+        .AddScoped<IUseCase<SearchOrderByIdInput, Task<OrderData?>>, SearchOrderById>()
+        .AddScoped<IUseCase<SearchOrderByUserIdInput, Task<IReadOnlyCollection<OrderData>>>, SearchOrderByUserId>();
     }
 }
