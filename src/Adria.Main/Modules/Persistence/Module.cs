@@ -120,7 +120,15 @@ public static class PersistenceModule
                     _connectionString,
                     serviceProvider.GetRequiredService<ILogger<AdoSupplementRepository>>()
                 );
-            });
+            }).AddScoped<IOrderRepository, AdoOrderRepository>(serviceProvider =>
+            {
+                return new AdoOrderRepository(
+                    serviceProvider.GetRequiredService<DbProviderFactory>(),
+                    _connectionString,
+                    serviceProvider.GetRequiredService<ILogger<AdoOrderRepository>>()
+                );
+            }).AddScoped<IOrderByIdQuery, OrderByIdQuery>()
+            .AddScoped<IOrderByUserIdQuery, OrderByUserIdQuery>();
     }
 
     private static IServiceCollection AddQueries(

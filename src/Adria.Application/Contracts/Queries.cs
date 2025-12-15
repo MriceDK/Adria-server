@@ -34,16 +34,6 @@ public interface IBodyStatRepository
     Task Update(BodyStat bodyStat);
 }
 
-public interface IOrderByUserIdQuery
-{
-    Task<IReadOnlyCollection<OrderData>> Fetch(Guid adrianId);
-}
-
-public interface IOrderByIdQuery
-{
-    Task<OrderData> Fetch(Guid orderId);
-}
-
 public interface ISupplementsByNameQuery
 {
     Task<IReadOnlyCollection<SupplementData?>> Fetch(string name);
@@ -77,4 +67,14 @@ public interface IOrderSupplementDetailsBySupplementIdQuery
 public interface IOrderSupplementDetailsByOrderAndSupplementIdQuery
 {
     Task<IReadOnlyCollection<OrderSupplementDetailsData?>> Fetch(Guid orderId, Guid supplementId);
+}
+
+public interface IOrderByIdQuery
+{
+    Task<OrderData?> Fetch(Guid id);
+}
+
+public interface IOrderByUserIdQuery
+{
+    Task<IReadOnlyCollection<OrderData?>> Fetch(Guid id);
 }
