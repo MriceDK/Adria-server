@@ -7,5 +7,4 @@ public interface ISupplementRepository
     Task<IReadOnlyCollection<Supplement>> ByType(string type);
     Task<IReadOnlyCollection<Supplement>> GetAll();
     Task Save(Supplement supplement);
-    Task Remove(Supplement supplement);
 }

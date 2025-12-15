@@ -187,7 +187,6 @@ public static class Routes
             .WithDescription("All endpoints related to Supplements.")
             .WithOpenApi();
 
-        // POST /api/Supplement/create
         supplementRoutes
             .MapPost("/create", CreateSupplementController.Invoke)
             .WithDescription("Create a new supplement.")
@@ -195,22 +194,12 @@ public static class Routes
             .WithMetadata(new ConsumesAttribute(APPLICATION_JSON))
             .WithOpenApi();
 
-        // DELETE /api/Supplement/delete
-        supplementRoutes
-            .MapDelete("/delete", DeleteSupplementController.Invoke) // Using MapDelete for deletion commands
-            .WithDescription("Delete an existing supplement by ID.")
-            .WithName(nameof(DeleteSupplementController))
-            .WithMetadata(new ConsumesAttribute(APPLICATION_JSON))
-            .WithOpenApi();
-
-        // GET /api/Supplement/all
         supplementRoutes
             .MapGet("/all", SearchAllSupplementsController.Invoke)
             .WithDescription("Get all supplements.")
             .WithName(nameof(SearchAllSupplementsController))
             .WithOpenApi();
 
-        // GET /api/Supplement/by-id/{id}
         supplementRoutes
             .MapGet("/{id}", SearchSupplementsByIdController.Invoke)
             .WithDescription("Get a supplement by its ID.")
