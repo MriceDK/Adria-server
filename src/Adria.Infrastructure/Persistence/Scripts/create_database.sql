@@ -73,7 +73,7 @@ CREATE TABLE `nutrients`
 (
     `NutrientId` VARCHAR(36) PRIMARY KEY NOT NULL,
     `Type`       VARCHAR(100)            NOT NULL,
-    `Amount`     DOUBLE NOT NULL         NOT NULL,
+    `Amount` DOUBLE NOT NULL         NOT NULL,
     `Unit`       VARCHAR(36),
     `Minimum`    VARCHAR(36)             NOT NULL,
     `Maximum`    VARCHAR(36)             NOT NULL
@@ -106,7 +106,7 @@ CREATE TABLE `foodCompositions`
 (
     `FoodId`     VARCHAR(36) NOT NULL,
     `NutrientId` VARCHAR(36) NOT NULL,
-    `Amount`     DOUBLE NOT NULL,
+    `Amount` DOUBLE NOT NULL,
     PRIMARY KEY (`FoodId`, `NutrientId`),
     CONSTRAINT `fk_foodcomp_food`
         FOREIGN KEY (`FoodId`) REFERENCES `foods` (`FoodId`),
@@ -198,38 +198,38 @@ INSERT INTO users (`AdrianId`, `Name`, `Job`, `SubscriptionId`)
 VALUES ('b8c9d0e1-f2a3-4b5c-5d6e-8f9a0b1c2d3e', 'David Brown', 'Chef', 'a1b2c3d4-e5f6-4a5b-8c9d-1e2f3a4b5c6d');
 
 -- Insert Nutrients
-INSERT INTO nutrients (`NutrientId`, `Type`, `Amount` ,`Unit`, `Minimum`, `Maximum`)
-VALUES ('bd1-prot-0001', 'Protein',50,'g' ,'45', '60');
-INSERT INTO nutrients (`NutrientId`, `Type`, `Amount` ,`Unit`, `Minimum`, `Maximum`)
-VALUES ('bd1-carb-0002', 'Carbohydrates', 300, 'g','200', '350');
-INSERT INTO nutrients (`NutrientId`, `Type`, `Amount` ,`Unit`, `Minimum`, `Maximum`)
-VALUES ('bd1-fats-0003', 'Fats', 25,'g' ,'20', '35');
-INSERT INTO nutrients (`NutrientId`, `Type`, `Amount` ,`Unit`, `Minimum`, `Maximum`)
-VALUES ('bd1-watr-0004', 'Water', 90,'g' ,'70', '120');
-INSERT INTO nutrients (`NutrientId`, `Type`, `Amount` ,`Unit`, `Minimum`, `Maximum`)
-VALUES ('bd1-cali-0005', 'Calories', 1000, 'g' ,'2000', '3000');
-INSERT INTO nutrients (`NutrientId`, `Type`, `Amount` ,`Unit`, `Minimum`, `Maximum`)
-VALUES ('bd2-calc-0001', 'Calcium', 1000,'g' ,'800', '1500');
-INSERT INTO nutrients (`NutrientId`, `Type`, `Amount` ,`Unit`, `Minimum`, `Maximum`)
-VALUES ('bd2-iron-0002', 'Iron', 18, 'g','8', '27');
-INSERT INTO nutrients (`NutrientId`, `Type`, `Amount` ,`Unit`, `Minimum`, `Maximum`)
-VALUES ('bd2-magn-0003', 'Magnesium', 600, 'g','400', '800');
-INSERT INTO nutrients (`NutrientId`, `Type`, `Amount` ,`Unit`, `Minimum`, `Maximum`)
-VALUES ('bd2-phos-0004', 'Phosphorus', 600,'g' ,'400', '800');
-INSERT INTO nutrients (`NutrientId`, `Type`, `Amount` ,`Unit`, `Minimum`, `Maximum`)
-VALUES ('bd2-pota-0005', 'Potassium', 600,'g' ,'400', '800');
-INSERT INTO nutrients (`NutrientId`, `Type`, `Amount` ,`Unit`, `Minimum`, `Maximum`)
-VALUES ('bd2-sodi-0006', 'Sodium', 600,'g' ,'400', '800');
-INSERT INTO nutrients (`NutrientId`, `Type`, `Amount` ,`Unit`, `Minimum`, `Maximum`)
-VALUES ('bd2-zinc-0007', 'Zinc', 600,'g' ,'400', '800');
-INSERT INTO nutrients (`NutrientId`, `Type`, `Amount` ,`Unit`, `Minimum`, `Maximum`)
-VALUES ('bd2-copp-0008', 'Copper', 600,'g' ,'400', '800');
-INSERT INTO nutrients (`NutrientId`, `Type`, `Amount` ,`Unit`, `Minimum`, `Maximum`)
-VALUES ('bd2-mang-0009', 'Manganese', 600,'g' ,'400', '800');
-INSERT INTO nutrients (`NutrientId`, `Type`, `Amount` ,`Unit`, `Minimum`, `Maximum`)
-VALUES ('bd2-sele-0010', 'Selenium', 600,'g' ,'400', '800');
-INSERT INTO nutrients (`NutrientId`, `Type`, `Amount` ,`Unit`, `Minimum`, `Maximum`)
-VALUES ('bd2-iodi-0011', 'Iodine', 600,'g' ,'400', '800');
+INSERT INTO nutrients (`NutrientId`, `Type`, `Amount`, `Unit`, `Minimum`, `Maximum`)
+VALUES ('bd1-prot-0001', 'Protein', 50, 'g', '45', '60');
+INSERT INTO nutrients (`NutrientId`, `Type`, `Amount`, `Unit`, `Minimum`, `Maximum`)
+VALUES ('bd1-carb-0002', 'Carbohydrates', 300, 'g', '200', '350');
+INSERT INTO nutrients (`NutrientId`, `Type`, `Amount`, `Unit`, `Minimum`, `Maximum`)
+VALUES ('bd1-fats-0003', 'Fats', 25, 'g', '20', '35');
+INSERT INTO nutrients (`NutrientId`, `Type`, `Amount`, `Unit`, `Minimum`, `Maximum`)
+VALUES ('bd1-watr-0004', 'Water', 90, 'g', '70', '120');
+INSERT INTO nutrients (`NutrientId`, `Type`, `Amount`, `Unit`, `Minimum`, `Maximum`)
+VALUES ('bd1-cali-0005', 'Calories', 1000, 'g', '2000', '3000');
+INSERT INTO nutrients (`NutrientId`, `Type`, `Amount`, `Unit`, `Minimum`, `Maximum`)
+VALUES ('bd2-calc-0001', 'Calcium', 1000, 'g', '800', '1500');
+INSERT INTO nutrients (`NutrientId`, `Type`, `Amount`, `Unit`, `Minimum`, `Maximum`)
+VALUES ('bd2-iron-0002', 'Iron', 18, 'g', '8', '27');
+INSERT INTO nutrients (`NutrientId`, `Type`, `Amount`, `Unit`, `Minimum`, `Maximum`)
+VALUES ('bd2-magn-0003', 'Magnesium', 600, 'g', '400', '800');
+INSERT INTO nutrients (`NutrientId`, `Type`, `Amount`, `Unit`, `Minimum`, `Maximum`)
+VALUES ('bd2-phos-0004', 'Phosphorus', 600, 'g', '400', '800');
+INSERT INTO nutrients (`NutrientId`, `Type`, `Amount`, `Unit`, `Minimum`, `Maximum`)
+VALUES ('bd2-pota-0005', 'Potassium', 600, 'g', '400', '800');
+INSERT INTO nutrients (`NutrientId`, `Type`, `Amount`, `Unit`, `Minimum`, `Maximum`)
+VALUES ('bd2-sodi-0006', 'Sodium', 600, 'g', '400', '800');
+INSERT INTO nutrients (`NutrientId`, `Type`, `Amount`, `Unit`, `Minimum`, `Maximum`)
+VALUES ('bd2-zinc-0007', 'Zinc', 600, 'g', '400', '800');
+INSERT INTO nutrients (`NutrientId`, `Type`, `Amount`, `Unit`, `Minimum`, `Maximum`)
+VALUES ('bd2-copp-0008', 'Copper', 600, 'g', '400', '800');
+INSERT INTO nutrients (`NutrientId`, `Type`, `Amount`, `Unit`, `Minimum`, `Maximum`)
+VALUES ('bd2-mang-0009', 'Manganese', 600, 'g', '400', '800');
+INSERT INTO nutrients (`NutrientId`, `Type`, `Amount`, `Unit`, `Minimum`, `Maximum`)
+VALUES ('bd2-sele-0010', 'Selenium', 600, 'g', '400', '800');
+INSERT INTO nutrients (`NutrientId`, `Type`, `Amount`, `Unit`, `Minimum`, `Maximum`)
+VALUES ('bd2-iodi-0011', 'Iodine', 600, 'g', '400', '800');
 -- Insert Foods
 INSERT INTO foods (`FoodId`, `Name`, `Type`, `Edible`)
 VALUES ('e7f8a9b0-c1d2-4e5f-4a5b-7c8d9e0f1a2b', 'Apple', 'Fruit', TRUE);
@@ -407,7 +407,8 @@ INSERT INTO `bodyStats` (`BodyStatId`, `Label`, `Unit`, `Goal`)
 VALUES ('bd1-prot-0001', 'Protein', 'g', 150),
        ('bd1-carb-0002', 'Carbohydrates', 'g', 250),
        ('bd1-fats-0003', 'Fats', 'g', 65),
-       ('bd1-watr-0004', 'Water', 'ml', 2500);
+       ('bd1-watr-0004', 'Water', 'ml', 2500),
+       ('bd1-cali-0005', 'Calories', 'g', 2000);
 
 -- 2. Minerals
 INSERT INTO `bodyStats` (`BodyStatId`, `Label`, `Unit`, `Goal`)
@@ -476,4 +477,5 @@ VALUES
 ('an1-aaaa-bbbb-cccc-dddddddddddd', 'bd4-hear-0004', 1),
 ('an1-aaaa-bbbb-cccc-dddddddddddd', 'bd4-bmi-0005', 1),
 ('an1-aaaa-bbbb-cccc-dddddddddddd', 'bd4-blood-0006', 1),
-('an1-aaaa-bbbb-cccc-dddddddddddd', 'bd4-glucose-0007', 1);
+('an1-aaaa-bbbb-cccc-dddddddddddd', 'bd4-glucose-0007', 1),
+('an1-aaaa-bbbb-cccc-dddddddddddd', 'bd1-cali-0005', 0);
