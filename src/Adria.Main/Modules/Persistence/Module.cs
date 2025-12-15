@@ -8,6 +8,7 @@ using Adria.Domain.BodyStats;
 using Adria.Domain.Food;
 using Adria.Domain.PushNotifications;
 using Adria.Domain.BodyStats;
+using Adria.Domain.Order;
 using Adria.Domain.Scanner;
 using Adria.Domain.Subcriptions;
 using Adria.Domain.Users;
@@ -112,6 +113,13 @@ public static class PersistenceModule
                     _connectionString,
                     serviceProvider.GetRequiredService<ILogger<AdoBodyStatRepository>>()
                 );
+            }).AddScoped<ISupplementRepository, AdoSupplementRepository>(serviceProvider =>
+            {
+                return new AdoSupplementRepository(
+                    serviceProvider.GetRequiredService<DbProviderFactory>(),
+                    _connectionString,
+                    serviceProvider.GetRequiredService<ILogger<AdoSupplementRepository>>()
+                );
             });
     }
 
@@ -166,7 +174,15 @@ public static class PersistenceModule
                     _connectionString,
                     serviceProvider.GetRequiredService<ILogger<AdoPushSubscriptionRepository>>()
                 );
-            });
+            }).AddScoped<ISupplementRepository, AdoSupplementRepository>(sp =>
+            {
+                return new AdoSupplementRepository(
+                    sp.GetRequiredService<DbProviderFactory>(),
+                    _connectionString,
+                    sp.GetRequiredService<ILogger<AdoSupplementRepository>>()
+                );
+            }).AddScoped<IAllSupplementsQuery, AllSupplementsQuery>()
+            .AddScoped<ISupplementsByIdQuery, SupplementsByIdQuery>();
     }
 
     private static IServiceCollection AddUseCases(this IServiceCollection services)
