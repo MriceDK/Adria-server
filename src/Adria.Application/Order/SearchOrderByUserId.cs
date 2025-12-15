@@ -12,18 +12,17 @@ public sealed record SearchOrderByUserIdInput(
 public sealed class SearchOrderByUserId(
     IOrderByUserIdQuery orderByUserIdQuery,
     ILogger<SearchOrderByUserId> logger)
-    : IUseCase<SearchOrderByUserIdInput, Task<OrderData>>
+    : IUseCase<SearchOrderByUserIdInput, Task<IReadOnlyCollection<OrderData>>> 
 {
-    public async Task<OrderData> Execute(SearchOrderByUserIdInput input)
+    public async Task<IReadOnlyCollection<OrderData>> Execute(SearchOrderByUserIdInput input)
     {
+        var orders = await orderByUserIdQuery.Fetch(input.AdrianId);
+
         logger.LogInformation(
-            "Fetching orders with user ID {AdrianId}",
+            "Found order(s) for user ID {AdrianId}",
             input.AdrianId
         );
-
-        return (await orderByUserIdQuery.Fetch(input.AdrianId))
-               ?? throw new ElementNotFoundException(
-                   $"Orders with user ID {input.AdrianId} not found."
-               );
+        
+        return orders;
     }
 }

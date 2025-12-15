@@ -36,12 +36,12 @@ public interface IBodyStatRepository
 
 public interface IOrderByUserIdQuery
 {
-    Task<OrderData?> Fetch(Guid adrianId);
+    Task<IReadOnlyCollection<OrderData>> Fetch(Guid adrianId);
 }
 
 public interface IOrderByIdQuery
 {
-    Task<OrderData?> Fetch(Guid orderId);
+    Task<OrderData> Fetch(Guid orderId);
 }
 
 public interface ISupplementsByNameQuery
