@@ -1,6 +1,7 @@
 ﻿using System.Data.Common;
 using Adria.Application.Contracts;
 using Adria.Application.Contracts.Data;
+using Adria.Domain.BodyStats;
 using Microsoft.Extensions.Logging;
 
 namespace Adria.Infrastructure.Persistence.Queries;
@@ -80,9 +81,8 @@ public sealed class LatestBodyStatsQuery : IBodyStatsQuery
                 
             var val = reader.GetDouble(currentOrd);
 
-            string formattedCurrent = (unit == "%") ? $"{val}%" : val.ToString();
 
-            result.Add(new BodyStatData(bodyStatId,label, formattedCurrent, goal, unit));
+            result.Add(new BodyStatData(bodyStatId,label, val, goal, unit));
         }
 
         return result.AsReadOnly();
