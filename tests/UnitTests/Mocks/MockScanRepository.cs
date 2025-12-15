@@ -12,11 +12,11 @@ public class MockScanRepository : IScan
         return Task.CompletedTask;
     }
 
-    public Task Remove(Scan scan)
+    public Task Remove(Guid scanId)
     {
-        _scans.Remove(scan);
-        return Task.CompletedTask;
+        throw new NotImplementedException();
     }
+
 
     public Task<IReadOnlyCollection<Scan>> ByUserId(Guid adrianId)
     {
