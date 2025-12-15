@@ -40,7 +40,6 @@ public static class UseCases
             .AddScoped<GetRandomFood>()
             .AddScoped<GetFoodNutrients>()
             .AddScoped<IUseCase<GetFoodNutrientsInput, Task<IReadOnlyCollection<NutrientInfo>>>, GetFoodNutrients>()
-            .AddScoped<ScanFood>()
             .AddScoped<GetScanHistory>()
             .AddScoped<IUseCase<GetScanHistoryInput, Task<IReadOnlyCollection<ScannedFoodResult>>>, GetScanHistory>()
             .AddScoped<IUseCase<CreateSubscriptionInput, Task<Guid>>, CreateSubscription>()
@@ -59,6 +58,8 @@ public static class UseCases
             .AddScoped<IUseCase<UpdateBodyStatGoalInput, Task>, UpdateBodyStatGoal>()
             .AddScoped<IUseCase<SubscribeToPushInput, Task>, SubscribeToPush>()
             .AddScoped<IUseCase<GetLatestBodyStatsInput, Task<IReadOnlyCollection<BodyStatData>>>,
-                GetLatestBodyStats>();
+                GetLatestBodyStats>()
+            .AddScoped<RemoveScanFood>()
+            .AddScoped<ScanFood>();
     }
 }
