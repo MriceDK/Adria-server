@@ -1,6 +1,7 @@
 using Adria.Infrastructure.WebApi.Controllers;
 using Adria.Infrastructure.WebApi.Controllers.FoodComposition;
 using Adria.Infrastructure.WebApi.Controllers.Scanner;
+using Adria.Infrastructure.WebApi.Controllers.Supplement;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -32,6 +33,7 @@ public static class Routes
         MapAnalyseRoutes(app);
         MapPushRoutes(app);
         MapScannerRoutes(app);
+        MapSupplementRoutes(app);
         return app;
     }
     
@@ -176,5 +178,44 @@ public static class Routes
             .WithName(nameof(UpdateBodyStatController))
             .WithMetadata(new ConsumesAttribute(APPLICATION_JSON))
             .WithOpenApi();
+    }
+    
+    private static void MapSupplementRoutes(WebApplication app)
+    {
+        var supplementRoutes = app.MapGroup("/api/Supplement")
+            .WithTags("Supplement")
+            .WithDescription("All endpoints related to Supplements.")
+            .WithOpenApi();
+
+        // POST /api/Supplement/create
+        supplementRoutes
+            .MapPost("/create", CreateSupplementController.Invoke)
+            .WithDescription("Create a new supplement.")
+            .WithName(nameof(CreateSupplementController))
+            .WithMetadata(new ConsumesAttribute(APPLICATION_JSON))
+            .WithOpenApi();
+
+        // DELETE /api/Supplement/delete
+        supplementRoutes
+            .MapDelete("/delete", DeleteSupplementController.Invoke) // Using MapDelete for deletion commands
+            .WithDescription("Delete an existing supplement by ID.")
+            .WithName(nameof(DeleteSupplementController))
+            .WithMetadata(new ConsumesAttribute(APPLICATION_JSON))
+            .WithOpenApi();
+
+        // GET /api/Supplement/all
+        supplementRoutes
+            .MapGet("/all", SearchAllSupplementsController.Invoke)
+            .WithDescription("Get all supplements.")
+            .WithName(nameof(SearchAllSupplementsController))
+            .WithOpenApi();
+
+        // GET /api/Supplement/by-id/{id}
+        supplementRoutes
+            .MapGet("/{id}", SearchSupplementsByIdController.Invoke)
+            .WithDescription("Get a supplement by its ID.")
+            .WithName(nameof(SearchSupplementsByIdController))
+            .WithOpenApi();
+        
     }
 }
