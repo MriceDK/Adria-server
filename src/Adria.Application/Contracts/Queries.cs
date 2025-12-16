@@ -54,21 +54,6 @@ public interface IAllSupplementsQuery
     Task<IReadOnlyCollection<SupplementData?>> Fetch();
 }
 
-public interface IOrderSupplementDetailsByOrderIdQuery
-{
-    Task<IReadOnlyCollection<OrderSupplementDetailsData?>> Fetch(Guid orderId);
-}
-
-public interface IOrderSupplementDetailsBySupplementIdQuery
-{
-    Task<IReadOnlyCollection<OrderSupplementDetailsData?>> Fetch(Guid supplementId);
-}
-
-public interface IOrderSupplementDetailsByOrderAndSupplementIdQuery
-{
-    Task<IReadOnlyCollection<OrderSupplementDetailsData?>> Fetch(Guid orderId, Guid supplementId);
-}
-
 public interface IOrderByIdQuery
 {
     Task<OrderData?> Fetch(Guid id);
@@ -76,5 +61,15 @@ public interface IOrderByIdQuery
 
 public interface IOrderByUserIdQuery
 {
-    Task<IReadOnlyCollection<OrderData>?> Fetch(Guid id);
+    Task<IReadOnlyCollection<OrderData?>> Fetch(Guid id);
+}
+
+public interface IOrderSupplementsByOrderQuery
+{
+    Task<IReadOnlyCollection<OrderSupplementDetailsData>> Fetch(Guid orderId);
+}
+
+public interface IOrderSupplementsBySupplementQuery
+{
+    Task<IReadOnlyCollection<OrderSupplementDetailsData>> Fetch(Guid supplementId);
 }
