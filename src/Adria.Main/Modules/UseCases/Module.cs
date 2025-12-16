@@ -10,10 +10,6 @@ using Adria.Application.Subscriptions;
 using Adria.Application.Users;
 using Adria.Application.Supplement;
 using Adria.Application.Order;
-using Adria.Application.OrderSupplement;
-using Adria.Domain.Order;
-using Adria.Infrastructure.Persistence.Queries;
-using Adria.Infrastructure.Persistence.Repositories;
 
 namespace Adria.Main.Modules.UseCases;
 
@@ -41,8 +37,8 @@ public static class UseCases
         .AddScoped<IUseCase<UpdateBodyStatGoalInput, Task>, UpdateBodyStatGoal>()
         .AddScoped<IUseCase<SubscribeToPushInput, Task>, SubscribeToPush>()
         .AddScoped<IUseCase<GetLatestBodyStatsInput, Task<IReadOnlyCollection<BodyStatData>>>, GetLatestBodyStats>()
-        
-        // --- Food and Scanning Use Cases (Some are non-IUseCase classes) ---
+
+        // --- Food and Scanning Use Cases ---
         .AddScoped<IUseCase<FoodData, Task<Guid>>, CreateNewFood>()
         .AddScoped<GetAllFoods>()
         .AddScoped<GetRandomFood>()
@@ -52,25 +48,16 @@ public static class UseCases
         .AddScoped<GetScanHistory>()
         .AddScoped<IUseCase<GetScanHistoryInput, Task<IReadOnlyCollection<ScannedFoodResult>>>, GetScanHistory>()
         .AddScoped<RemoveScanFood>()
-        
+
         // --- Supplement Use Cases ---
         .AddScoped<IUseCase<CreateSupplementInput, Task<Guid>>, CreateSupplement>()
         .AddScoped<IUseCase<SearchSupplementsByIdInput, Task<SupplementData?>>, SearchSupplementsById>()
         .AddScoped<IUseCase<Task<IReadOnlyCollection<SupplementData?>>>, SearchAllSupplements>()
-        
+
         // --- Order Use Cases ---
         .AddScoped<IUseCase<CreateOrderInput, Task<Guid>>, CreateOrder>()
         .AddScoped<IUseCase<DeleteOrderInput, Task>, DeleteOrder>()
-        .AddScoped<IUseCase<SearchOrderByIdInput, Task<OrderData?>>, SearchOrderById>()
-        .AddScoped<IUseCase<SearchOrderByUserIdInput, Task<IReadOnlyCollection<OrderData>>>, SearchOrderByUserId>()
-        
-        // --- OrderSupplement Use Cases ---
-        .AddScoped<IUseCase<CreateOrderSupplementDetailsInput, Task>, CreateOrderSupplementDetails>()
-
-        // Used by DeleteOrderSupplementDetailsController
-        .AddScoped<IUseCase<DeleteOrderSupplementDetailsInput, Task<OrderSupplementDetails>>, DeleteOrderSupplementDetails>()
-
-        // Used by SearchOrderSupplementsByOrderController
-        .AddScoped<IUseCase<SearchOrderSupplementsByOrderIdInput, Task<IReadOnlyCollection<OrderSupplementDetailsData>>>, SearchOrderSupplementsByOrderId>();
+        .AddScoped<IUseCase<SearchOrderByIdInput, Task<OrderData>>, SearchOrderById>()
+        .AddScoped<IUseCase<SearchOrderByUserIdInput, Task<IReadOnlyCollection<OrderData>>>, SearchOrderByUserId>();
     }
 }

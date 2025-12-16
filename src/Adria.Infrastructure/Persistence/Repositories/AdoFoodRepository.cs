@@ -6,6 +6,8 @@ namespace Adria.Infrastructure.Persistence.Repositories;
 
 public class AdoFoodRepository : AbstractAdoRepository, IFood
 {
+    private const string CouldNotCreateDbConnectionMessage = "Could not create DB connection.";
+
     public AdoFoodRepository(DbProviderFactory factory, string connectionString)
         : base(factory, connectionString)
     {
@@ -17,7 +19,7 @@ public class AdoFoodRepository : AbstractAdoRepository, IFood
                            VALUES (@FoodId, @Name, @Type, @Edible);";
 
         using var connection = _factory.CreateConnection()
-                               ?? throw new InvalidOperationException("Could not create DB connection.");
+                               ?? throw new InvalidOperationException(CouldNotCreateDbConnectionMessage);
         connection.ConnectionString = _connectionString;
         await connection.OpenAsync();
 
@@ -72,7 +74,7 @@ public class AdoFoodRepository : AbstractAdoRepository, IFood
         var foods = new List<Food>();
 
         using var connection = _factory.CreateConnection()
-                               ?? throw new InvalidOperationException("Could not create DB connection.");
+                               ?? throw new InvalidOperationException(CouldNotCreateDbConnectionMessage );
         connection.ConnectionString = _connectionString;
         await connection.OpenAsync();
 
@@ -102,7 +104,7 @@ public class AdoFoodRepository : AbstractAdoRepository, IFood
         const string query = "SELECT FoodId FROM Foods WHERE Name = @Name LIMIT 1;";
 
         using var connection = _factory.CreateConnection()
-                           ?? throw new InvalidOperationException("Could not create DB connection.");
+                           ?? throw new InvalidOperationException(CouldNotCreateDbConnectionMessage );
         connection.ConnectionString = _connectionString;
         await connection.OpenAsync();
 
@@ -129,7 +131,7 @@ public class AdoFoodRepository : AbstractAdoRepository, IFood
         const string query = "INSERT INTO Foods (FoodId, Name, Type, Edible) VALUES (@Id, @Name, @Type, @Edible);";
 
         using var connection = _factory.CreateConnection()
-                           ?? throw new InvalidOperationException("Could not create DB connection.");
+                           ?? throw new InvalidOperationException(CouldNotCreateDbConnectionMessage );
         connection.ConnectionString = _connectionString;
         await connection.OpenAsync();
 

@@ -11,14 +11,13 @@ namespace Adria.Infrastructure.Persistence.Queries;
 public sealed class OrderByUserIdQuery(
     IOrderRepository orderRepository) : IOrderByUserIdQuery
 {
-    public async Task<IReadOnlyCollection<OrderData>?> Fetch(Guid adrianId)
+    public async Task<IReadOnlyCollection<OrderData?>> Fetch(Guid id)
     {
-        var orders = await orderRepository.ByUserId(adrianId);
-
-        if (!orders.Any()) return null;
+        var orders = await orderRepository.ByUserId(id);
 
         return orders
             .Select(o => new OrderData(o.OrderId, o.AdrianId, o.Date, o.TotalPrice))
+            .Cast<OrderData?>()
             .ToList()
             .AsReadOnly();
     }
