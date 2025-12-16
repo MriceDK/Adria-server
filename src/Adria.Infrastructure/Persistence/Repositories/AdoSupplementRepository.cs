@@ -7,6 +7,8 @@ namespace Adria.Infrastructure.Persistence.Repositories;
 
 public class AdoSupplementRepository :  AbstractAdoRepository, ISupplementRepository
 {
+    private const string CouldNotCreateDbDataReader = "Could not create DBDataReader.";
+
     private readonly ILogger<AdoSupplementRepository> _logger;
 
     private static readonly string TABLE_SUPPLEMENTS = "supplements";
@@ -72,7 +74,7 @@ public class AdoSupplementRepository :  AbstractAdoRepository, ISupplementReposi
     public async Task<IReadOnlyCollection<Supplement>> GetAll()
     {
         var dbDataReader = await ExecuteReaderAsync(SELECT_ALL_SUPPLEMENTS, Array.Empty<DbParameter>())
-                           ?? throw new InvalidOperationException("Failed to create DbDataReader.");
+                           ?? throw new InvalidOperationException(CouldNotCreateDbDataReader);
 
         var supplements = new List<Supplement>();
 
@@ -108,7 +110,7 @@ public class AdoSupplementRepository :  AbstractAdoRepository, ISupplementReposi
     {
         DbParameter id = CreateParameter("@Id", supplementId.ToString().ToLower());
         var dbDataReader = await ExecuteReaderAsync(SELECT_SUPPLEMENT_BY_ID, [id])
-                           ?? throw new InvalidOperationException("Failed to create DbDataReader.");
+                           ?? throw new InvalidOperationException(CouldNotCreateDbDataReader);
 
         try
         {
@@ -149,7 +151,7 @@ public class AdoSupplementRepository :  AbstractAdoRepository, ISupplementReposi
     {
         DbParameter param = CreateParameter("@Name", name);
         var dbDataReader = await ExecuteReaderAsync(SELECT_SUPPLEMENTS_BY_NAME, [param])
-                           ?? throw new InvalidOperationException("Failed to create DbDataReader.");
+                           ?? throw new InvalidOperationException(CouldNotCreateDbDataReader);
 
         var supplements = new List<Supplement>();
 
@@ -184,7 +186,7 @@ public class AdoSupplementRepository :  AbstractAdoRepository, ISupplementReposi
     {
         DbParameter param = CreateParameter("@Type", type);
         var dbDataReader = await ExecuteReaderAsync(SELECT_SUPPLEMENTS_BY_TYPE, [param])
-                           ?? throw new InvalidOperationException("Failed to create DbDataReader.");
+                           ?? throw new InvalidOperationException(CouldNotCreateDbDataReader);
 
         var supplements = new List<Supplement>();
 

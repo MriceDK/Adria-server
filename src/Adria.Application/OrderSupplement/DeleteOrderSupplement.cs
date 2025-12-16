@@ -15,8 +15,10 @@ public sealed class DeleteOrderSupplementDetails(IOrderSupplementDetailsReposito
 {
     public async Task<OrderSupplementDetails> Execute(DeleteOrderSupplementDetailsInput input)
     {
-        OrderSupplementDetails? orderSupplement = await orderSupplementDetailsRepository.ByOrderAndSupplementId(input.OrderId, input.SupplementId);
-
+        OrderSupplementDetails orderSupplement =
+            (await orderSupplementDetailsRepository
+                .ByOrderAndSupplementId(input.OrderId, input.SupplementId))!;
+        
         if (orderSupplement is null)
         {
             throw new ElementNotFoundException($"Supplement with ID {input.SupplementId} not found.");

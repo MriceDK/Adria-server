@@ -6,13 +6,16 @@ namespace Adria.Infrastructure.Persistence.Repositories;
 
 public class AdoNutrientRepository : AbstractAdoRepository, INutrient
 {
+    private const string CouldNotCreateDbConnectionMessage = "Could not create DB connection.";
+    private const string nutrientId = "NutrientId";
+
     public AdoNutrientRepository(DbProviderFactory factory, string connectionString)
         : base(factory, connectionString) { }
 
     public async Task<Nutrient?> ById(string nutrientId)
     {
         using var connection = _factory.CreateConnection()
-                               ?? throw new InvalidOperationException("Could not create DB connection.");
+                               ?? throw new InvalidOperationException(CouldNotCreateDbConnectionMessage);
 
         connection.ConnectionString = _connectionString;
         await connection.OpenAsync();
@@ -31,7 +34,7 @@ public class AdoNutrientRepository : AbstractAdoRepository, INutrient
             return null;
 
         return new Nutrient(
-            reader.GetString(reader.GetOrdinal("NutrientId")),
+            reader.GetString(reader.GetOrdinal(nutrientId)),
             reader.GetString(reader.GetOrdinal("Type")),
             reader.GetString(reader.GetOrdinal("Unit"))
         );
@@ -48,7 +51,7 @@ public class AdoNutrientRepository : AbstractAdoRepository, INutrient
         ";
 
         using var connection = _factory.CreateConnection()
-            ?? throw new InvalidOperationException("Could not create DB connection.");
+            ?? throw new InvalidOperationException(CouldNotCreateDbConnectionMessage);
         connection.ConnectionString = _connectionString;
         await connection.OpenAsync();
 
@@ -64,7 +67,7 @@ public class AdoNutrientRepository : AbstractAdoRepository, INutrient
         while (await reader.ReadAsync())
         {
             nutrients.Add(new Nutrient(
-                reader.GetString(reader.GetOrdinal("NutrientId")),
+                reader.GetString(reader.GetOrdinal(nutrientId)),
                 reader.GetString(reader.GetOrdinal("Type")),
                 reader.GetString(reader.GetOrdinal("Unit"))
             ));
@@ -81,7 +84,7 @@ public class AdoNutrientRepository : AbstractAdoRepository, INutrient
         ";
 
         using var connection = _factory.CreateConnection()
-            ?? throw new InvalidOperationException("Could not create DB connection.");
+            ?? throw new InvalidOperationException(CouldNotCreateDbConnectionMessage);
         connection.ConnectionString = _connectionString;
         await connection.OpenAsync();
 
@@ -101,7 +104,7 @@ public class AdoNutrientRepository : AbstractAdoRepository, INutrient
         var nutrients = new List<Nutrient>();
 
         using var connection = _factory.CreateConnection() 
-            ?? throw new InvalidOperationException("Could not create DB connection.");
+            ?? throw new InvalidOperationException(CouldNotCreateDbConnectionMessage);
         connection.ConnectionString = _connectionString;
         await connection.OpenAsync();
 
@@ -112,7 +115,7 @@ public class AdoNutrientRepository : AbstractAdoRepository, INutrient
         while (await reader.ReadAsync())
         {
             nutrients.Add(new Nutrient(
-                reader.GetString(reader.GetOrdinal("NutrientId")),
+                reader.GetString(reader.GetOrdinal(nutrientId)),
                 reader.GetString(reader.GetOrdinal("Type")),
                 reader.GetString(reader.GetOrdinal("Unit"))
             ));
@@ -128,7 +131,7 @@ public class AdoNutrientRepository : AbstractAdoRepository, INutrient
         const string query = "SELECT NutrientId FROM Nutrients WHERE LOWER(Type) = LOWER(@Type);";
 
         using var connection = _factory.CreateConnection()
-                               ?? throw new InvalidOperationException("Could not create DB connection.");
+                               ?? throw new InvalidOperationException(CouldNotCreateDbConnectionMessage);
         connection.ConnectionString = _connectionString;
         await connection.OpenAsync();
 
@@ -143,7 +146,7 @@ public class AdoNutrientRepository : AbstractAdoRepository, INutrient
         using var reader = await command.ExecuteReaderAsync();
         while (await reader.ReadAsync())
         {
-            nutrientIds.Add(reader.GetString(reader.GetOrdinal("NutrientId")));
+            nutrientIds.Add(reader.GetString(reader.GetOrdinal(nutrientId)));
         }
 
         return nutrientIds;

@@ -5,16 +5,17 @@ using System.Threading.Tasks;
 
 namespace UnitTests.Mocks;
 
-public sealed class MockAllSupplementsQuery : IAllSupplementsQuery // Implements the real contract
+public sealed class MockAllSupplementsQuery : IAllSupplementsQuery
 {
-    private IReadOnlyCollection<SupplementData?>? _returnValue;
+    private IReadOnlyCollection<SupplementData?> _returnValue =
+        new List<SupplementData?>().AsReadOnly();
 
-    public void SetReturnValue(IReadOnlyCollection<SupplementData?>? value)
+    public void SetReturnValue(IReadOnlyCollection<SupplementData?> value)
     {
         _returnValue = value;
     }
 
-    public Task<IReadOnlyCollection<SupplementData?>?> Fetch()
+    public Task<IReadOnlyCollection<SupplementData?>> Fetch()
     {
         return Task.FromResult(_returnValue);
     }

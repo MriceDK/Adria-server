@@ -3,6 +3,7 @@ using System.Data.Common;
 using Adria.Domain.Scanner;
 using Adria.Infrastructure.Persistence.Shared;
 using Adria.Main.Workers;
+using Adria.Main.Workers;
 using Microsoft.Extensions.Logging;
 
 namespace Adria.Infrastructure.Persistence.Repositories;
@@ -75,7 +76,10 @@ public class AdoScanFood : AbstractAdoRepository, IScan
         catch (DbException ex)
         {
             _logger.LogError(ex, "Failed to save scan {ScanId}", scan.ScanId);
-            throw;
+            throw new InvalidOperationException(
+                $"Failed to persist scan with ScanId {scan.ScanId}.",
+                ex
+            );
         }
     }
 
@@ -94,7 +98,10 @@ public class AdoScanFood : AbstractAdoRepository, IScan
         catch (DbException ex)
         {
             _logger.LogError(ex, "Failed to remove scan {ScanId}", scanId);
-            throw;
+            throw new InvalidOperationException(
+                $"Failed to remove scan with ScanId {scanId}.",
+                ex
+            );
         }
     }
 

@@ -7,6 +7,9 @@ namespace Adria.Infrastructure.Persistence.Repositories;
 
 public class AdoOrderSupplementRepository : AbstractAdoRepository, IOrderSupplementDetailsRepository
 {
+    private const string OrderId = "@OrderId";
+    private const string SupplementId = "@SupplementId";
+    
     private readonly ILogger<AdoOrderRepository> _logger;
     private static readonly string TABLE_ORDER_SUPPLEMENTS = "orderSupplementDetails";
 
@@ -60,7 +63,7 @@ public class AdoOrderSupplementRepository : AbstractAdoRepository, IOrderSupplem
     
     public async Task<IReadOnlyCollection<OrderSupplementDetails>> ByOrderId(Guid orderId)
     {
-        DbParameter param = CreateParameter("@OrderId", orderId.ToString().ToLower());
+        DbParameter param = CreateParameter(OrderId, orderId.ToString().ToLower());
         var dbDataReader = await ExecuteReaderAsync(SELECT_ORDER_SUPPLEMENTS_BY_ORDER, [param])
                            ?? throw new InvalidOperationException("Failed to create DbDataReader.");
 
@@ -93,7 +96,7 @@ public class AdoOrderSupplementRepository : AbstractAdoRepository, IOrderSupplem
 
     public async Task<IReadOnlyCollection<OrderSupplementDetails>> BySupplementId(Guid supplementId)
     {
-        DbParameter param = CreateParameter("@SupplementId", supplementId.ToString().ToLower());
+        DbParameter param = CreateParameter(SupplementId, supplementId.ToString().ToLower());
         var dbDataReader = await ExecuteReaderAsync(SELECT_ORDER_SUPPLEMENTS_BY_SUPPLEMENT, [param])
                            ?? throw new InvalidOperationException("Failed to create DbDataReader.");
 
@@ -135,25 +138,29 @@ public class AdoOrderSupplementRepository : AbstractAdoRepository, IOrderSupplem
     {
         DbParameter[] parameters =
         [
-            CreateParameter("@OrderId", orderId.ToString().ToLower()),
-            CreateParameter("@SupplementId", supplementId.ToString().ToLower())
+            CreateParameter(OrderId, orderId.ToString().ToLower()),
+            CreateParameter(SupplementId, supplementId.ToString().ToLower())
         ];
 
-        var dbDataReader = await ExecuteReaderAsync(SELECT_ORDER_SUPPLEMENT_BY_ORDER_AND_SUPPLEMENT, parameters)
-                           ?? throw new InvalidOperationException("Failed to create DbDataReader.");
+        var dbDataReader = await ExecuteReaderAsync(
+            SELECT_ORDER_SUPPLEMENT_BY_ORDER_AND_SUPPLEMENT,
+            parameters
+        ) ?? throw new InvalidOperationException("Failed to create DbDataReader.");
 
         try
         {
-            if (await dbDataReader.ReadAsync())
+            if (!await dbDataReader.ReadAsync())
             {
-                return new OrderSupplementDetails(
-                    dbDataReader.GetGuid(dbDataReader.GetOrdinal(COL_ORDER_ID)),
-                    dbDataReader.GetGuid(dbDataReader.GetOrdinal(COL_SUPPLEMENT_ID)),
-                    dbDataReader.GetInt32(dbDataReader.GetOrdinal(COL_AMOUNT))
+                throw new InvalidOperationException(
+                    $"OrderSupplement not found for OrderId {orderId} and SupplementId {supplementId}."
                 );
             }
 
-            return null;
+            return new OrderSupplementDetails(
+                dbDataReader.GetGuid(dbDataReader.GetOrdinal(COL_ORDER_ID)),
+                dbDataReader.GetGuid(dbDataReader.GetOrdinal(COL_SUPPLEMENT_ID)),
+                dbDataReader.GetInt32(dbDataReader.GetOrdinal(COL_AMOUNT))
+            );
         }
         catch (DbException ex)
         {
@@ -163,7 +170,10 @@ public class AdoOrderSupplementRepository : AbstractAdoRepository, IOrderSupplem
                 orderId,
                 supplementId
             );
-            throw new NutriscanDatabaseException("Failed to read order supplement from database.", ex);
+            throw new NutriscanDatabaseException(
+                "Failed to read order supplement from database.",
+                ex
+            );
         }
         finally
         {
@@ -175,6 +185,7 @@ public class AdoOrderSupplementRepository : AbstractAdoRepository, IOrderSupplem
             await dbDataReader.DisposeAsync();
         }
     }
+
 
     
     public async Task Save(OrderSupplementDetails orderSupplementDetails)
@@ -193,8 +204,8 @@ public class AdoOrderSupplementRepository : AbstractAdoRepository, IOrderSupplem
         {
             DbParameter[] parameters =
             [
-                CreateParameter("@OrderId", orderSupplementDetails.OrderId.ToString().ToLower()),
-                CreateParameter("@SupplementId", orderSupplementDetails.SupplementId.ToString().ToLower()),
+                CreateParameter(OrderId, orderSupplementDetails.OrderId.ToString().ToLower()),
+                CreateParameter(SupplementId, orderSupplementDetails.SupplementId.ToString().ToLower()),
                 CreateParameter("@Amount", orderSupplementDetails.Amount)
             ];
 
@@ -224,8 +235,8 @@ public class AdoOrderSupplementRepository : AbstractAdoRepository, IOrderSupplem
         {
             DbParameter[] parameters =
             [
-                CreateParameter("@OrderId", orderSupplementDetails.OrderId.ToString().ToLower()),
-                CreateParameter("@SupplementId", orderSupplementDetails.SupplementId.ToString().ToLower())
+                CreateParameter(OrderId, orderSupplementDetails.OrderId.ToString().ToLower()),
+                CreateParameter(SupplementId, orderSupplementDetails.SupplementId.ToString().ToLower())
             ];
 
             await ExecuteNonQueryAsync(DELETE_ORDER_SUPPLEMENT, parameters);
