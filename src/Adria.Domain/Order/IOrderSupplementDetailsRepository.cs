@@ -6,5 +6,6 @@ public interface IOrderSupplementDetailsRepository
     Task<IReadOnlyCollection<OrderSupplementDetails>> BySupplementId(Guid supplementId);
     Task<OrderSupplementDetails?> ByOrderAndSupplementId(Guid orderId, Guid supplementId);
     Task Save(OrderSupplementDetails orderSupplementDetails);
+    Task SaveMany(IReadOnlyCollection<OrderSupplementDetails> orderSupplementDetails);
     Task Remove(OrderSupplementDetails orderSupplementDetails);
 }

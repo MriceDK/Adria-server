@@ -4,28 +4,58 @@ using Microsoft.Extensions.Logging;
 
 namespace Adria.Application.OrderSupplement;
 
-public sealed record CreateOrderSupplementDetailsInput(
-    Guid OrderId,
+public sealed record CreateOrderSupplementDetailItem(
     Guid SupplementId,
     int Amount
 );
 
-public sealed class CreateOrderSupplementDetails(IOrderSupplementDetailsRepository orderSupplementDetailsRepository, ILogger<CreateOrderSupplementDetails> logger)
-    : IUseCase<CreateOrderSupplementDetailsInput, Task<OrderSupplementDetails>>
+public sealed record CreateOrderInput(
+    Guid AdrianId,
+    IReadOnlyCollection<CreateOrderSupplementDetailItem> Supplements
+);
+
+
+public sealed class CreateOrderSupplement(
+    IOrderRepository orderRepository,
+    IOrderSupplementDetailsRepository orderSupplementRepository,
+    IUseCase<IReadOnlyCollection<CreateOrderSupplementDetailItem>, Task<double>> calculateTotalPrice,
+    ILogger<CreateOrderSupplement> logger
+) : IUseCase<CreateOrderInput, Task<Guid>>
 {
-    public async Task<OrderSupplementDetails> Execute(CreateOrderSupplementDetailsInput input)
+    public async Task<Guid> Execute(CreateOrderInput input)
     {
-        OrderSupplementDetails orderSupplement = new(input.OrderId, input.SupplementId, input.Amount);
+        var orderId = Guid.NewGuid();
+        var date = DateTime.UtcNow;
 
-        await orderSupplementDetailsRepository.Save(orderSupplement);
+        var totalPrice = await calculateTotalPrice.Execute(input.Supplements);
 
-        logger.LogInformation(
-            "New OrderSupplement created with Order ID {OrderId}, Supplement ID: {SupplementId} and Amount: {Amount}",
-            orderSupplement.OrderId,
-            orderSupplement.SupplementId,
-            orderSupplement.Amount
+        var order = new Domain.Order.Order(
+            orderId,
+            input.AdrianId,
+            date,
+            totalPrice
         );
 
-        return orderSupplement;
+        await orderRepository.Save(order);
+
+        var supplements = input.Supplements
+            .GroupBy(s => s.SupplementId)
+            .Select(g => new OrderSupplementDetails(
+                orderId,
+                g.Key,
+                g.Sum(x => x.Amount)
+            ))
+            .ToList();
+
+        await orderSupplementRepository.SaveMany(supplements);
+
+        logger.LogInformation(
+            "Created order {OrderId} for AdrianId {AdrianId} with total price {TotalPrice}",
+            orderId,
+            input.AdrianId,
+            totalPrice
+        );
+
+        return orderId;
     }
 }

@@ -12,7 +12,6 @@ public sealed class MockOrderSupplementDetailsRepository : IOrderSupplementDetai
 
     public IReadOnlyList<OrderSupplementDetails> Entities => _entities;
 
-    // Backward compatibility for previous tests
     public List<OrderSupplementDetails> SavedEntities => _entities;
 
     public void Seed(OrderSupplementDetails entity)
@@ -26,19 +25,31 @@ public sealed class MockOrderSupplementDetailsRepository : IOrderSupplementDetai
         return Task.CompletedTask;
     }
 
+    public Task SaveMany(IReadOnlyCollection<OrderSupplementDetails> entities)
+    {
+        _entities.AddRange(entities);
+        return Task.CompletedTask;
+    }
+
     public Task Remove(OrderSupplementDetails orderSupplementDetails)
     {
         _entities.Remove(orderSupplementDetails);
         return Task.CompletedTask;
     }
 
-    public Task<OrderSupplementDetails?> ByOrderAndSupplementId(Guid orderId, Guid supplementId)
+    public Task<OrderSupplementDetails> ByOrderAndSupplementId(Guid orderId, Guid supplementId)
     {
-        return Task.FromResult<OrderSupplementDetails?>(
-            _entities.FirstOrDefault(e =>
-                e.OrderId == orderId &&
-                e.SupplementId == supplementId)
+        var entity = _entities.FirstOrDefault(e =>
+            e.OrderId == orderId &&
+            e.SupplementId == supplementId
         );
+
+        if (entity is null)
+            throw new InvalidOperationException(
+                $"OrderSupplement not found for OrderId {orderId} and SupplementId {supplementId}."
+            );
+
+        return Task.FromResult(entity);
     }
 
     public Task<IReadOnlyCollection<OrderSupplementDetails>> ByOrderId(Guid orderId)

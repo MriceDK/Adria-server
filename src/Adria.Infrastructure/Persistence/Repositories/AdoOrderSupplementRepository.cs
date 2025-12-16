@@ -10,9 +10,9 @@ public class AdoOrderSupplementRepository : AbstractAdoRepository, IOrderSupplem
     private const string OrderId = "@OrderId";
     private const string SupplementId = "@SupplementId";
     
-    private readonly ILogger<AdoOrderRepository> _logger;
+    private readonly ILogger<AdoOrderSupplementRepository> _logger;
     private static readonly string TABLE_ORDER_SUPPLEMENTS = "orderSupplementDetails";
-
+        
     private static readonly string COL_ORDER_ID = "OrderId";
     private static readonly string COL_SUPPLEMENT_ID = "SupplementId";
     private static readonly string COL_AMOUNT = "Amount";
@@ -55,7 +55,7 @@ public class AdoOrderSupplementRepository : AbstractAdoRepository, IOrderSupplem
     public AdoOrderSupplementRepository(
         DbProviderFactory factory,
         string connectionString,
-        ILogger<AdoOrderRepository> logger
+        ILogger<AdoOrderSupplementRepository> logger
     ) : base(factory, connectionString)
     {
         _logger = logger;
@@ -196,10 +196,6 @@ public class AdoOrderSupplementRepository : AbstractAdoRepository, IOrderSupplem
             orderSupplementDetails.SupplementId
         );
 
-        // Check if the row exists
-        var existing = await ByOrderAndSupplementId(orderSupplementDetails.OrderId, orderSupplementDetails.SupplementId);
-        string query = existing == null ? INSERT_ORDER_SUPPLEMENT : UPDATE_ORDER_SUPPLEMENT;
-
         try
         {
             DbParameter[] parameters =
@@ -209,7 +205,7 @@ public class AdoOrderSupplementRepository : AbstractAdoRepository, IOrderSupplem
                 CreateParameter("@Amount", orderSupplementDetails.Amount)
             ];
 
-            await ExecuteNonQueryAsync(query, parameters);
+            await ExecuteNonQueryAsync(INSERT_ORDER_SUPPLEMENT, parameters);
         }
         catch (DbException ex)
         {
@@ -222,6 +218,45 @@ public class AdoOrderSupplementRepository : AbstractAdoRepository, IOrderSupplem
             throw new NutriscanDatabaseException("Failed to save OrderSupplement to database.", ex);
         }
     }
+
+    public async Task SaveMany(IReadOnlyCollection<OrderSupplementDetails> orderSupplementDetails)
+    {
+        if (!orderSupplementDetails.Any())
+            return;
+
+        try
+        {
+            await ExecuteInTransactionAsync(async (connection, transaction) =>
+            {
+                foreach (var detail in orderSupplementDetails)
+                {
+                    using var command = connection.CreateCommand();
+                    command.Transaction = transaction;
+                    command.CommandText = INSERT_ORDER_SUPPLEMENT;
+
+                    command.Parameters.Add(CreateParameter(OrderId, detail.OrderId.ToString().ToLower()));
+                    command.Parameters.Add(CreateParameter(SupplementId, detail.SupplementId.ToString().ToLower()));
+                    command.Parameters.Add(CreateParameter("@Amount", detail.Amount));
+
+                    await command.ExecuteNonQueryAsync();
+                }
+            });
+
+            _logger.LogInformation(
+                "Saved {Count} OrderSupplementDetails for OrderId {OrderId}.",
+                orderSupplementDetails.Count,
+                orderSupplementDetails.First().OrderId
+            );
+        }
+        catch (DbException ex)
+        {
+            _logger.LogError(ex, "Failed to save multiple OrderSupplementDetails.");
+            throw new NutriscanDatabaseException("Failed to save order supplements to database.", ex);
+        }
+    }
+
+
+
 
     public async Task Remove(OrderSupplementDetails orderSupplementDetails)
     {

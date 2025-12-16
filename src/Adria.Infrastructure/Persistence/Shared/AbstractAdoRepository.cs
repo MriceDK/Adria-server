@@ -85,4 +85,26 @@ public class AbstractAdoRepository
 
         return connection;
     }
+    
+    protected async Task ExecuteInTransactionAsync(Func<DbConnection, DbTransaction, Task> action)
+    {
+        await using var connection = _factory.CreateConnection()
+                                     ?? throw new InvalidOperationException("Failed to create a database connection.");
+
+        connection.ConnectionString = _connectionString;
+        await connection.OpenAsync();
+
+        await using var transaction = await connection.BeginTransactionAsync();
+
+        try
+        {
+            await action(connection, transaction);
+            await transaction.CommitAsync();
+        }
+        catch
+        {
+            await transaction.RollbackAsync();
+            throw;
+        }
+    }
 }
