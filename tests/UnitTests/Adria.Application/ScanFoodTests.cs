@@ -29,11 +29,11 @@ public class ScanFoodTests
 
         var food = new Food(foodId, foodName, foodType, foodEdible);
         var nutrient = new Nutrient("bd1-prot-0001", "Protein", "g");
-        var composition = new FoodComposition(foodId, "bd1-prot-0001", 31.0);
+        var composition = new global::Adria.Domain.Food.FoodComposition(foodId, "bd1-prot-0001", 31.0);
 
         var mockFoodRepo = new MockFoodRepository(new List<Food> { food });
         var mockNutrientRepo = new MockNutrientRepository(new List<Nutrient> { nutrient });
-        var mockFoodCompRepo = new MockFoodCompositionRepository(new List<FoodComposition> { composition });
+        var mockFoodCompRepo = new MockFoodCompositionRepository(new List<global::Adria.Domain.Food.FoodComposition> { composition });
         var mockScanRepo = new MockScanRepository();
         var mockAnalyseRepository = new MockAnalyseRepository();
         var bodyStatsQuery = new MockBodyStatsQuery();
@@ -72,7 +72,7 @@ public class ScanFoodTests
         var Carbohydrates = new Nutrient("bd1-carb-0002", "Carbohydrates", "g");
         var Calories = new Nutrient("bd1-cali-0005", "Calories", "g");
 
-        var compositions = new List<FoodComposition>
+        var compositions = new List<global::Adria.Domain.Food.FoodComposition>
         {
             new(food1Id, "bd1-cali-0005", 31.0),
             new(food1Id, "bd1-prot-0001", 0.5),
