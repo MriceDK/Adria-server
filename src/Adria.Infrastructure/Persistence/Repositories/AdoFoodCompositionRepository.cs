@@ -34,14 +34,7 @@ public sealed class AdoFoodCompositionRepository : AbstractAdoRepository, IFoodC
         SELECT {COL_FOOD_ID}, {COL_NUTRIENT_ID}, {COL_AMOUNT}
         FROM {TABLE_FOOD_COMPOSITION}
         WHERE {COL_FOOD_ID} = @FoodId;
-    ";
-
-    private static readonly string SELECT_BY_NUTRIENT_ID = $@"
-        SELECT {COL_FOOD_ID}, {COL_NUTRIENT_ID}, {COL_AMOUNT}
-        FROM {TABLE_FOOD_COMPOSITION}
-        WHERE {COL_NUTRIENT_ID} = @NutrientId;
-    ";
-
+    ";  
     public AdoFoodCompositionRepository(
         DbProviderFactory factory,
         string connectionString,
@@ -108,21 +101,21 @@ public sealed class AdoFoodCompositionRepository : AbstractAdoRepository, IFoodC
         return false;
     }
 
-    public async Task<IReadOnlyCollection<FoodComposition>> ByFoodId(string foodKey)
+    public async Task<IReadOnlyCollection<FoodComposition>> ByFoodId(string foodName)
     {
         Guid foodId;
 
-        if (Guid.TryParse(foodKey, out var parsedId))
+        if (Guid.TryParse(foodName, out var parsedId))
         {
             foodId = parsedId;
         }
         else
         {
-            var ids = await _foodRepository.GetFoodIdByName(foodKey);
+            var ids = await _foodRepository.GetFoodIdByName(foodName);
 
             if (ids.Count == 0)
             {
-                _logger.LogInformation("No FoodId found for food name {FoodName}.", foodKey);
+                _logger.LogInformation("No FoodId found for food name {FoodName}.", foodName);
                 return Array.Empty<FoodComposition>();
             }
 

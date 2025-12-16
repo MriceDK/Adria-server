@@ -197,13 +197,6 @@ public static class Routes
             .WithOpenApi();
 
         supplementRoutes
-            .MapDelete("/delete", DeleteSupplementController.Invoke)
-            .WithDescription("Delete an existing supplement by ID.")
-            .WithName(nameof(DeleteSupplementController))
-            .WithMetadata(new ConsumesAttribute(APPLICATION_JSON))
-            .WithOpenApi();
-
-        supplementRoutes
             .MapGet("/all", SearchAllSupplementsController.Invoke)
             .WithDescription("Get all supplements.")
             .WithName(nameof(SearchAllSupplementsController))

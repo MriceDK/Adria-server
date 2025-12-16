@@ -26,7 +26,7 @@ public sealed class SearchOrderByIdController
         try
         {
             var order = await searchOrderById.Execute(input);
-            return TypedResults.Ok(order);
+            return TypedResults.Ok<OrderData?>(order);
         }
         catch (ElementNotFoundException ex)
         {
