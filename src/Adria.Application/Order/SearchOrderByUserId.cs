@@ -11,7 +11,7 @@ namespace Adria.Application.Order;
 public sealed record OrderWithSupplementsData(
     Guid OrderId,
     Guid AdrianId,
-    ReadOnlyCollection<SupplementData> Supplements,
+    ReadOnlyCollection<OrderSupplementExtraDetailsData> Supplements,
     DateTime Date,
     double TotalPrice
 );
@@ -44,12 +44,12 @@ public sealed class SearchOrderByUserId(
                         {
                             var supplement = supplementRepository.ById(s.SupplementId).Result;
                             if (supplement != null)
-                                return new SupplementData(
+                                return new OrderSupplementExtraDetailsData(
                                     supplement.SupplementId,
                                     supplement.Name,
                                     supplement.Type,
                                     supplement.Price,
-                                    supplement.Stock
+                                    s.Amount
                                 );
                             throw new ElementNotFoundException($"Supplement with id {s.SupplementId} not found");
                         })
