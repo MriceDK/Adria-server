@@ -3,11 +3,11 @@ using Adria.Application.Contracts.Data;
 
 namespace UnitTests.Mocks;
 
-public class MockBodyStatsQuery : IBodyStatsQuery
+public sealed class MockBodyStatsQuery : IBodyStatsQuery
 {
-    private readonly Dictionary<Guid, List<BodyStatData>> _dataStore = new();
+    private readonly Dictionary<Guid, IReadOnlyCollection<BodyStatData>> _dataStore = new();
 
-    public void AddStats(Guid userId, List<BodyStatData> stats)
+    public void AddStats(Guid userId, IReadOnlyCollection<BodyStatData> stats)
     {
         _dataStore[userId] = stats;
     }
@@ -16,9 +16,9 @@ public class MockBodyStatsQuery : IBodyStatsQuery
     {
         if (_dataStore.TryGetValue(userId, out var stats))
         {
-            return Task.FromResult<IReadOnlyCollection<BodyStatData>?>(stats.AsReadOnly());
+            return Task.FromResult<IReadOnlyCollection<BodyStatData>?>(stats);
         }
-        
-        return Task.FromResult<IReadOnlyCollection<BodyStatData>?>(new List<BodyStatData>().AsReadOnly());
+
+        return Task.FromResult<IReadOnlyCollection<BodyStatData>?>(Array.Empty<BodyStatData>());
     }
 }
