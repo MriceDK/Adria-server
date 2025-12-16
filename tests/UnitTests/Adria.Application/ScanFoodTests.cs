@@ -1,4 +1,5 @@
-﻿using Adria.Application.Contracts.Data;
+﻿using Adria.Application.Contracts;
+using Adria.Application.Contracts.Data;
 using Adria.Application.Scanner;
 using Adria.Domain.Food;
 using UnitTests.Mocks;
@@ -34,10 +35,14 @@ public class ScanFoodTests
         var mockNutrientRepo = new MockNutrientRepository(new List<Nutrient> { nutrient });
         var mockFoodCompRepo = new MockFoodCompositionRepository(new List<FoodComposition> { composition });
         var mockScanRepo = new MockScanRepository();
+        var mockAnalyseRepository = new MockAnalyseRepository();
+        var bodyStatsQuery = new MockBodyStatsQuery();
+
 
         var getRandomFood = new GetRandomFood(mockFoodRepo);
         var getFoodNutrients = new GetFoodNutrients(mockFoodCompRepo, mockNutrientRepo);
-        var scanFoodUseCase = new ScanFood(getRandomFood, getFoodNutrients, mockScanRepo);
+        var scanFoodUseCase = new ScanFood(getRandomFood, getFoodNutrients, mockScanRepo, mockAnalyseRepository,
+            bodyStatsQuery);
 
         ScannedFoodResult result = await scanFoodUseCase.Execute(new ScanFoodInput(adrianId));
 
@@ -81,10 +86,13 @@ public class ScanFoodTests
         var mockNutrientRepo = new MockNutrientRepository(new List<Nutrient> { protein, Carbohydrates, Calories });
         var mockFoodCompRepo = new MockFoodCompositionRepository(compositions);
         var mockScanRepo = new MockScanRepository();
+        var mockAnalyseRepository = new MockAnalyseRepository();
+        var bodyStatsQuery = new MockBodyStatsQuery();
 
         var getRandomFood = new GetRandomFood(mockFoodRepo);
         var getFoodNutrients = new GetFoodNutrients(mockFoodCompRepo, mockNutrientRepo);
-        var scanFoodUseCase = new ScanFood(getRandomFood, getFoodNutrients, mockScanRepo);
+        var scanFoodUseCase = new ScanFood(getRandomFood, getFoodNutrients, mockScanRepo, mockAnalyseRepository,
+            bodyStatsQuery);
 
         ScannedFoodResult result = await scanFoodUseCase.Execute(new ScanFoodInput(adrianId));
 
@@ -94,6 +102,7 @@ public class ScanFoodTests
             _testOutputHelper.WriteLine(
                 $"Nutrient: {nutrient.Type}, Amount: {nutrient.Amount}");
         }
+
         _testOutputHelper.WriteLine(
             $"{result.FoodName}{result.Nutrients.Count}{result.ScanDateTime}{result.ScanId}");
 
