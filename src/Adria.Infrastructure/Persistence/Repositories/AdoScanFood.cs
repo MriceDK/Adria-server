@@ -65,14 +65,16 @@ public class AdoScanFood : AbstractAdoRepository, IScan
                     CreateParameter("@FoodId", scan.FoodId)
                 }
             );
-        }
+        }  
         catch (DbException ex)
         {
-            _logger.LogError(ex, "Failed to save scan {ScanId}", scan.ScanId);
-            throw;
+            throw new InvalidOperationException(
+                $"Failed to save scan. ScanId={scan.ScanId}, AdrianId={scan.AdrianId}, FoodId={scan.FoodId}.",
+                ex
+            );
         }
     }
-
+    
     public async Task Remove(Guid scanId)
     {
         try
@@ -87,8 +89,10 @@ public class AdoScanFood : AbstractAdoRepository, IScan
         }
         catch (DbException ex)
         {
-            _logger.LogError(ex, "Failed to remove scan {ScanId}", scanId);
-            throw;
+            throw new InvalidOperationException(
+                $"Failed to remove scan. ScanId={scanId}.",
+                ex
+            );
         }
     }
 

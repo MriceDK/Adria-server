@@ -13,7 +13,6 @@ public sealed class RemoveScanFood
 {
     private readonly IScan _scanRepository;
     private readonly IAnalyseRepository _analyseRepository;
-    private IUseCase<GetFoodNutrientsInput, Task<IReadOnlyCollection<NutrientInfo>>> getFoodNutrients;
     private readonly IUseCase<GetFoodNutrientsInput, Task<IReadOnlyCollection<NutrientInfo>>> _getFoodNutrients;
     private readonly IBodyStatsQuery _bodyStatsQuery;
 

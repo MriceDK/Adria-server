@@ -28,7 +28,7 @@ public sealed class SearchSupplementsByIdController
         {
             var supplement = await searchSupplementsById.Execute(input);
             
-            return TypedResults.Ok(supplement);
+            return TypedResults.Ok<SupplementData?>(supplement);
         }
         catch (ElementNotFoundException ex)
         {

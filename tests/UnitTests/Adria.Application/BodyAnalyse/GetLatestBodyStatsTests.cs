@@ -13,8 +13,8 @@ public sealed class GetLatestBodyStatsTests
         var userId = Guid.NewGuid();
         var statsData = new List<BodyStatData>
         {
-            new BodyStatData("bd4-weig-0002","Weight", 75, 70, "kg"),
-            new BodyStatData("bd4-fatp-0001","Body Fat", 15, 12, "%")
+            new BodyStatData("Weight", "75kg", 70,100 ,"kg"),
+            new BodyStatData("Body Fat", "15%", 12,100 ,"%")
         };
 
         var mockQuery = new MockBodyStatsQuery();
@@ -30,7 +30,7 @@ public sealed class GetLatestBodyStatsTests
         // Assert
         Assert.NotNull(result);
         Assert.Equal(2, result.Count);
-        Assert.Contains(result, r => r.Label == "Weight" && Math.Abs(r.Current - 75) < 1);
+        Assert.Contains(result, r => r.Label == "Weight" && r.Current == 75);
         
         Assert.Single(mockLogger.LoggedMessages);
         Assert.Contains($"Fetching latest body stats for user {userId}", mockLogger.LoggedMessages[0]);

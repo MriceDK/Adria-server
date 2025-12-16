@@ -9,16 +9,15 @@ namespace Adria.Infrastructure.Persistence.Queries;
 public sealed class SupplementsByIdQuery(
     ISupplementRepository supplementRepository) : ISupplementsByIdQuery
 {
-    public async Task<SupplementData?> Fetch(Guid id)
+    public async Task<SupplementData?> Fetch(Guid supplementId)
     {
-        var supplement = await supplementRepository.ById(id);
+        var supplement = await supplementRepository.ById(supplementId);
 
         if (supplement == null)
         {
             return null;
         }
 
-        // Map Domain Entity to DTO
         return new SupplementData(
             supplement.SupplementId, 
             supplement.Name, 

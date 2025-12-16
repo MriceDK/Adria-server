@@ -76,5 +76,5 @@ public interface IOrderByIdQuery
 
 public interface IOrderByUserIdQuery
 {
-    Task<IReadOnlyCollection<OrderData?>> Fetch(Guid id);
+    Task<IReadOnlyCollection<OrderData>?> Fetch(Guid id);
 }

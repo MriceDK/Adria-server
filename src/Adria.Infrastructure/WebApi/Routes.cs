@@ -195,7 +195,6 @@ public static class Routes
             .WithName(nameof(CreateSupplementController))
             .WithMetadata(new ConsumesAttribute(APPLICATION_JSON))
             .WithOpenApi();
-        
 
         supplementRoutes
             .MapGet("/all", SearchAllSupplementsController.Invoke)

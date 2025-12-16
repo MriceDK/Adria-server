@@ -29,18 +29,16 @@ public sealed class GetFoodNutrients
 
         foreach (var comp in compositions)
         {
-
             Nutrient? nutrient = await _nutrientRepository.ById(comp.NutrientId);
 
-    
 
-
-            results.Add(new NutrientInfo(
-                nutrient.NutrientId,
-                nutrient.Type,
-                comp.Amount,
-                nutrient.Unit
-            ));
+            if (nutrient != null)
+                results.Add(new NutrientInfo(
+                    nutrient.NutrientId,
+                    nutrient.Type,
+                    comp.Amount,
+                    nutrient.Unit
+                ));
         }
 
         return results;

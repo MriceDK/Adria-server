@@ -15,7 +15,7 @@ public sealed class OrderByUserIdQuery(
     {
         var orders = await orderRepository.ByUserId(adrianId);
 
-        if (orders == null || !orders.Any()) return null;
+        if (!orders.Any()) return null;
 
         return orders
             .Select(o => new OrderData(o.OrderId, o.AdrianId, o.Date, o.TotalPrice))
