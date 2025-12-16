@@ -47,16 +47,7 @@ public class AdoOrderSupplementRepository : AbstractAdoRepository, IOrderSupplem
     DELETE FROM {TABLE_ORDER_SUPPLEMENTS}
     WHERE {COL_ORDER_ID} = @OrderId AND {COL_SUPPLEMENT_ID} = @SupplementId;
 ";
-
-    private static readonly string DELETE_ORDER_SUPPLEMENTS_BY_ORDER = $@"
-    DELETE FROM {TABLE_ORDER_SUPPLEMENTS}
-    WHERE {COL_ORDER_ID} = @OrderId;
-";
-
-    private static readonly string SELECT_ALL_ORDER_SUPPLEMENTS = $@"
-    SELECT {COL_ORDER_ID}, {COL_SUPPLEMENT_ID}, {COL_AMOUNT}
-    FROM {TABLE_ORDER_SUPPLEMENTS};
-";
+    
 
     public AdoOrderSupplementRepository(
         DbProviderFactory factory,
@@ -186,25 +177,25 @@ public class AdoOrderSupplementRepository : AbstractAdoRepository, IOrderSupplem
     }
 
     
-    public async Task Save(OrderSupplementDetails orderSupplement)
+    public async Task Save(OrderSupplementDetails orderSupplementDetails)
     {
         _logger.LogInformation(
             "Saving OrderSupplement: OrderId {OrderId}, SupplementId {SupplementId} to database.",
-            orderSupplement.OrderId,
-            orderSupplement.SupplementId
+            orderSupplementDetails.OrderId,
+            orderSupplementDetails.SupplementId
         );
 
         // Check if the row exists
-        var existing = await ByOrderAndSupplementId(orderSupplement.OrderId, orderSupplement.SupplementId);
+        var existing = await ByOrderAndSupplementId(orderSupplementDetails.OrderId, orderSupplementDetails.SupplementId);
         string query = existing == null ? INSERT_ORDER_SUPPLEMENT : UPDATE_ORDER_SUPPLEMENT;
 
         try
         {
             DbParameter[] parameters =
             [
-                CreateParameter("@OrderId", orderSupplement.OrderId.ToString().ToLower()),
-                CreateParameter("@SupplementId", orderSupplement.SupplementId.ToString().ToLower()),
-                CreateParameter("@Amount", orderSupplement.Amount)
+                CreateParameter("@OrderId", orderSupplementDetails.OrderId.ToString().ToLower()),
+                CreateParameter("@SupplementId", orderSupplementDetails.SupplementId.ToString().ToLower()),
+                CreateParameter("@Amount", orderSupplementDetails.Amount)
             ];
 
             await ExecuteNonQueryAsync(query, parameters);
@@ -214,27 +205,27 @@ public class AdoOrderSupplementRepository : AbstractAdoRepository, IOrderSupplem
             _logger.LogError(
                 ex,
                 "Failed to save OrderSupplement: OrderId {OrderId}, SupplementId {SupplementId}.",
-                orderSupplement.OrderId,
-                orderSupplement.SupplementId
+                orderSupplementDetails.OrderId,
+                orderSupplementDetails.SupplementId
             );
             throw new NutriscanDatabaseException("Failed to save OrderSupplement to database.", ex);
         }
     }
 
-    public async Task Remove(OrderSupplementDetails orderSupplement)
+    public async Task Remove(OrderSupplementDetails orderSupplementDetails)
     {
         _logger.LogInformation(
             "Removing OrderSupplement: OrderId {OrderId}, SupplementId {SupplementId} from database.",
-            orderSupplement.OrderId,
-            orderSupplement.SupplementId
+            orderSupplementDetails.OrderId,
+            orderSupplementDetails.SupplementId
         );
 
         try
         {
             DbParameter[] parameters =
             [
-                CreateParameter("@OrderId", orderSupplement.OrderId.ToString().ToLower()),
-                CreateParameter("@SupplementId", orderSupplement.SupplementId.ToString().ToLower())
+                CreateParameter("@OrderId", orderSupplementDetails.OrderId.ToString().ToLower()),
+                CreateParameter("@SupplementId", orderSupplementDetails.SupplementId.ToString().ToLower())
             ];
 
             await ExecuteNonQueryAsync(DELETE_ORDER_SUPPLEMENT, parameters);
@@ -244,8 +235,8 @@ public class AdoOrderSupplementRepository : AbstractAdoRepository, IOrderSupplem
             _logger.LogError(
                 ex,
                 "Failed to remove OrderSupplement: OrderId {OrderId}, SupplementId {SupplementId}.",
-                orderSupplement.OrderId,
-                orderSupplement.SupplementId
+                orderSupplementDetails.OrderId,
+                orderSupplementDetails.SupplementId
             );
             throw new NutriscanDatabaseException("Failed to remove OrderSupplement from database.", ex);
         }

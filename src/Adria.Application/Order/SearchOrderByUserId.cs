@@ -18,11 +18,16 @@ public sealed class SearchOrderByUserId(
     {
         var orders = await orderByUserIdQuery.Fetch(input.AdrianId);
 
+        var nonNullOrders = orders
+            .Where(o => o is not null)
+            .Select(o => o!)
+            .ToArray();
+
         logger.LogInformation(
             "Found order(s) for user ID {AdrianId}",
             input.AdrianId
         );
-        
-        return orders;
+
+        return nonNullOrders;
     }
 }

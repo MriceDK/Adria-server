@@ -1,13 +1,10 @@
 using System.Data.Common;
 using Adria.Application.Contracts;
 using Adria.Application.Contracts.Data;
-using Adria.Application.FoodComposition;
 using Adria.Application.Scanner;
-using Adria.Application.Food;
 using Adria.Domain.BodyStats;
 using Adria.Domain.Food;
 using Adria.Domain.PushNotifications;
-using Adria.Domain.BodyStats;
 using Adria.Domain.Order;
 using Adria.Domain.Scanner;
 using Adria.Domain.Subcriptions;
@@ -113,8 +110,8 @@ public static class PersistenceModule
                     _connectionString,
                     serviceProvider.GetRequiredService<ILogger<AdoBodyStatRepository>>()
                 );
-            }).AddScoped<ISupplementRepository, AdoSupplementRepository>(serviceProvider =>
-            {
+            }).AddScoped<ISupplementRepository>(serviceProvider =>
+            {    
                 return new AdoSupplementRepository(
                     serviceProvider.GetRequiredService<DbProviderFactory>(),
                     _connectionString,

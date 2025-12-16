@@ -37,8 +37,13 @@ public class AdoFoodRepository : AbstractAdoRepository, IFood
     public async Task<Food?> ById(Guid id)
     {
         using var connection = _factory.CreateConnection();
-        connection.ConnectionString = _connectionString;
-        await connection.OpenAsync();
+        
+        if (connection is null)
+        {
+            throw new InvalidOperationException("Connection was not initialized.");
+        }
+
+        connection.ConnectionString = _connectionString;        await connection.OpenAsync();
 
         using var command = connection.CreateCommand();
         command.CommandText = "SELECT FoodId, Name, Type, Edible FROM foods WHERE FoodId = @Id";

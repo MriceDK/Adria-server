@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Adria.Application.Contracts;
+using Adria.Domain.Shared.Exceptions;
 
 namespace Adria.Infrastructure.Persistence.Queries;
 
@@ -14,9 +15,9 @@ public sealed class AllSupplementsQuery(
     {
         var supplements = await supplementRepository.GetAll();
 
-        if (supplements == null || !supplements.Any())
+        if (!supplements.Any())
         {
-            return null;
+            throw new ElementNotFoundException("No supplements found.");
         }
         
         return supplements
