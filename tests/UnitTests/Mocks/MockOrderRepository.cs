@@ -10,7 +10,12 @@ public sealed class MockOrderRepository : IOrderRepository
 {
     private readonly Dictionary<Guid, Order> _orders = new();
     public List<Order> SavedOrders { get; } = new();
+    public IReadOnlyCollection<Order> Entities => _orders.Values.ToList().AsReadOnly();
 
+    public void Seed(Order order)
+    {
+        _orders[order.OrderId] = order;
+    }
 
     public Task<Order?> ById(Guid orderId)
     {
@@ -24,7 +29,7 @@ public sealed class MockOrderRepository : IOrderRepository
             .Where(o => o.AdrianId == adrianId)
             .ToList()
             .AsReadOnly();
-            
+
         return Task.FromResult((IReadOnlyCollection<Order>)userOrders);
     }
 
@@ -33,12 +38,13 @@ public sealed class MockOrderRepository : IOrderRepository
         var allOrders = _orders.Values
             .ToList()
             .AsReadOnly();
-            
+
         return Task.FromResult((IReadOnlyCollection<Order>)allOrders);
     }
 
     public Task Save(Order order)
     {
+        _orders[order.OrderId] = order;
         SavedOrders.Add(order);
         return Task.CompletedTask;
     }

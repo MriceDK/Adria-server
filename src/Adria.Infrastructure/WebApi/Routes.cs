@@ -221,14 +221,15 @@ public static class Routes
 
         group.MapPost("/", CreateOrderSupplementController.Invoke)
             .WithName(nameof(CreateOrderSupplementController))
-            .Produces<CreateOrderSupplementResponse>(StatusCodes.Status200OK)
-            .Produces<string>(StatusCodes.Status400BadRequest);
+            .WithOpenApi();
 
         group.MapDelete("/", DeleteOrderSupplementController.Invoke)
-            .WithName(nameof(DeleteOrderSupplementController));
+            .WithName(nameof(DeleteOrderSupplementController))
+            .WithOpenApi();
 
         group.MapGet("/{orderId}", SearchOrderSupplementsByOrderController.Invoke)
-            .WithName(nameof(SearchOrderSupplementsByOrderController));
+            .WithName(nameof(SearchOrderSupplementsByOrderController))
+            .WithOpenApi();
     }
     
     

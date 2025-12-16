@@ -10,24 +10,24 @@ public sealed record DeleteOrderInput(
 );
 
 public sealed class DeleteOrder(
-    IOrderRepository orderRepository,
-    ILogger<DeleteOrder> logger)
+    IOrderRepository repository,
+    ILogger<DeleteOrder> logger
+)
     : IUseCase<DeleteOrderInput, Task>
 {
     public async Task Execute(DeleteOrderInput input)
     {
-        Domain.Order.Order? order = await orderRepository.ById(input.OrderId);
+        var order = await repository.ById(input.OrderId);
 
         if (order is null)
         {
-            throw new ElementNotFoundException($"Order with ID {input.OrderId} not found.");
+            throw new ElementNotFoundException(
+                $"Order with ID {input.OrderId} not found."
+            );
         }
-        
-        await orderRepository.Remove(order);
-        
-        logger.LogInformation(
-            "Deleted order with ID {OrderId}",
-            input.OrderId
-        );
+
+        await repository.Remove(order);
+
+        logger.LogInformation("Order removed");
     }
 }
