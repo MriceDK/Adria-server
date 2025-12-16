@@ -59,15 +59,13 @@ public static class UseCases
             .AddScoped<IUseCase<SearchSupplementsByIdInput, Task<SupplementData?>>, SearchSupplementsById>()
             .AddScoped<IUseCase<Task<IReadOnlyCollection<SupplementData?>>>, SearchAllSupplements>()
 
-            // --- Order Use Cases ---
+// --- Order Use Cases ---
             .AddScoped<IUseCase<CreateOrderInput, Task<Guid>>, CreateOrderSupplement>()
             .AddScoped<IUseCase<DeleteOrderInput, Task>, DeleteOrder>()
             .AddScoped<IUseCase<SearchOrderByIdInput, Task<OrderData>>, SearchOrderById>()
-            .AddScoped<IUseCase<SearchOrderByUserIdInput, Task<IReadOnlyCollection<OrderData>>>, SearchOrderByUserId>()
+            .AddScoped<IUseCase<SearchOrderByUserIdInput, Task<IReadOnlyCollection<OrderWithSupplementsData>>>, SearchOrderByUserId>()
             .AddScoped<IUseCase<IReadOnlyCollection<CreateOrderSupplementDetailItem>, Task<double>>, CalculateOrderTotalPrice>()
-            .AddScoped<
-                IUseCase<SearchOrderSupplementsByOrderIdInput, Task<IReadOnlyCollection<OrderSupplementDetailsData>>>,
-                SearchOrderSupplementsByOrderId
-            >();
+            .AddScoped<IUseCase<SearchOrderSupplementsByOrderIdInput, Task<IReadOnlyCollection<OrderSupplementDetailsData>>>, SearchOrderSupplementsByOrderId>();
+
     }
 }

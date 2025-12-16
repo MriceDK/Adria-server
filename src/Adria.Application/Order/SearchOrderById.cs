@@ -1,5 +1,6 @@
 ﻿using Adria.Application.Contracts;
 using Adria.Application.Contracts.Data;
+using Adria.Domain.Order;
 using Adria.Domain.Shared.Exceptions;
 using Microsoft.Extensions.Logging;
 
@@ -15,6 +16,7 @@ public sealed class SearchOrderById : IUseCase<SearchOrderByIdInput, Task<OrderD
 
     public SearchOrderById(
         IOrderByIdQuery orderByIdQuery,
+        
         ILogger<SearchOrderById> logger
     )
     {
