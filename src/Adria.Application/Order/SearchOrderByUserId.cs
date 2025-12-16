@@ -1,4 +1,5 @@
-﻿using Adria.Application.Contracts;
+﻿using System.Collections.ObjectModel;
+using Adria.Application.Contracts;
 using Adria.Application.Contracts.Data;
 using Adria.Domain.Order;
 using Adria.Domain.Shared.Exceptions;
@@ -10,9 +11,9 @@ namespace Adria.Application.Order;
 public sealed record OrderWithSupplementsData(
     Guid OrderId,
     Guid AdrianId,
+    ReadOnlyCollection<SupplementData> Supplements,
     DateTime Date,
-    double TotalPrice,
-    IReadOnlyCollection<OrderSupplementDetailsData> Supplements
+    double TotalPrice
 );
 
 public sealed record SearchOrderByUserIdInput(Guid AdrianId);
@@ -20,6 +21,7 @@ public sealed record SearchOrderByUserIdInput(Guid AdrianId);
 public sealed class SearchOrderByUserId(
     IOrderByUserIdQuery orderByUserIdQuery,
     IOrderSupplementDetailsRepository supplementDetailsRepository,
+    ISupplementRepository supplementRepository,
     ILogger<SearchOrderByUserId> logger)
     : IUseCase<SearchOrderByUserIdInput, Task<IReadOnlyCollection<OrderWithSupplementsData>>>
 {
@@ -37,16 +39,24 @@ public sealed class SearchOrderByUserId(
                 new OrderWithSupplementsData(
                     order.OrderId,
                     order.AdrianId,
-                    order.Date,
-                    order.TotalPrice,
                     supplements
-                        .Select(s => new OrderSupplementDetailsData(
-                            s.OrderId,
-                            s.SupplementId,
-                            s.Amount
-                        ))
+                        .Select(s =>
+                        {
+                            var supplement = supplementRepository.ById(s.SupplementId).Result;
+                            if (supplement != null)
+                                return new SupplementData(
+                                    supplement.SupplementId,
+                                    supplement.Name,
+                                    supplement.Type,
+                                    supplement.Price,
+                                    supplement.Stock
+                                );
+                            throw new ElementNotFoundException($"Supplement with id {s.SupplementId} not found");
+                        })
                         .ToList()
-                        .AsReadOnly()
+                        .AsReadOnly(),
+                    order.Date,
+                    order.TotalPrice
                 )
             );
         }
