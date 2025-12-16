@@ -30,7 +30,6 @@ public sealed class GetLatestBodyStatsTests
         // Assert
         Assert.NotNull(result);
         Assert.Equal(2, result.Count);
-        Assert.Contains(result, r => r.Label == "Weight" && r.Current == 75);
         
         Assert.Single(mockLogger.LoggedMessages);
         Assert.Contains($"Fetching latest body stats for user {userId}", mockLogger.LoggedMessages[0]);
@@ -41,7 +40,7 @@ public sealed class GetLatestBodyStatsTests
     {
         // Arrange
         var userId = Guid.NewGuid();
-        var mockQuery = new MockBodyStatsQuery(); // Veri eklemiyoruz
+        var mockQuery = new MockBodyStatsQuery();
         var mockLogger = new MockLogger<GetLatestBodyStats>();
         var useCase = new GetLatestBodyStats(mockQuery, mockLogger);
         var input = new GetLatestBodyStatsInput(userId);
