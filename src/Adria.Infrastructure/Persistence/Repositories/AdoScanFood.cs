@@ -3,7 +3,6 @@ using System.Data.Common;
 using Adria.Domain.Scanner;
 using Adria.Infrastructure.Persistence.Shared;
 using Adria.Main.Workers;
-using Adria.Main.Workers;
 using Microsoft.Extensions.Logging;
 
 namespace Adria.Infrastructure.Persistence.Repositories;
