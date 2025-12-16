@@ -84,7 +84,7 @@ CREATE TABLE `orders`
     `OrderId`    VARCHAR(36) PRIMARY KEY NOT NULL,
     `AdrianId`   VARCHAR(36)             NOT NULL,
     `Date`       DATETIME                NOT NULL,
-    `TotalPrice` INT                     NOT NULL,
+    `TotalPrice` DOUBLE                  NOT NULL,
     CONSTRAINT `fk_orders_user`
         FOREIGN KEY (`AdrianId`) REFERENCES `users` (`AdrianId`)
 );
