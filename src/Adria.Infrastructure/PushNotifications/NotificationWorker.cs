@@ -5,12 +5,12 @@ namespace Adria.Main.Workers;
 
 public class NotificationWorker : BackgroundService
 {
-    private readonly IServiceProvider _serviceProvider;
-    private readonly ILogger<NotificationWorker> _logger;
-    private readonly IConfiguration _configuration;
+    private static IServiceProvider _serviceProvider;
+    private static ILogger<NotificationWorker> _logger;
+    private static IConfiguration _configuration;
 
     public NotificationWorker(
-        IServiceProvider serviceProvider,
+        IServiceProvider serviceProvider, 
         ILogger<NotificationWorker> logger,
         IConfiguration configuration)
     {
@@ -22,7 +22,7 @@ public class NotificationWorker : BackgroundService
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         using PeriodicTimer timer = new PeriodicTimer(TimeSpan.FromMinutes(1));
-
+    
         int executionCount = 0;
 
         while (await timer.WaitForNextTickAsync(stoppingToken))
@@ -34,29 +34,32 @@ public class NotificationWorker : BackgroundService
                 if (executionCount == 1)
                 {
                     await SendNotifications(
-                        "Welcome to Nutriscan!",
-                        "First minute passed! Don't forget to hydrate."
-                    );
-                }
-                else if (executionCount == 3)
-                {
-                    await SendNotifications(
-                        "Feeling Hungry?",
-                        "It's been 3 minutes! Time for a healthy snack."
-                    );
-                }
-                else if (executionCount == 5)
-                {
-                    await SendNotifications(
-                        "Time to Move!",
-                        "5 minutes in! Stretch your legs."
+                        "Nutriscan always with you! 🚀", 
+                        "Don't forget to hydrate. 💧"
                     );
                 }
 
+                else if (executionCount == 3)
+                {
+                    await SendNotifications(
+                        "Feeling Hungry? 🥗", 
+                        "Time for a healthy snack!."
+                    );
+                }
+
+                else if (executionCount == 5)
+                {
+                    await SendNotifications(
+                        "Time to Move! 🏃‍♂️", 
+                        "Stretch your legs!"
+                    );
+                }
+                
                 if (executionCount >= 15)
                 {
-                    executionCount = 0;
+                    executionCount = 0; 
                 }
+                
             }
             catch (Exception ex)
             {
@@ -65,7 +68,7 @@ public class NotificationWorker : BackgroundService
         }
     }
 
-    private async Task SendNotifications(string title, string body)
+    public static async Task SendNotifications(string title,string body)
     {
         using var scope = _serviceProvider.CreateScope();
         var repository = scope.ServiceProvider.GetRequiredService<IPushSubscriptionRepository>();
@@ -73,11 +76,10 @@ public class NotificationWorker : BackgroundService
         var subscriptions = await repository.GetAll();
         if (subscriptions.Count == 0) return;
 
-        _logger.LogInformation(
-            "Found {SubscriptionCount} users to notify.",
-            subscriptions.Count
-        );
+        _logger.LogInformation($"Found {subscriptions.Count} users to notify.");
 
+        // VAPID Keys (It should be in appsettings.json)
+        // Client and backend keys should be same
         var subject = "mailto:admin@adria.com";
         var publicKey = _configuration["Vapid:PublicKey"];
         var privateKey = _configuration["Vapid:PrivateKey"];
@@ -90,44 +92,28 @@ public class NotificationWorker : BackgroundService
             try
             {
                 var pushSubscription = new WebPush.PushSubscription(
-                    sub.Endpoint,
-                    sub.P256dh,
+                    sub.Endpoint, 
+                    sub.P256dh, 
                     sub.Auth
                 );
 
-                var payload = System.Text.Json.JsonSerializer.Serialize(new
-                {
-                    title,
-                    body
+                var payload = System.Text.Json.JsonSerializer.Serialize(new 
+                { 
+                    title = title, 
+                    body = body
                 });
 
-                await webPushClient.SendNotificationAsync(
-                    pushSubscription,
-                    payload,
-                    vapidDetails
-                );
-
-                _logger.LogInformation(
-                    "Notification sent to user {UserId}.",
-                    sub.UserId
-                );
+                await webPushClient.SendNotificationAsync(pushSubscription, payload, vapidDetails);
+                _logger.LogInformation($"Notification sent to {sub.UserId}");
             }
             catch (WebPushException ex) when (ex.StatusCode == System.Net.HttpStatusCode.Gone)
             {
-                _logger.LogWarning(
-                    "Subscription expired for user {UserId}. Deleting subscription.",
-                    sub.UserId
-                );
-
+                _logger.LogWarning($"Subscription expired for user {sub.UserId}. Deleting...");
                 await repository.Delete(sub.Id);
             }
             catch (Exception ex)
             {
-                _logger.LogError(
-                    ex,
-                    "Failed to send notification to user {UserId}.",
-                    sub.UserId
-                );
+                _logger.LogError(ex, $"Failed to send to {sub.UserId}");
             }
         }
     }
