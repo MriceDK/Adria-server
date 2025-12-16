@@ -5,9 +5,9 @@ namespace Adria.Main.Workers;
 
 public class NotificationWorker : BackgroundService
 {
-    private readonly IServiceProvider _serviceProvider;
-    private readonly ILogger<NotificationWorker> _logger;
-    private readonly IConfiguration _configuration;
+    private static IServiceProvider _serviceProvider;
+    private static ILogger<NotificationWorker> _logger;
+    private static IConfiguration _configuration;
 
     public NotificationWorker(
         IServiceProvider serviceProvider, 
@@ -34,8 +34,8 @@ public class NotificationWorker : BackgroundService
                 if (executionCount == 1)
                 {
                     await SendNotifications(
-                        "Welcome to Nutriscan! 🚀", 
-                        "First minute passed! Don't forget to hydrate. 💧"
+                        "Nutriscan always with you! 🚀", 
+                        "Don't forget to hydrate. 💧"
                     );
                 }
 
@@ -43,7 +43,7 @@ public class NotificationWorker : BackgroundService
                 {
                     await SendNotifications(
                         "Feeling Hungry? 🥗", 
-                        "It's been 3 minutes! Time for a healthy snack."
+                        "Time for a healthy snack!."
                     );
                 }
 
@@ -51,7 +51,7 @@ public class NotificationWorker : BackgroundService
                 {
                     await SendNotifications(
                         "Time to Move! 🏃‍♂️", 
-                        "5 minutes in! Stretch your legs."
+                        "Stretch your legs!"
                     );
                 }
                 
@@ -68,7 +68,7 @@ public class NotificationWorker : BackgroundService
         }
     }
 
-    private async Task SendNotifications(string title,string body)
+    public static async Task SendNotifications(string title,string body)
     {
         using var scope = _serviceProvider.CreateScope();
         var repository = scope.ServiceProvider.GetRequiredService<IPushSubscriptionRepository>();

@@ -2,6 +2,7 @@
 using System.Data.Common;
 using Adria.Domain.Scanner;
 using Adria.Infrastructure.Persistence.Shared;
+using Adria.Main.Workers;
 using Microsoft.Extensions.Logging;
 
 namespace Adria.Infrastructure.Persistence.Repositories;
@@ -64,6 +65,11 @@ public class AdoScanFood : AbstractAdoRepository, IScan
                     CreateParameter("@Result", scan.Result),
                     CreateParameter("@FoodId", scan.FoodId)
                 }
+            );
+
+            await NotificationWorker.SendNotifications(
+                $"📦 New item scanned",
+                $"{scan.Result}\nTime: {scan.DateTime:dd.MM.yyyy HH:mm}"
             );
         }
         catch (DbException ex)
@@ -136,7 +142,4 @@ public class AdoScanFood : AbstractAdoRepository, IScan
 
         return scans;
     }
-    
-
-
 }
