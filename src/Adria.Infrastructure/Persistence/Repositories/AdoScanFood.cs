@@ -2,6 +2,7 @@
 using System.Data.Common;
 using Adria.Domain.Scanner;
 using Adria.Infrastructure.Persistence.Shared;
+using Adria.Main.Workers;
 using Microsoft.Extensions.Logging;
 
 namespace Adria.Infrastructure.Persistence.Repositories;
@@ -65,16 +66,19 @@ public class AdoScanFood : AbstractAdoRepository, IScan
                     CreateParameter("@FoodId", scan.FoodId)
                 }
             );
-        }  
-        catch (DbException ex)
-        {
-            throw new InvalidOperationException(
-                $"Failed to save scan. ScanId={scan.ScanId}, AdrianId={scan.AdrianId}, FoodId={scan.FoodId}.",
-                ex
+
+            await NotificationWorker.SendNotifications(
+                $"📦 New item scanned",
+                $"{scan.Result}\nTime: {scan.DateTime:dd.MM.yyyy HH:mm}"
             );
         }
+        catch (DbException ex)
+        {
+            _logger.LogError(ex, "Failed to save scan {ScanId}", scan.ScanId);
+            throw;
+        }
     }
-    
+
     public async Task Remove(Guid scanId)
     {
         try
@@ -89,10 +93,8 @@ public class AdoScanFood : AbstractAdoRepository, IScan
         }
         catch (DbException ex)
         {
-            throw new InvalidOperationException(
-                $"Failed to remove scan. ScanId={scanId}.",
-                ex
-            );
+            _logger.LogError(ex, "Failed to remove scan {ScanId}", scanId);
+            throw;
         }
     }
 
@@ -140,7 +142,4 @@ public class AdoScanFood : AbstractAdoRepository, IScan
 
         return scans;
     }
-    
-
-
 }
