@@ -186,8 +186,18 @@ public static class PersistenceModule
                     _connectionString,
                     sp.GetRequiredService<ILogger<AdoSupplementRepository>>()
                 );
-            }).AddScoped<IAllSupplementsQuery, AllSupplementsQuery>()
-            .AddScoped<ISupplementsByIdQuery, SupplementsByIdQuery>();
+            })
+            .AddScoped<IAllSupplementsQuery, AllSupplementsQuery>()
+            .AddScoped<ISupplementsByIdQuery, SupplementsByIdQuery>()
+            .AddScoped<IOrderSupplementDetailsRepository, AdoOrderSupplementRepository>(sp =>
+            {
+                return new AdoOrderSupplementRepository(
+                    sp.GetRequiredService<DbProviderFactory>(),
+                    _connectionString,
+                    sp.GetRequiredService<ILogger<AdoOrderRepository>>()
+                );
+            })
+            .AddScoped<IOrderSupplementsByOrderQuery, OrderSupplementsByOrderQuery>();
     }
 
     private static IServiceCollection AddUseCases(this IServiceCollection services)
