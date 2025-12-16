@@ -3,6 +3,7 @@ using Adria.Infrastructure.WebApi.Controllers.FoodComposition;
 using Adria.Infrastructure.WebApi.Controllers.Scanner;
 using Adria.Infrastructure.WebApi.Controllers.Supplement;
 using Adria.Infrastructure.WebApi.Controllers.Order;
+using Adria.Infrastructure.WebApi.Controllers.OrderSupplement;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -36,6 +37,7 @@ public static class Routes
         MapScannerRoutes(app);
         MapSupplementRoutes(app);
         MapOrderRoutes(app);
+        MapOrderSupplementRoutes(app);
         return app;
     }
     
@@ -190,13 +192,12 @@ public static class Routes
             .WithOpenApi();
 
         supplementRoutes
-            .MapPost("/create", CreateSupplementController.Invoke)
+            .MapPost("/", CreateSupplementController.Invoke)
             .WithDescription("Create a new supplement.")
             .WithName(nameof(CreateSupplementController))
             .WithMetadata(new ConsumesAttribute(APPLICATION_JSON))
             .WithOpenApi();
         
-
         supplementRoutes
             .MapGet("/all", SearchAllSupplementsController.Invoke)
             .WithDescription("Get all supplements.")
@@ -211,6 +212,23 @@ public static class Routes
         
     }
     
+    private static void MapOrderSupplementRoutes(WebApplication app)
+    {
+        var group = app.MapGroup("/api/OrderSupplement")
+            .WithTags("Order Supplement Details")
+            .WithOpenApi();
+
+        group.MapPost("/", CreateOrderSupplementController.Invoke)
+            .WithName(nameof(CreateOrderSupplementController));
+
+        group.MapDelete("/", DeleteOrderSupplementController.Invoke)
+            .WithName(nameof(DeleteOrderSupplementController));
+
+        group.MapGet("/{orderId}", SearchOrderSupplementsByOrderController.Invoke)
+            .WithName(nameof(SearchOrderSupplementsByOrderController));
+    }
+    
+    
     private static void MapOrderRoutes(WebApplication app)
     {
         var orderRoutes = app.MapGroup("/api/order")
@@ -219,14 +237,14 @@ public static class Routes
             .WithOpenApi();
 
         orderRoutes
-            .MapPost("/create", CreateOrderController.Invoke)
+            .MapPost("/", CreateOrderController.Invoke)
             .WithDescription("Create a new order.")
             .WithName(nameof(CreateOrderController))
             .WithMetadata(new ConsumesAttribute(APPLICATION_JSON))
             .WithOpenApi();
 
         orderRoutes
-            .MapDelete("/delete", DeleteOrderController.Invoke) 
+            .MapDelete("/", DeleteOrderController.Invoke) 
             .WithDescription("Delete an existing order by ID.")
             .WithName(nameof(DeleteOrderController))
             .WithMetadata(new ConsumesAttribute(APPLICATION_JSON))

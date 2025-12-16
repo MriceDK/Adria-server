@@ -10,6 +10,8 @@ using Adria.Application.Subscriptions;
 using Adria.Application.Users;
 using Adria.Application.Supplement;
 using Adria.Application.Order;
+using Adria.Application.OrderSupplement;
+using Adria.Domain.Order;
 using Adria.Infrastructure.Persistence.Queries;
 using Adria.Infrastructure.Persistence.Repositories;
 
@@ -60,6 +62,15 @@ public static class UseCases
         .AddScoped<IUseCase<CreateOrderInput, Task<Guid>>, CreateOrder>()
         .AddScoped<IUseCase<DeleteOrderInput, Task>, DeleteOrder>()
         .AddScoped<IUseCase<SearchOrderByIdInput, Task<OrderData?>>, SearchOrderById>()
-        .AddScoped<IUseCase<SearchOrderByUserIdInput, Task<IReadOnlyCollection<OrderData>>>, SearchOrderByUserId>();
+        .AddScoped<IUseCase<SearchOrderByUserIdInput, Task<IReadOnlyCollection<OrderData>>>, SearchOrderByUserId>()
+        
+        // --- OrderSupplement Use Cases ---
+        .AddScoped<IUseCase<CreateOrderSupplementDetailsInput, Task>, CreateOrderSupplementDetails>()
+
+        // Used by DeleteOrderSupplementDetailsController
+        .AddScoped<IUseCase<DeleteOrderSupplementDetailsInput, Task<OrderSupplementDetails>>, DeleteOrderSupplementDetails>()
+
+        // Used by SearchOrderSupplementsByOrderController
+        .AddScoped<IUseCase<SearchOrderSupplementsByOrderIdInput, Task<IReadOnlyCollection<OrderSupplementDetailsData>>>, SearchOrderSupplementsByOrderId>();
     }
 }

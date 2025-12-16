@@ -140,7 +140,7 @@ public class AdoOrderSupplementRepository : AbstractAdoRepository, IOrderSupplem
         }
     }
 
-    public async Task<OrderSupplementDetails?> ByOrderAndSupplementId(Guid orderId, Guid supplementId)
+    public async Task<OrderSupplementDetails> ByOrderAndSupplementId(Guid orderId, Guid supplementId)
     {
         DbParameter[] parameters =
         [

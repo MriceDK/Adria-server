@@ -11,18 +11,21 @@ public sealed record SearchOrderSupplementsByOrderIdInput(Guid OrderId);
 public sealed class SearchOrderSupplementsByOrderId(
     IOrderSupplementDetailsRepository orderSupplementDetailsRepository,
     ILogger<SearchOrderSupplementsByOrderId> logger)
-    : IUseCase<SearchOrderSupplementsByOrderIdInput, Task<IReadOnlyCollection<OrderSupplementDetails>>>
+    : IUseCase<SearchOrderSupplementsByOrderIdInput, Task<IReadOnlyCollection<OrderSupplementDetailsData>>>
 {
-    public async Task<IReadOnlyCollection<OrderSupplementDetails>> Execute(SearchOrderSupplementsByOrderIdInput input)
+    public async Task<IReadOnlyCollection<OrderSupplementDetailsData>> Execute(SearchOrderSupplementsByOrderIdInput input)
     {
-        logger.LogInformation(
-            "Fetching order supplement details with order id '{OrderId}'.",
-            input.OrderId
-        );
+            logger.LogInformation(
+                "Fetching order supplement details with order id '{OrderId}'.",
+                input.OrderId
+            );
 
-        return (await orderSupplementDetailsRepository.ByOrderId(input.OrderId))
-               ?? throw new ElementNotFoundException(
-                   $"OrderSupplementDetails with order id {input.OrderId} not found."
-               );
-    }
+            var entities = await orderSupplementDetailsRepository.ByOrderId(input.OrderId);
+
+            return entities.Select(e => new OrderSupplementDetailsData(
+                e.OrderId,
+                e.SupplementId,
+                e.Amount
+            )).ToList().AsReadOnly();
+        }
 }
