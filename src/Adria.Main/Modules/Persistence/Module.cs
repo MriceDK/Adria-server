@@ -194,7 +194,7 @@ public static class PersistenceModule
                 return new AdoOrderSupplementRepository(
                     sp.GetRequiredService<DbProviderFactory>(),
                     _connectionString,
-                    sp.GetRequiredService<ILogger<AdoOrderRepository>>()
+                    sp.GetRequiredService<ILogger<AdoOrderSupplementRepository>>()
                 );
             })
             .AddScoped<IOrderSupplementsByOrderQuery, OrderSupplementsByOrderQuery>();

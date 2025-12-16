@@ -1,43 +1,55 @@
 ﻿using Adria.Application.OrderSupplement;
-using Adria.Domain.Order;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Threading.Tasks;
 using UnitTests.Mocks;
-using Xunit;
 
 namespace UnitTests.Adria.Application.Order;
 
 public sealed class CreateOrderSupplementTest
 {
     [Fact]
-    public async Task Execute_WithValidInput_SavesOrderSupplementAndReturnsEntity()
+    public async Task Execute_WithValidInput_GeneratesOrderIdAndSavesOrderAndSupplements()
     {
-        var repository = new MockOrderSupplementDetailsRepository();
-        var logger = new MockLogger<CreateOrderSupplementDetails>();
-        var useCase = new CreateOrderSupplementDetails(repository, logger);
+        var orderRepository = new MockOrderRepository();
+        var supplementRepository = new MockOrderSupplementDetailsRepository();
+        var priceCalculator = new MockCalculateOrderTotalPrice();
+        var logger = new MockLogger<CreateOrderSupplement>();
 
-        var orderId = Guid.NewGuid();
-        var supplementId = Guid.NewGuid();
-        var amount = 2;
-
-        var input = new CreateOrderSupplementDetailsInput(
-            orderId,
-            supplementId,
-            amount
+        var useCase = new CreateOrderSupplement(
+            orderRepository,
+            supplementRepository,
+            priceCalculator,
+            logger
         );
 
-        var result = await useCase.Execute(input);
+        var supplementId1 = Guid.NewGuid();
+        var supplementId2 = Guid.NewGuid();
 
-        Assert.NotNull(result);
-        Assert.Equal(orderId, result.OrderId);
-        Assert.Equal(supplementId, result.SupplementId);
-        Assert.Equal(amount, result.Amount);
+        var input = new CreateOrderInput(
+            Guid.NewGuid(),
+            new[]
+            {
+                new CreateOrderSupplementDetailItem(supplementId1, 2),
+                new CreateOrderSupplementDetailItem(supplementId2, 5)
+            }
+        );
 
-        Assert.Single(repository.SavedEntities);
-        Assert.Equal(result, repository.SavedEntities[0]);
+        var orderId = await useCase.Execute(input);
 
-        Assert.Single(logger.LoggedMessages);
-        Assert.Contains("New OrderSupplement created", logger.LoggedMessages[0]);
+        Assert.NotEqual(Guid.Empty, orderId);
+
+        Assert.Single(orderRepository.SavedOrders);
+        Assert.Equal(orderId, orderRepository.SavedOrders[0].OrderId);
+
+        Assert.Equal(2, supplementRepository.SavedEntities.Count);
+        Assert.All(supplementRepository.SavedEntities, s => Assert.Equal(orderId, s.OrderId));
+
+        Assert.Contains(
+            supplementRepository.SavedEntities,
+            s => s.SupplementId == supplementId1 && s.Amount == 2
+        );
+
+        Assert.Contains(
+            supplementRepository.SavedEntities,
+            s => s.SupplementId == supplementId2 && s.Amount == 5
+        );
     }
 }

@@ -9,6 +9,8 @@ namespace UnitTests.Mocks;
 public sealed class MockOrderRepository : IOrderRepository
 {
     private readonly Dictionary<Guid, Order> _orders = new();
+    public List<Order> SavedOrders { get; } = new();
+
 
     public Task<Order?> ById(Guid orderId)
     {
@@ -37,7 +39,7 @@ public sealed class MockOrderRepository : IOrderRepository
 
     public Task Save(Order order)
     {
-        _orders[order.OrderId] = order;
+        SavedOrders.Add(order);
         return Task.CompletedTask;
     }
 

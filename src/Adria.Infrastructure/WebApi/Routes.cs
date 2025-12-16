@@ -4,6 +4,7 @@ using Adria.Infrastructure.WebApi.Controllers.Scanner;
 using Adria.Infrastructure.WebApi.Controllers.Supplement;
 using Adria.Infrastructure.WebApi.Controllers.Order;
 using Adria.Infrastructure.WebApi.Controllers.OrderSupplement;
+using Adria.Infrastructure.WebApi.Controllers.Responses;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -219,7 +220,9 @@ public static class Routes
             .WithOpenApi();
 
         group.MapPost("/", CreateOrderSupplementController.Invoke)
-            .WithName(nameof(CreateOrderSupplementController));
+            .WithName(nameof(CreateOrderSupplementController))
+            .Produces<CreateOrderSupplementResponse>(StatusCodes.Status200OK)
+            .Produces<string>(StatusCodes.Status400BadRequest);
 
         group.MapDelete("/", DeleteOrderSupplementController.Invoke)
             .WithName(nameof(DeleteOrderSupplementController));
