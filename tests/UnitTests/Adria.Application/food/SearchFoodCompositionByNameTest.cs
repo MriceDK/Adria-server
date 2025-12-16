@@ -1,13 +1,7 @@
 ﻿using Adria.Application.FoodComposition;
-using Adria.Application.Contracts.Data;
-using Adria.Domain.Food;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 using UnitTests.Mocks;
-using Xunit;
 
-namespace UnitTests.Adria.Application;
+namespace UnitTests.Adria.Application.food;
 
 public sealed class SearchFoodCompositionByNameTest
 {
@@ -18,9 +12,9 @@ public sealed class SearchFoodCompositionByNameTest
 
         var compositions = new[]
         {
-            new FoodComposition(foodId, "PROTEIN", 25),
-            new FoodComposition(foodId, "CARBS", 40),
-            new FoodComposition(Guid.NewGuid(), "FAT", 10)
+            new global::Adria.Domain.Food.FoodComposition(foodId, "PROTEIN", 25),
+            new global::Adria.Domain.Food.FoodComposition(foodId, "CARBS", 40),
+            new global::Adria.Domain.Food.FoodComposition(Guid.NewGuid(), "FAT", 10)
         };
 
         var repository = new MockFoodCompositionRepository(compositions);
