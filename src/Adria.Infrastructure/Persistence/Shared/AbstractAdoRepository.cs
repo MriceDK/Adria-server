@@ -106,5 +106,6 @@ public class AbstractAdoRepository
             await transaction.RollbackAsync();
             throw;
         }
+        await connection.CloseAsync();
     }
 }

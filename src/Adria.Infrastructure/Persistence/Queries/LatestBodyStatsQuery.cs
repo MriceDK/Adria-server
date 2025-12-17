@@ -62,7 +62,7 @@ public sealed class LatestBodyStatsQuery : IBodyStatsQuery
         var result = new List<BodyStatData>();
 
         while (await reader.ReadAsync())
-        {   
+        {
             var bodyStatIdOrd = reader.GetOrdinal("BodyStatId");
             var labelOrd = reader.GetOrdinal("Label");
             var unitOrd = reader.GetOrdinal("Unit");
@@ -71,20 +71,21 @@ public sealed class LatestBodyStatsQuery : IBodyStatsQuery
 
             var label = reader.GetString(labelOrd);
             var bodyStatId = reader.GetString(bodyStatIdOrd);
-            var unit = await reader.IsDBNullAsync(unitOrd) 
-                ? null 
+            var unit = await reader.IsDBNullAsync(unitOrd)
+                ? null
                 : reader.GetString(unitOrd);
-                
-            var goal = await reader.IsDBNullAsync(goalOrd) 
-                ? (double?)null 
+
+            var goal = await reader.IsDBNullAsync(goalOrd)
+                ? (double?)null
                 : reader.GetDouble(goalOrd);
-                
+
             var val = reader.GetDouble(currentOrd);
 
 
-            result.Add(new BodyStatData(bodyStatId,label, val, goal, unit));
+            result.Add(new BodyStatData(bodyStatId, label, val, goal, unit));
         }
 
+        await connection.CloseAsync();
         return result.AsReadOnly();
     }
 }

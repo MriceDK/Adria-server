@@ -61,11 +61,12 @@ public class SubscriptionByIdQuery : ISubscriptionByIdQuery
             var advantages = reader.GetString(advOrd);
 
             _logger.LogInformation("Found subscription with ID {SubscriptionId}", subscriptionId);
-            
+            await connection.CloseAsync();
             return new SubscriptionData(id,Enum.Parse<SubscriptionType>(type), price, advantages);
         }
 
         _logger.LogInformation("Subscription with ID {SubscriptionId} not found", subscriptionId);
+        await connection.CloseAsync();
         return null;
     }
 }

@@ -86,7 +86,7 @@ public class AdoOrderRepository : AbstractAdoRepository, IOrderRepository
 
                 orders.Add(order);
             }
-
+            await connection.CloseAsync();
             return orders;
         }
         catch (DbException ex)
@@ -159,7 +159,7 @@ public class AdoOrderRepository : AbstractAdoRepository, IOrderRepository
                     reader.GetDouble(reader.GetOrdinal(COL_TOTAL_PRICE))
                 ));
             }
-
+            await connection.CloseAsync();
             return orders;
         }
         catch (DbException ex)

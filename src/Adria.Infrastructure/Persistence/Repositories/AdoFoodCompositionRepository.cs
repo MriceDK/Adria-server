@@ -187,7 +187,7 @@ public sealed class AdoFoodCompositionRepository : AbstractAdoRepository, IFoodC
                 reader.GetDouble(reader.GetOrdinal("Amount"))
             ));
         }
-
+        await connection.CloseAsync();
         return result;
     }
 

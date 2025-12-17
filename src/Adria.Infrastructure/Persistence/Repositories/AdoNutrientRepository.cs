@@ -32,12 +32,21 @@ public class AdoNutrientRepository : AbstractAdoRepository, INutrient
         using var reader = await command.ExecuteReaderAsync();
 
         if (!await reader.ReadAsync())
+        {
+            await connection.CloseAsync();
             return null;
+        }
 
+
+        string nutrientIdDb = reader.GetString(reader.GetOrdinal(NUTRIENT_ID));
+        string type = reader.GetString(reader.GetOrdinal("Type"));
+        string unit = reader.GetString(reader.GetOrdinal("Unit"));
+        
+        await connection.CloseAsync();
         return new Nutrient(
-            reader.GetString(reader.GetOrdinal(NUTRIENT_ID)),
-            reader.GetString(reader.GetOrdinal("Type")),
-            reader.GetString(reader.GetOrdinal("Unit"))
+            nutrientIdDb,
+            type,
+            unit
         );
     }
 
@@ -73,7 +82,7 @@ public class AdoNutrientRepository : AbstractAdoRepository, INutrient
                 reader.GetString(reader.GetOrdinal("Unit"))
             ));
         }
-
+        await connection.CloseAsync();
         return nutrients;
     }
 
@@ -98,6 +107,7 @@ public class AdoNutrientRepository : AbstractAdoRepository, INutrient
         command.Parameters.Add(param);
 
         await command.ExecuteNonQueryAsync();
+        await connection.CloseAsync();
     }
 
     public async Task<IReadOnlyCollection<Nutrient>> GetAllNutrients()
@@ -121,7 +131,7 @@ public class AdoNutrientRepository : AbstractAdoRepository, INutrient
                 reader.GetString(reader.GetOrdinal("Unit"))
             ));
         }
-
+        await connection.CloseAsync();
         return nutrients;
     }
 
@@ -149,7 +159,7 @@ public class AdoNutrientRepository : AbstractAdoRepository, INutrient
         {
             nutrientIds.Add(reader.GetString(reader.GetOrdinal(NUTRIENT_ID)));
         }
-
+        await connection.CloseAsync();
         return nutrientIds;
     }
 

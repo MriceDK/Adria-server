@@ -67,7 +67,7 @@ public class AllUsersQuery : IAllUsersQuery
         }
 
         _logger.LogInformation("Fetched {Count} users", users.Count);
-
+        await connection.CloseAsync();
         return users.AsReadOnly();
     }
 }
