@@ -224,7 +224,7 @@ VALUES ('e7f8a9b0-c1d2-4e5f-4a5b-7c8d9e0f1a2b', 'Apple', 'Fruit', TRUE),
 
 -- Insert FoodCompositions
 
-INSERT INTO subscriptions (id, `Type`, `PricePerMonth`, `Advantages`, `StartDate`, `EndDate`)
+INSERT INTO foodCompositions (FoodId, `NutrientId`, `Amount`)
 VALUES
         -- Apple composition
         ('e7f8a9b0-c1d2-4e5f-4a5b-7c8d9e0f1a2b', 'bd1-carb-0002', 25),
