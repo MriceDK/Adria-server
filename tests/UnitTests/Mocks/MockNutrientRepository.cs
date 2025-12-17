@@ -21,7 +21,7 @@ public class MockNutrientRepository:INutrient
         return Task.FromResult<IReadOnlyCollection<Nutrient>>(_nutrients.Where(n => n.Type == type).ToList());
     }
 
-    public Task Save(Nutrient nutrient) => Task.CompletedTask;
+    public static Task Save(Nutrient nutrient) => Task.CompletedTask;
     public Task Remove(Nutrient nutrient) => Task.CompletedTask;
 
     public Task<IReadOnlyCollection<Nutrient>> GetAllNutrients()

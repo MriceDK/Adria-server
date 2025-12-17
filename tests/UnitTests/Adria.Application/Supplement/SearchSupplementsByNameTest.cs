@@ -36,17 +36,21 @@ public sealed class SearchSupplementsByNameTest
     [Fact]
     public async Task Execute_WithUnknownName_ThrowsElementNotFoundException()
     {
+        // Arrange
         var query = new MockSupplementsByNameQuery();
         var logger = new MockLogger<SearchSupplementsByName>();
 
-        query.SetReturnValue(null);
+        query.SetReturnValue(Array.Empty<SupplementData>());
 
         var useCase = new SearchSupplementsByName(query, logger);
-
         var input = new SearchSupplementsByNameInput("Unknown");
 
-        await Assert.ThrowsAsync<ElementNotFoundException>(
+        // Act & Assert
+        var exception = await Assert.ThrowsAsync<ElementNotFoundException>(
             () => useCase.Execute(input)
         );
+
+        Assert.Equal("No supplements found.", exception.Message);
     }
+
 }

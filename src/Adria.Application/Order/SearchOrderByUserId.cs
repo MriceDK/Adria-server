@@ -31,24 +31,27 @@ public sealed class SearchOrderByUserId(
 
         foreach (var order in orders)
         {
-            var supplements = await supplementDetailsRepository.ByOrderId(order.OrderId);
+            if (order != null)
+            {
+                var supplements = await supplementDetailsRepository.ByOrderId(order.OrderId);
 
-            result.Add(
-                new OrderWithSupplementsData(
-                    order.OrderId,
-                    order.AdrianId,
-                    order.Date,
-                    order.TotalPrice,
-                    supplements
-                        .Select(s => new OrderSupplementDetailsData(
-                            s.OrderId,
-                            s.SupplementId,
-                            s.Amount
-                        ))
-                        .ToList()
-                        .AsReadOnly()
-                )
-            );
+                result.Add(
+                    new OrderWithSupplementsData(
+                        order.OrderId,
+                        order.AdrianId,
+                        order.Date,
+                        order.TotalPrice,
+                        supplements
+                            .Select(s => new OrderSupplementDetailsData(
+                                s.OrderId,
+                                s.SupplementId,
+                                s.Amount
+                            ))
+                            .ToList()
+                            .AsReadOnly()
+                    )
+                );
+            }
         }
 
         logger.LogInformation(

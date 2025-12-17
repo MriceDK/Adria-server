@@ -8,14 +8,14 @@ using CreateOrderInput = Adria.Application.OrderSupplement.CreateOrderInput;
 
 namespace Adria.Infrastructure.WebApi.Controllers.OrderSupplement;
 
-public sealed class CreateOrderSupplementController
+public static class CreateOrderSupplementController
 {
     public static async Task<Results<Ok<CreateOrderSupplementResponse>, BadRequest<string>>> Invoke(
         [FromBody] CreateOrderSupplementBody body,
         [FromServices] IUseCase<CreateOrderInput, Task<Guid>> useCase
     )
     {
-        if (body.Supplements is null || body.Supplements.Count == 0)
+        if (body.Supplements.Count == 0)
             return TypedResults.BadRequest("At least one supplement is required.");
 
         if (body.Supplements.Any(s => s.Amount <= 0))
@@ -35,6 +35,7 @@ public sealed class CreateOrderSupplementController
         return TypedResults.Ok(new CreateOrderSupplementResponse(orderId));
     }
 }
+
 public sealed record CreateOrderSupplementBody(
     Guid AdrianId,
     IReadOnlyCollection<CreateOrderSupplementItemBody> Supplements

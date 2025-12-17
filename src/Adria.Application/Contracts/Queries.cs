@@ -36,12 +36,12 @@ public interface IBodyStatRepository
 
 public interface ISupplementsByNameQuery
 {
-    Task<IReadOnlyCollection<SupplementData?>> Fetch(string name);
+    Task<IReadOnlyCollection<SupplementData>> Fetch(string name);
 }
 
 public interface ISupplementsByTypeQuery
 {
-    Task<IReadOnlyCollection<SupplementData?>> Fetch(string type);
+    Task<IReadOnlyCollection<SupplementData>> Fetch(string type);
 }
 
 public interface ISupplementsByIdQuery
@@ -51,7 +51,7 @@ public interface ISupplementsByIdQuery
 
 public interface IAllSupplementsQuery
 {
-    Task<IReadOnlyCollection<SupplementData?>> Fetch();
+    Task<IReadOnlyCollection<SupplementData>> Fetch();
 }
 
 public interface IOrderByIdQuery

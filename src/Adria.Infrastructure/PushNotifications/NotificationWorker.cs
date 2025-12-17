@@ -1,13 +1,19 @@
-﻿using Adria.Domain.PushNotifications;
+﻿using System.Diagnostics.CodeAnalysis;
+using Adria.Domain.PushNotifications;
 using WebPush;
 
 namespace Adria.Main.Workers;
 
 public class NotificationWorker : BackgroundService
 {
-    private static IServiceProvider _serviceProvider = null!;
-    private static ILogger<NotificationWorker> _logger = null!;
-    private static IConfiguration _configuration = null!;
+    [SuppressMessage(
+        "Major Code Smell",
+        "S2696:Instance members should not write to static fields",
+        Justification = "Intentional static access for global notification dispatch"
+    )]
+    private static IServiceProvider _serviceProvider = null!; 
+    private static ILogger<NotificationWorker> _logger = null!; 
+    private static IConfiguration _configuration = null!; 
 
     public NotificationWorker(
         IServiceProvider serviceProvider,
