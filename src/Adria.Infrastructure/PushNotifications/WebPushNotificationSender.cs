@@ -8,10 +8,10 @@ namespace Adria.Infrastructure.PushNotifications;
 
 public sealed class WebPushNotificationSender : INotificationSender
 {
-    private readonly IPushSubscriptionRepository _repository;
+
     private readonly IConfiguration _configuration;
     private readonly ILogger<WebPushNotificationSender> _logger;
-    private static IServiceProvider _serviceProvider;
+    private static IServiceProvider? _serviceProvider;
 
 
     public WebPushNotificationSender(
@@ -20,7 +20,6 @@ public sealed class WebPushNotificationSender : INotificationSender
         ILogger<WebPushNotificationSender> logger,
         IServiceProvider serviceProvider)
     {
-        _repository = repository;
         _configuration = configuration;
         _logger = logger;
         _serviceProvider = serviceProvider;
@@ -29,7 +28,7 @@ public sealed class WebPushNotificationSender : INotificationSender
 
     public async Task Send(string title, string body)
     {
-        using var scope = _serviceProvider.CreateScope();
+        using var scope = _serviceProvider!.CreateScope();
         var repository = scope.ServiceProvider.GetRequiredService<IPushSubscriptionRepository>();
 
         var subscriptions = await repository.GetAll();

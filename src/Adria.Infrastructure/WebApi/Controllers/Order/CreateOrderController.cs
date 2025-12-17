@@ -25,7 +25,6 @@ public sealed class CreateOrderController
             return TypedResults.BadRequest("TotalPrice must be positive.");
         }
         DateTime utcNow = DateTime.UtcNow;
-        utcNow = utcNow;
         CreateOrderInput input = new(
             OrderId: Guid.NewGuid(),
             AdrianId: body.AdrianId,
