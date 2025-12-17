@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
+using Microsoft.VisualBasic;
 
 namespace Adria.Infrastructure.WebApi.Controllers.Order;
 
@@ -23,11 +24,12 @@ public sealed class CreateOrderController
         {
             return TypedResults.BadRequest("TotalPrice must be positive.");
         }
-        
+        DateTime utcNow = DateTime.UtcNow;
+        utcNow = utcNow;
         CreateOrderInput input = new(
             OrderId: Guid.NewGuid(),
             AdrianId: body.AdrianId,
-            Date: DateTime.UtcNow,
+            Date: utcNow,
             TotalPrice: body.TotalPrice
         );
 
