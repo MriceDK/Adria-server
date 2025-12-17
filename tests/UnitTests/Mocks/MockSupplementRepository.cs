@@ -9,7 +9,6 @@ namespace UnitTests.Mocks;
 public sealed class MockSupplementRepository : ISupplementRepository
 {
     private readonly List<Supplement> _supplements = new();
-    private Func<Guid, Task<Supplement?>>? _byIdFunc;
     public Task<Supplement?> ById(Guid supplementId)
     {
         return Task.FromResult(_supplements.FirstOrDefault(s => s.SupplementId == supplementId));
