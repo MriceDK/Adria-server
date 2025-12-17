@@ -14,8 +14,10 @@ public sealed class MockOrderSupplementDetailsRepository : IOrderSupplementDetai
 
     public List<OrderSupplementDetails> SavedEntities => _entities;
 
-    public void Seed(OrderSupplementDetails entity)
+    public void Seed(OrderSupplementDetails? entity)
     {
+        if (entity is null)
+            return;
         _entities.Add(entity);
     }
 

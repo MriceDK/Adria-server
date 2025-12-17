@@ -9,10 +9,26 @@ namespace UnitTests.Mocks;
 public sealed class MockSupplementRepository : ISupplementRepository
 {
     private readonly List<Supplement> _supplements = new();
-
     public Task<Supplement?> ById(Guid supplementId)
     {
         return Task.FromResult(_supplements.FirstOrDefault(s => s.SupplementId == supplementId));
+    }
+
+    
+    public void Seed(Supplement? supplement)
+    {
+        if (supplement is null)
+            return;
+
+        var existing = _supplements
+            .FirstOrDefault(s => s.SupplementId == supplement.SupplementId);
+
+        if (existing != null)
+        {
+            _supplements.Remove(existing);
+        }
+
+        _supplements.Add(supplement);
     }
 
     public Task Save(Supplement supplement)
