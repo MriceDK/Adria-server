@@ -30,8 +30,8 @@ public class AbstractAdoRepository
     {
         try
         {
-            var connection = await OpenConnection();
-            using var command = connection.CreateCommand();
+            await using var connection = await OpenConnection();
+            await using var command = connection.CreateCommand();
             command.CommandText = commandText;
             command.Parameters.AddRange(parameters);
             await command.ExecuteNonQueryAsync();
@@ -40,38 +40,19 @@ public class AbstractAdoRepository
         {
             throw new NutriscanDatabaseException("Database operation failed.", ex);
         }
-        catch (ArgumentException ex)
-        {
-            throw new NutriscanDatabaseException("Invalid argument for database operation.", ex);
-        }
-        catch (InvalidOperationException ex)
-        {
-            throw new NutriscanDatabaseException("Invalid operation during database access.", ex);
-        }
     }
 
-    protected async Task<DbDataReader> ExecuteReaderAsync(string commandText, DbParameter[] parameters)
+    protected async Task<DbDataReader> ExecuteReaderAsync(
+        string commandText,
+        DbParameter[] parameters
+    )
     {
-        try
-        {
-            var connection = await OpenConnection();
-            var command = connection.CreateCommand();
-            command.CommandText = commandText;
-            command.Parameters.AddRange(parameters);
-            return await command.ExecuteReaderAsync();
-        }
-        catch (DbException ex)
-        {
-            throw new NutriscanDatabaseException("Database operation failed.", ex);
-        }
-        catch (ArgumentException ex)
-        {
-            throw new NutriscanDatabaseException("Invalid argument for database operation.", ex);
-        }
-        catch (InvalidOperationException ex)
-        {
-            throw new NutriscanDatabaseException("Invalid operation during database access.", ex);
-        }
+        var connection = await OpenConnection();
+        var command = connection.CreateCommand();
+        command.CommandText = commandText;
+        command.Parameters.AddRange(parameters);
+
+        return await command.ExecuteReaderAsync(CommandBehavior.CloseConnection);
     }
 
     protected async Task<DbConnection> OpenConnection()
