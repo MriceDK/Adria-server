@@ -7,15 +7,15 @@ namespace UnitTests.Mocks;
 
 public sealed class MockAllSupplementsQuery : IAllSupplementsQuery
 {
-    private IReadOnlyCollection<SupplementData?> _returnValue =
-        new List<SupplementData?>().AsReadOnly();
+    private IReadOnlyCollection<SupplementData> _returnValue =
+        new List<SupplementData>().AsReadOnly();
 
-    public void SetReturnValue(IReadOnlyCollection<SupplementData?> value)
+    public void SetReturnValue(IReadOnlyCollection<SupplementData>? value)
     {
-        _returnValue = value;
+        _returnValue = value ?? new List<SupplementData>().AsReadOnly();
     }
 
-    public Task<IReadOnlyCollection<SupplementData?>> Fetch()
+    public Task<IReadOnlyCollection<SupplementData>> Fetch()
     {
         return Task.FromResult(_returnValue);
     }
