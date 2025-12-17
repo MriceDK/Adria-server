@@ -5,15 +5,11 @@ namespace Adria.Main.Modules.PushNotifications;
 
 public static class PushNotificationModule
 {
-
     public static IServiceCollection AddPersistenceModule(
         this IServiceCollection services,
-        IConfiguration configuration
-    )
+        IConfiguration configuration)
     {
-        services.AddSingleton<INotificationSender, LogNotificationSender>();
-        services.AddHostedService<NotificationWorker>();
-
+        services.AddScoped<INotificationSender, WebPushNotificationSender>();
         return services;
     }
 }
