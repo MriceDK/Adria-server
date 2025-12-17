@@ -7,11 +7,15 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Adria.Infrastructure.WebApi.Controllers.FoodComposition;
 
-public sealed class GetFoodCompositionsByFoodController
+public static class GetFoodCompositionsByFoodController
 {
-    public static async Task<Results<Ok<List<Domain.Food.FoodComposition>>, NotFound>> Invoke(
+    public static async Task<Results<Ok<List<Domain.Food.FoodComposition>>, NotFound>
+    > Invoke(
         [FromRoute] string foodName,
-        [FromServices] IUseCase<SearchFoodCompositionsByFoodIdInput, Task<IReadOnlyCollection<FoodCompositionData>>> searchFoodCompositions
+        [FromServices] IUseCase<
+            SearchFoodCompositionsByFoodIdInput,
+            Task<IReadOnlyCollection<FoodCompositionData>>
+        > searchFoodCompositions
     )
     {
         if (string.IsNullOrWhiteSpace(foodName))
@@ -20,7 +24,8 @@ public sealed class GetFoodCompositionsByFoodController
         }
 
         var input = new SearchFoodCompositionsByFoodIdInput(foodName);
-        IReadOnlyCollection<FoodCompositionData> result = await searchFoodCompositions.Execute(input);
+        IReadOnlyCollection<FoodCompositionData> result =
+            await searchFoodCompositions.Execute(input);
 
         if (result.Count == 0)
         {

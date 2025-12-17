@@ -1,3 +1,4 @@
+using Adria.Infrastructure.PushNotifications;
 using Adria.Main.Modules.Persistence;
 using Adria.Main.Modules.UseCases;
 using Adria.Main.Modules.WebApi;
@@ -9,7 +10,7 @@ builder
     .Services
         .AddPersistenceModule(configuration)
         .AddWebApiModule(configuration)
-        .AddHostedService<Adria.Main.Workers.NotificationWorker>()
+        .AddHostedService<NotificationWorker>()
         .AddUseCases();
 
 await builder

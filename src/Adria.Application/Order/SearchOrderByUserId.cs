@@ -29,29 +29,26 @@ public sealed class SearchOrderByUserId(
 
         var result = new List<OrderWithSupplementsData>();
 
-        foreach (var order in orders)
+        foreach (var order in orders.Where(o => o != null))
         {
-            if (order != null)
-            {
-                var supplements = await supplementDetailsRepository.ByOrderId(order.OrderId);
+            var supplements = await supplementDetailsRepository.ByOrderId(order!.OrderId);
 
-                result.Add(
-                    new OrderWithSupplementsData(
-                        order.OrderId,
-                        order.AdrianId,
-                        order.Date,
-                        order.TotalPrice,
-                        supplements
-                            .Select(s => new OrderSupplementDetailsData(
-                                s.OrderId,
-                                s.SupplementId,
-                                s.Amount
-                            ))
-                            .ToList()
-                            .AsReadOnly()
-                    )
-                );
-            }
+            result.Add(
+                new OrderWithSupplementsData(
+                    order.OrderId,
+                    order.AdrianId,
+                    order.Date,
+                    order.TotalPrice,
+                    supplements
+                        .Select(s => new OrderSupplementDetailsData(
+                            s.OrderId,
+                            s.SupplementId,
+                            s.Amount
+                        ))
+                        .ToList()
+                        .AsReadOnly()
+                )
+            );
         }
 
         logger.LogInformation(
@@ -62,4 +59,5 @@ public sealed class SearchOrderByUserId(
 
         return result.AsReadOnly();
     }
+
 }
