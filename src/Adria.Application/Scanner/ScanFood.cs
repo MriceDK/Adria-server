@@ -67,7 +67,7 @@ public sealed class ScanFood
 
 
         Guid scanId = Guid.NewGuid();
-        DateTime scanDateTime = DateTime.UtcNow;
+        DateTime scanDateTime = DateTime.UtcNow.ToLocalTime();
 
 
         Scan scan = new Scan(

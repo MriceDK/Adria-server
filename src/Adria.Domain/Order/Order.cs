@@ -16,7 +16,7 @@ public sealed class Order
     }
     public void SetDate(DateTime? date)
     {
-        Date = date ?? DateTime.UtcNow;
+        Date = date ?? DateTime.UtcNow.ToLocalTime();
     }
     
     public void SetTotalPrice(double totalPrice)

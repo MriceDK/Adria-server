@@ -31,7 +31,7 @@ public sealed class CreateAnalyseTests
         // Arrange
         var input = new CreateAnalyseInput(
             _validUserId,
-            DateTime.UtcNow,
+            DateTime.UtcNow.ToLocalTime(),
             _validDetails
         );
 
@@ -56,7 +56,7 @@ public sealed class CreateAnalyseTests
         // Arrange
         var input = new CreateAnalyseInput(
             Guid.Empty, 
-            DateTime.UtcNow,
+            DateTime.UtcNow.ToLocalTime(),
             _validDetails
         );
 
@@ -70,7 +70,7 @@ public sealed class CreateAnalyseTests
         // Arrange
         var input = new CreateAnalyseInput(
             _validUserId,
-            DateTime.UtcNow,
+            DateTime.UtcNow.ToLocalTime(),
             new List<AnalyseDetailInput>() 
         );
 
