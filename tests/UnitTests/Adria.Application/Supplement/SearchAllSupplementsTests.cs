@@ -71,21 +71,4 @@ public sealed class SearchAllSupplementsTests
         Assert.Contains("Fetching all supplements...", _mockLogger.LoggedMessages[0]);
     }
 
-    [Fact]
-    public async Task Execute_WhenQueryReturnsNull_ThrowsElementNotFoundException()
-    {
-        // Arrange
-        _mockQuery.SetReturnValue(null);
-        _mockLogger.Clear(); 
-
-        // Act & Assert 1: Expect the ElementNotFoundException
-        var exception = await Assert.ThrowsAsync<ElementNotFoundException>(
-            () => _useCase.Execute()
-        );
-
-        Assert.Equal("No supplements found.", exception.Message);
-
-        // Assert 2: Check logging (Only initial log should be present)
-        Assert.Single(_mockLogger.LoggedMessages);
-    }
 }

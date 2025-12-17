@@ -11,15 +11,14 @@ namespace Adria.Infrastructure.Persistence.Queries;
 public sealed class AllSupplementsQuery(
     ISupplementRepository supplementRepository) : IAllSupplementsQuery
 {
-    public async Task<IReadOnlyCollection<SupplementData?>> Fetch()
+    public async Task<IReadOnlyCollection<SupplementData>> Fetch()
     {
         var supplements = await supplementRepository.GetAll();
 
-        if (!supplements.Any())
+        if (supplements.Count == 0)
         {
             throw new ElementNotFoundException("No supplements found.");
         }
-        
         return supplements
             .Select(s => new SupplementData(s.SupplementId, s.Name, s.Type, s.Price, s.Stock))
             .ToList()

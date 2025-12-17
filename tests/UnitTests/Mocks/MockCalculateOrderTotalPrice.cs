@@ -1,6 +1,8 @@
 ﻿using Adria.Application.Contracts;
 using Adria.Application.OrderSupplement;
 
+namespace UnitTests.Mocks;
+
 public sealed class MockCalculateOrderTotalPrice
     : IUseCase<IReadOnlyCollection<CreateOrderSupplementDetailItem>, Task<double>>
 {

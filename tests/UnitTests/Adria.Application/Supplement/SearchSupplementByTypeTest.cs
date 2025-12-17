@@ -39,17 +39,21 @@ public sealed class SearchSupplementByTypeTest
     [Fact]
     public async Task Execute_WithUnknownType_ThrowsElementNotFoundException()
     {
+        // Arrange
         var query = new MockSupplementsByTypeQuery();
         var logger = new MockLogger<SearchSupplementsByType>();
 
-        query.SetReturnValue(null);
+        query.SetReturnValue(Array.Empty<SupplementData>());
 
         var useCase = new SearchSupplementsByType(query, logger);
-
         var input = new SearchSupplementsByTypeInput("UnknownType");
 
-        await Assert.ThrowsAsync<ElementNotFoundException>(
+        // Act & Assert
+        var exception = await Assert.ThrowsAsync<ElementNotFoundException>(
             () => useCase.Execute(input)
         );
+
+        Assert.Equal("No supplements found.", exception.Message);
     }
+
 }

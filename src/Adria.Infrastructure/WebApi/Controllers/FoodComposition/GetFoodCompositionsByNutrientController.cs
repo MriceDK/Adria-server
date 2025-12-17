@@ -9,7 +9,7 @@ namespace Adria.Infrastructure.WebApi.Controllers.FoodComposition;
 
 public sealed class GetFoodCompositionsByNutrientController
 {
-    public static async Task<Results<Ok<IReadOnlyCollection<Domain.Food.FoodComposition>>, NotFound>> Invoke(
+    public static async Task<Results<Ok<List<Domain.Food.FoodComposition>>, NotFound>> Invoke(
         [FromRoute(Name = "type")] string type,
         [FromServices] IUseCase<SearchFoodCompositionsByNutrientIdInput, Task<IReadOnlyCollection<FoodCompositionData>>> searchFoodCompositions
     )
@@ -23,7 +23,7 @@ public sealed class GetFoodCompositionsByNutrientController
 
         IReadOnlyCollection<FoodCompositionData> result = await searchFoodCompositions.Execute(input);
 
-        if (result == null || result.Count == 0)
+        if (result.Count == 0)
         {
             return TypedResults.NotFound();
         }
@@ -32,7 +32,7 @@ public sealed class GetFoodCompositionsByNutrientController
         return TypedResults.Ok(response);
     }
 
-    private static IReadOnlyCollection<Domain.Food.FoodComposition> ToResponse(
+    private static List<Domain.Food.FoodComposition> ToResponse(
         IReadOnlyCollection<FoodCompositionData> foodCompositionData
     )
     {

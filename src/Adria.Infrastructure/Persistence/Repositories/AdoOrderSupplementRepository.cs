@@ -22,12 +22,6 @@ public class AdoOrderSupplementRepository : AbstractAdoRepository, IOrderSupplem
     VALUES (@OrderId, @SupplementId, @Amount);
 ";
 
-    private static readonly string UPDATE_ORDER_SUPPLEMENT = $@"
-    UPDATE {TABLE_ORDER_SUPPLEMENTS}
-    SET {COL_AMOUNT} = @Amount
-    WHERE {COL_ORDER_ID} = @OrderId AND {COL_SUPPLEMENT_ID} = @SupplementId;
-";
-
     private static readonly string SELECT_ORDER_SUPPLEMENT_BY_ORDER_AND_SUPPLEMENT = $@"
     SELECT {COL_ORDER_ID}, {COL_SUPPLEMENT_ID}, {COL_AMOUNT}
     FROM {TABLE_ORDER_SUPPLEMENTS}
@@ -134,7 +128,7 @@ public class AdoOrderSupplementRepository : AbstractAdoRepository, IOrderSupplem
         }
     }
 
-    public async Task<OrderSupplementDetails?> ByOrderAndSupplementId(Guid orderId, Guid supplementId)
+    public async Task<OrderSupplementDetails> ByOrderAndSupplementId(Guid orderId, Guid supplementId)
     {
         DbParameter[] parameters =
         [
@@ -221,7 +215,7 @@ public class AdoOrderSupplementRepository : AbstractAdoRepository, IOrderSupplem
 
     public async Task SaveMany(IReadOnlyCollection<OrderSupplementDetails> orderSupplementDetails)
     {
-        if (!orderSupplementDetails.Any())
+        if (orderSupplementDetails.Count == 0)
             return;
 
         try

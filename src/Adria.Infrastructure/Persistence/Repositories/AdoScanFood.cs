@@ -68,7 +68,7 @@ public class AdoScanFood : AbstractAdoRepository, IScan
             );
 
             await NotificationWorker.SendNotifications(
-                $"📦 New item scanned",
+                $"New item scanned",
                 $"{scan.Result}\nTime: {scan.DateTime:dd.MM.yyyy HH:mm}"
             );
         }

@@ -14,8 +14,11 @@ public sealed class MockSupplementsByNameQuery : ISupplementsByNameQuery
         _returnValue = value;
     }
 
-    public Task<IReadOnlyCollection<SupplementData?>?> Fetch(string name)
+    public Task<IReadOnlyCollection<SupplementData>> Fetch(string name)
     {
-        return Task.FromResult(_returnValue);
+        return Task.FromResult(
+            (IReadOnlyCollection<SupplementData>)(_returnValue ?? Array.Empty<SupplementData>())
+        );
     }
+
 }
