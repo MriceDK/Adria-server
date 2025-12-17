@@ -1,26 +1,22 @@
 ﻿using Adria.Application.PushNotifications;
 using Adria.Domain.PushNotifications;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 using WebPush;
 
 namespace Adria.Infrastructure.PushNotifications;
 
 public sealed class WebPushNotificationSender : INotificationSender
 {
-    private readonly IPushSubscriptionRepository _repository;
+
     private readonly IConfiguration _configuration;
     private readonly ILogger<WebPushNotificationSender> _logger;
-    private static IServiceProvider _serviceProvider;
+    private static IServiceProvider? _serviceProvider;
 
 
     public WebPushNotificationSender(
-        IPushSubscriptionRepository repository,
         IConfiguration configuration,
         ILogger<WebPushNotificationSender> logger,
         IServiceProvider serviceProvider)
     {
-        _repository = repository;
         _configuration = configuration;
         _logger = logger;
         _serviceProvider = serviceProvider;
@@ -29,13 +25,13 @@ public sealed class WebPushNotificationSender : INotificationSender
 
     public async Task Send(string title, string body)
     {
-        using var scope = _serviceProvider.CreateScope();
+        using var scope = _serviceProvider!.CreateScope();
         var repository = scope.ServiceProvider.GetRequiredService<IPushSubscriptionRepository>();
 
         var subscriptions = await repository.GetAll();
         if (subscriptions.Count == 0) return;
 
-        _logger.LogInformation($"Found {subscriptions.Count} users to notify.");
+        _logger.LogInformation("Found {SubscriptionsCount} users to notify.", subscriptions.Count);
 
         // VAPID Keys (It should be in appsettings.json)
         // Client and backend keys should be same
@@ -57,22 +53,21 @@ public sealed class WebPushNotificationSender : INotificationSender
                 );
 
                 var payload = System.Text.Json.JsonSerializer.Serialize(new 
-                { 
-                    title = title, 
-                    body = body
+                {
+                    title, body
                 });
 
                 await webPushClient.SendNotificationAsync(pushSubscription, payload, vapidDetails);
-                _logger.LogInformation($"Notification sent to {sub.UserId}");
+                _logger.LogInformation("Notification sent to {SubUserId}", sub.UserId);
             }
             catch (WebPushException ex) when (ex.StatusCode == System.Net.HttpStatusCode.Gone)
             {
-                _logger.LogWarning($"Subscription expired for user {sub.UserId}. Deleting...");
+                _logger.LogWarning("Subscription expired for user {SubUserId}. Deleting...", sub.UserId);
                 await repository.Delete(sub.Id);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"Failed to send to {sub.UserId}");
+                _logger.LogError(ex, "Failed to send to {SubUserId}", sub.UserId);
             }
         }
     }
