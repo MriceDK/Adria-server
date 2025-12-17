@@ -9,23 +9,23 @@ public sealed class WebPushNotificationSender : INotificationSender
 
     private readonly IConfiguration _configuration;
     private readonly ILogger<WebPushNotificationSender> _logger;
-    private static IServiceProvider? _serviceProvider;
+    private static IServiceScopeFactory? _scopeFactory;
 
 
     public WebPushNotificationSender(
         IConfiguration configuration,
         ILogger<WebPushNotificationSender> logger,
-        IServiceProvider serviceProvider)
+        IServiceScopeFactory scopeFactory)
     {
         _configuration = configuration;
         _logger = logger;
-        _serviceProvider = serviceProvider;
+        _scopeFactory = scopeFactory;;
 
     }
 
     public async Task Send(string title, string body)
     {
-        using var scope = _serviceProvider!.CreateScope();
+        using var scope = _scopeFactory!.CreateScope();
         var repository = scope.ServiceProvider.GetRequiredService<IPushSubscriptionRepository>();
 
         var subscriptions = await repository.GetAll();
