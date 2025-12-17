@@ -9,13 +9,16 @@ namespace UnitTests.Mocks;
 public sealed class MockOrderSupplementDetailsRepository : IOrderSupplementDetailsRepository
 {
     private readonly List<OrderSupplementDetails> _entities = new();
+    private Func<Guid, Task<Supplement?>>? _byIdFunc;
 
     public IReadOnlyList<OrderSupplementDetails> Entities => _entities;
 
     public List<OrderSupplementDetails> SavedEntities => _entities;
 
-    public void Seed(OrderSupplementDetails entity)
+    public void Seed(OrderSupplementDetails? entity)
     {
+        if (entity is null)
+            return;
         _entities.Add(entity);
     }
 
