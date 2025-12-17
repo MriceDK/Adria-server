@@ -1,6 +1,7 @@
 using System.Data.Common;
 using Adria.Application.Contracts;
 using Adria.Application.Contracts.Data;
+using Adria.Application.PushNotifications;
 using Adria.Application.Scanner;
 using Adria.Domain.BodyStats;
 using Adria.Domain.Food;
@@ -101,7 +102,9 @@ public static class PersistenceModule
                 return new AdoScanFood(
                     sp.GetRequiredService<DbProviderFactory>(),
                     _connectionString,
-                    sp.GetRequiredService<ILogger<AdoScanFood>>()
+                    sp.GetRequiredService<ILogger<AdoScanFood>>(),
+                    sp.GetRequiredService<INotificationSender>()
+
                 );
             }).AddScoped<IBodyStatRepository, AdoBodyStatRepository>(serviceProvider =>
             {

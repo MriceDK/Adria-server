@@ -3,7 +3,6 @@ using System.Data.Common;
 using Adria.Application.PushNotifications;
 using Adria.Domain.Scanner;
 using Adria.Infrastructure.Persistence.Shared;
-using Adria.Infrastructure.PushNotifications;
 using Microsoft.Extensions.Logging;
 
 namespace Adria.Infrastructure.Persistence.Repositories;
@@ -12,7 +11,6 @@ public class AdoScanFood : AbstractAdoRepository, IScan
 {
     private readonly ILogger<AdoScanFood> _logger;
     private readonly INotificationSender _notificationSender;
-
 
     private const string TABLE = "scans";
     private const string COL_SCAN_ID = "ScanId";
@@ -48,10 +46,12 @@ public class AdoScanFood : AbstractAdoRepository, IScan
     public AdoScanFood(
         DbProviderFactory factory,
         string connectionString,
-        ILogger<AdoScanFood> logger
+        ILogger<AdoScanFood> logger,
+        INotificationSender notificationSender
     ) : base(factory, connectionString)
     {
         _logger = logger;
+        _notificationSender = notificationSender;
     }
 
     public async Task Save(Scan scan)
@@ -106,7 +106,6 @@ public class AdoScanFood : AbstractAdoRepository, IScan
             );
         }
     }
-
 
     public async Task<Scan?> ById(Guid scanId)
     {
