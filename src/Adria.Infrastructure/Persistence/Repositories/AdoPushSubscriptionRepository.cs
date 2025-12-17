@@ -60,6 +60,7 @@ public sealed class AdoPushSubscriptionRepository : AbstractAdoRepository, IPush
                 Guid.Parse(reader.GetString(reader.GetOrdinal("SubscriptionId")))
             ));
         }
+        await connection.CloseAsync();
         return list;
     }
 

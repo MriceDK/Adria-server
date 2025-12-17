@@ -61,11 +61,12 @@ public class UserByIdQuery : IUserByIdQuery
             var subType = reader.GetString(subTypeOrd);
 
             _logger.LogInformation("Found user with ID {UserId}", userId);
-            
+            await connection.CloseAsync();
             return new UserData(id, name, job, subType);
         }
 
         _logger.LogInformation("User with ID {UserId} not found", userId);
+        await connection.CloseAsync();
         return null;
     }
 }

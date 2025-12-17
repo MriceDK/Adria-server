@@ -31,6 +31,8 @@ public class AdoFoodRepository : AbstractAdoRepository, IFood
         command.Parameters.Add(CreateParameter("@Edible", food.Edible));
 
         var affected = await command.ExecuteNonQueryAsync();
+        await connection.CloseAsync();
+
         if (affected != 1)
         {
             throw new InvalidOperationException($"Expected to insert 1 row into foods, but affected {affected}.");
@@ -58,13 +60,22 @@ public class AdoFoodRepository : AbstractAdoRepository, IFood
         using var reader = await command.ExecuteReaderAsync();
 
         if (!await reader.ReadAsync())
-            return null;
+        { 
+            await connection.CloseAsync();
+            return null; 
+        }
 
+        Guid foodId = reader.GetGuid(reader.GetOrdinal("FoodId"));
+        string name = reader.GetString(reader.GetOrdinal("Name"));
+        string type = reader.GetString(reader.GetOrdinal("Type"));
+        bool edible = reader.GetBoolean(reader.GetOrdinal("Edible"));
+            
+        await connection.CloseAsync();
         return new Food(
-            reader.GetGuid(reader.GetOrdinal("FoodId")),
-            reader.GetString(reader.GetOrdinal("Name")),
-            reader.GetString(reader.GetOrdinal("Type")),
-            reader.GetBoolean(reader.GetOrdinal("Edible"))
+            foodId,
+            name,
+            type,
+            edible
         );
     }
 
@@ -91,7 +102,7 @@ public class AdoFoodRepository : AbstractAdoRepository, IFood
                 reader.GetBoolean(reader.GetOrdinal("Edible"))
             ));
         }
-
+        await connection.CloseAsync();
         return foods;
     }
     public Task Remove(Food food)
@@ -121,7 +132,7 @@ public class AdoFoodRepository : AbstractAdoRepository, IFood
         {
             ids.Add(reader.GetGuid(reader.GetOrdinal("FoodId")));
         }
-
+        await connection.CloseAsync();
         return ids;
     }
 
@@ -143,6 +154,7 @@ public class AdoFoodRepository : AbstractAdoRepository, IFood
         command.Parameters.Add(CreateParameter("@Edible", edible));
 
         await command.ExecuteNonQueryAsync();
+        await connection.CloseAsync();
         return newId;
     }
 }

@@ -84,10 +84,12 @@ public class AdoAnalyseRepository : AbstractAdoRepository, IAnalyseRepository
 
             await transaction.CommitAsync();
             _logger.LogInformation("Analyse {AnalyseId} saved successfully.", analyse.Id);
+            await connection.CloseAsync();
         }
         catch (DbException ex)
         {
             await transaction.RollbackAsync();
+            await connection.CloseAsync();
             _logger.LogError(ex, "Failed to save Analyse. Transaction rolled back.");
             throw new NutriscanDatabaseException("Failed to save analyse to database.", ex);
         }

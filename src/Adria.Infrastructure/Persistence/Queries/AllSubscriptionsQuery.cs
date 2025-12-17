@@ -73,7 +73,7 @@ public class AllSubscriptionsQuery : IAllSubscriptionsQuery
         }
 
         _logger.LogInformation("Fetched {Count} subscriptions", subscriptions.Count);
-
+        await connection.CloseAsync();
         return subscriptions.AsReadOnly();
     }
 }
