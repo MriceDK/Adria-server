@@ -12,10 +12,10 @@ public class MockOrderByUserIdQuery : IOrderByUserIdQuery
 
     }
     
-    public Task<IReadOnlyCollection<OrderData>?> Fetch(Guid userId)
+    public Task<IReadOnlyCollection<OrderData?>> Fetch(Guid userId)
     {
         _dataStore.TryGetValue(userId, out var data);
-        return Task.FromResult(data);
+        return Task.FromResult(data)!;
     }
     
     public MockOrderByUserIdQuery Setup(Func<IOrderByUserIdQuery, Func<Guid, Task<IReadOnlyCollection<OrderData>?>>> setupExpression)

@@ -9,7 +9,6 @@ namespace UnitTests.Mocks;
 public sealed class MockOrderSupplementDetailsRepository : IOrderSupplementDetailsRepository
 {
     private readonly List<OrderSupplementDetails> _entities = new();
-    private Func<Guid, Task<Supplement?>>? _byIdFunc;
 
     public IReadOnlyList<OrderSupplementDetails> Entities => _entities;
 
