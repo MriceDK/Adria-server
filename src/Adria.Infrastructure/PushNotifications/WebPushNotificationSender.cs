@@ -1,4 +1,5 @@
-﻿using Adria.Application.PushNotifications;
+﻿using System.Net;
+using Adria.Application.PushNotifications;
 using Adria.Domain.PushNotifications;
 using WebPush;
 
@@ -6,7 +7,6 @@ namespace Adria.Infrastructure.PushNotifications;
 
 public sealed class WebPushNotificationSender : INotificationSender
 {
-
     private readonly IConfiguration _configuration;
     private readonly ILogger<WebPushNotificationSender> _logger;
     private static IServiceScopeFactory? _scopeFactory;
@@ -19,8 +19,8 @@ public sealed class WebPushNotificationSender : INotificationSender
     {
         _configuration = configuration;
         _logger = logger;
-        _scopeFactory = scopeFactory;;
-
+        _scopeFactory = scopeFactory;
+        ;
     }
 
     public async Task Send(string title, string body)
@@ -47,12 +47,12 @@ public sealed class WebPushNotificationSender : INotificationSender
             try
             {
                 var pushSubscription = new WebPush.PushSubscription(
-                    sub.Endpoint, 
-                    sub.P256dh, 
+                    sub.Endpoint,
+                    sub.P256dh,
                     sub.Auth
                 );
 
-                var payload = System.Text.Json.JsonSerializer.Serialize(new 
+                var payload = System.Text.Json.JsonSerializer.Serialize(new
                 {
                     title, body
                 });
@@ -60,14 +60,21 @@ public sealed class WebPushNotificationSender : INotificationSender
                 await webPushClient.SendNotificationAsync(pushSubscription, payload, vapidDetails);
                 _logger.LogInformation("Notification sent to {SubUserId}", sub.UserId);
             }
-            catch (WebPushException ex) when (ex.StatusCode == System.Net.HttpStatusCode.Gone)
+            catch (WebPushException ex) when (ex.StatusCode == HttpStatusCode.Gone)
             {
-                _logger.LogWarning("Subscription expired for user {SubUserId}. Deleting...", sub.UserId);
+                _logger.LogWarning(
+                    ex,
+                    "Subscription expired for user {SubUserId}. Deleting...",
+                    sub.UserId);
+
                 await repository.Delete(sub.Id);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Failed to send to {SubUserId}", sub.UserId);
+                _logger.LogError(
+                    ex,
+                    "Failed to send to {SubUserId}",
+                    sub.UserId);
             }
         }
     }
