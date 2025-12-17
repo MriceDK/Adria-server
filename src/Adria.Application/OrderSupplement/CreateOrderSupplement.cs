@@ -25,7 +25,7 @@ public sealed class CreateOrderSupplement(
     public async Task<Guid> Execute(CreateOrderInput input)
     {
         var orderId = Guid.NewGuid();
-        var date = DateTime.UtcNow;
+        var date = DateTime.UtcNow.ToLocalTime();
 
         var totalPrice = await calculateTotalPrice.Execute(input.Supplements);
 

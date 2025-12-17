@@ -1,5 +1,8 @@
 ﻿using Adria.Application.Order;
 using UnitTests.Mocks;
+using System;
+using System.Threading.Tasks;
+using Xunit;
 
 namespace UnitTests.Adria.Application.Order;
 
@@ -13,10 +16,9 @@ public sealed class CreateOrderTests
         var useCase = new CreateOrder(repository, logger);
 
         var input = new CreateOrderInput(
-            Guid.NewGuid(),
-            Guid.NewGuid(),
-            DateTime.UtcNow,
-            0.0
+            OrderId: Guid.NewGuid(),
+            AdrianId: Guid.NewGuid(),
+            TotalPrice: 10.0
         );
 
         var result = await useCase.Execute(input);
@@ -24,5 +26,7 @@ public sealed class CreateOrderTests
         Assert.NotEqual(Guid.Empty, result);
         Assert.Single(repository.SavedOrders);
         Assert.Equal(result, repository.SavedOrders[0].OrderId);
+
+        Assert.True(repository.SavedOrders[0].Date > DateTime.UtcNow.AddMinutes(-5));
     }
 }

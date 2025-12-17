@@ -30,7 +30,7 @@ public sealed class RemoveScanFoodTest
             new Scan(
                 scanId,
                 adrianId,
-                DateTime.UtcNow,
+                DateTime.UtcNow.ToLocalTime(),
                 "OK",
                 foodId.ToString()
             )
