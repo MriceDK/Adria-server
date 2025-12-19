@@ -95,9 +95,8 @@ dotnet test
 * **Port conflict (8000)**: If the port is already in use, update `launchSettings.json` or Docker configuration.
 * **Port conflict (3306 – MySQL)**: On machines with MySQL installed locally, the MySQL service often runs automatically on port **3306**. This can prevent the Docker MySQL container from starting.
 
-  * Stop the local MySQL service before running Docker.
-  * Alternatively, change the MySQL port in `docker-compose.yml` if stopping the service is not possible.
+    * Stop the local MySQL service before running Docker.
+    * Alternatively, change the MySQL port in `docker-compose.yml` if stopping the service is not possible.
 
 
 ---
-
