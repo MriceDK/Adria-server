@@ -1,4 +1,4 @@
-﻿# The backend of Nutriscan
+# The backend of Nutriscan
 
 ### To run:
 
