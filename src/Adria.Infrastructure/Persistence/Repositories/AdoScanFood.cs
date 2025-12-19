@@ -72,7 +72,7 @@ public class AdoScanFood : AbstractAdoRepository, IScan
 
             await _notificationSender.Send(
                 "New item scanned",
-                $"{scan.Result}\nTime: {scan.DateTime:dd.MM.yyyy HH:mm}"
+                $"{scan.Result}\nTime: {DateTime.UtcNow.ToLocalTime():dd/MM/yyyy HH:mm}"
             );
         }
         catch (DbException ex)
