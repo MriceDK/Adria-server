@@ -6,9 +6,6 @@
 `dotnet run --project src/Adria.Main` <br>
 Visit `http://localhost:8000/swagger/index.html`
 
-Remove the example server container if you get any errors. <br>
-Database credentials are in Discord under "Database credentials"
-
 ### To test:
 
 `dotnet test`
