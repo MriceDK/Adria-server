@@ -23,10 +23,10 @@
 
 ```mermaid
 flowchart LR
-    Client[Client (Vue 3)] -->|HTTP| API[Adria.Main API]
-    API -->|CRUD| MySQL[(MySQL database)]
+    Client["Client (Vue 3)"] -->|HTTP| API["Adria.Main API"]
+    API -->|CRUD| DB["MySQL database"]
     subgraph LocalDev
-        DB[MySQL container] -. docker compose .-> API
+        DB --> API
     end
 ```
 
